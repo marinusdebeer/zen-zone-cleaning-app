@@ -56,6 +56,16 @@ export function DashboardButton({ className }: DashboardButtonProps) {
       {/* Direct navigation buttons */}
       <button
         onClick={() => {
+          console.log('🔗 Direct navigation to isolated test');
+          window.location.href = '/isolated-test';
+        }}
+        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-1 px-4 rounded text-center block text-xs"
+      >
+        🟡 Isolated Test
+      </button>
+      
+      <button
+        onClick={() => {
           console.log('🔗 Direct navigation to test');
           window.location.href = '/t/zenzone/test';
         }}
