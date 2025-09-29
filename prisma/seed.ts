@@ -4,7 +4,12 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seeding database...');
+  const isDev = process.env.NODE_ENV === 'development';
+  const isPreview = process.env.VERCEL_ENV === 'preview';
+  const isProd = process.env.VERCEL_ENV === 'production';
+
+  const environment = isDev ? 'development' : isPreview ? 'preview' : isProd ? 'production' : 'unknown';
+  console.log(`🌱 Seeding database for ${environment} environment...`);
 
   // Create Zen Zone Cleaning organization
   const zenZoneOrg = await prisma.organization.upsert({
