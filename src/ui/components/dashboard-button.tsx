@@ -86,6 +86,16 @@ export function DashboardButton({ className }: DashboardButtonProps) {
       
       <button
         onClick={() => {
+          console.log('🔗 Direct navigation to dynamic slug test');
+          window.location.href = '/t/zenzone/debug-slug';
+        }}
+        className="w-full bg-green-300 hover:bg-green-400 text-white font-semibold py-1 px-4 rounded text-center block text-xs"
+      >
+        🟢 Dynamic Slug Test
+      </button>
+      
+      <button
+        onClick={() => {
           console.log('🔗 Direct navigation to test');
           window.location.href = '/t/zenzone/test';
         }}
