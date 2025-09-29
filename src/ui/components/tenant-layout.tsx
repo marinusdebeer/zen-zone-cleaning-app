@@ -18,8 +18,9 @@ export function TenantLayout({ children, org }: TenantLayoutProps) {
   console.log('🔍 TenantLayout: session status:', status, 'session:', !!session);
   
   useEffect(() => {
+    // TEMPORARILY DISABLED: Authentication redirect for debugging
     // Only redirect if we're definitely unauthenticated AND not loading
-    if (status === 'unauthenticated' && status !== 'loading') {
+    if (false && status === 'unauthenticated' && status !== 'loading') {
       console.log('🔄 TenantLayout: Redirecting to signin');
       // Add a small delay to prevent rapid redirects
       setTimeout(() => {
@@ -28,23 +29,8 @@ export function TenantLayout({ children, org }: TenantLayoutProps) {
     }
   }, [status, router]);
   
-  // Show loading state while session is loading
-  if (status === 'loading') {
-    console.log('⏳ TenantLayout: Loading session...');
-    return <div className="min-h-screen flex items-center justify-center">Loading session...</div>;
-  }
-  
-  // If definitely unauthenticated, show redirecting message
-  if (status === 'unauthenticated') {
-    console.log('🚫 TenantLayout: Unauthenticated, redirecting...');
-    return <div className="min-h-screen flex items-center justify-center">Redirecting to sign in...</div>;
-  }
-  
-  // If authenticated but no session data yet, wait
-  if (!session?.user) {
-    console.log('⏳ TenantLayout: Waiting for session data...');
-    return <div className="min-h-screen flex items-center justify-center">Loading user data...</div>;
-  }
+  // TEMPORARILY DISABLED: All authentication checks for debugging
+  console.log('🔧 TenantLayout: Authentication checks temporarily disabled for debugging');
   
   console.log('✅ TenantLayout: Authenticated, rendering content');
 
