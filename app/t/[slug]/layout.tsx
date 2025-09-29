@@ -1,6 +1,4 @@
-import { notFound } from 'next/navigation';
-import { getOrgBySlug } from '@/server/tenancy';
-import { TenantLayout } from '@/ui/components/tenant-layout';
+// TEMP DEBUG LAYOUT: bypass org lookup and TenantLayout to isolate routing
 import { SessionProvider } from '@/ui/components/session-provider';
 
 interface TenantLayoutProps {
@@ -9,23 +7,15 @@ interface TenantLayoutProps {
 }
 
 export default async function SlugLayout({ children, params }: TenantLayoutProps) {
-  console.log('🔄 SlugLayout called with params:', params);
-  
   const { slug } = await params;
-  console.log('🔍 SlugLayout: slug extracted:', slug);
-  
-  const org = await getOrgBySlug(slug);
-  console.log('🔍 SlugLayout: org fetched:', org ? 'SUCCESS' : 'NOT FOUND');
-  
-  if (!org) {
-    console.log('❌ SlugLayout: Organization not found, calling notFound()');
-    notFound();
-  }
-
-  console.log('✅ SlugLayout: Rendering TenantLayout with org:', org.name);
+  console.log('🧭 DEBUG SlugLayout (bypass): slug =', slug);
+  // Bypass DB and tenant layout completely to verify dynamic routing stability
   return (
     <SessionProvider>
-      <TenantLayout org={org}>{children}</TenantLayout>
+      <div style={{padding:"12px", background:"#fff7d6", borderBottom:"1px solid #eedc9a", fontSize:"12px"}}>
+        DEBUG: tenant slug = {slug} (temporary layout bypass)
+      </div>
+      {children}
     </SessionProvider>
   );
 }
