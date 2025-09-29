@@ -2,8 +2,8 @@ import React from 'react';
 
 export interface FieldProps {
   name: string;
-  value: any;
-  onChange: (value: any) => void;
+  value: string | number | Date | null | undefined;
+  onChange: (value: string | number | Date | null) => void;
   error?: string;
   required?: boolean;
   placeholder?: string;
@@ -38,7 +38,7 @@ export const fieldComponents = {
     </div>
   ),
 
-  clientId: ({ value, onChange, error, required, placeholder, options }: FieldProps & { options?: any[] }) => (
+  clientId: ({ value, onChange, error, required, placeholder, options }: FieldProps & { options?: Array<{ value: string; label: string }> }) => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
         Client {required && <span className="text-red-500">*</span>}
@@ -160,7 +160,7 @@ export const fieldComponents = {
 // Helper function to render a field based on its name
 export function renderField(
   fieldName: string, 
-  props: FieldProps & { options?: any[] }
+  props: FieldProps & { options?: Array<{ value: string; label: string }> }
 ): React.ReactElement | null {
   const FieldComponent = fieldComponents[fieldName as keyof typeof fieldComponents];
   

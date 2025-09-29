@@ -1,5 +1,4 @@
-// NextAuth configuration type - using any for compatibility
-type AuthConfig = any;
+import { AuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -46,7 +45,7 @@ export const authConfig = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({ token, user }: { token: any; user?: any }) {
       if (user) {
         token.userId = user.id;
         
@@ -69,7 +68,7 @@ export const authConfig = {
       }
       return token;
     },
-    async session({ session, token }: any) {
+    async session({ session, token }: { session: any; token: any }) {
       return {
         ...session,
         user: {
@@ -95,4 +94,4 @@ export const authConfig = {
   session: {
     strategy: "jwt" as const,
   },
-} as AuthConfig;
+} as AuthOptions;

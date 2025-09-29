@@ -102,7 +102,7 @@ export async function updateJobStatus(orgSlug: string, data: unknown) {
   const validatedData = jobStatusUpdateSchema.parse(data);
 
   // Validate transition based on organization workflow settings
-  const settings = org.settings as any;
+  const settings = org.settings as Record<string, any>;
   const workflows = settings?.workflows?.jobLifecycle;
   
   if (workflows?.transitions) {

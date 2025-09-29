@@ -1,0 +1,17 @@
+# Generated files
+src/generated/**
+*.generated.*
+
+# Build output
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# Vercel
+.vercel
+
+# Other
+*.config.js
+*.config.mjs

@@ -22,12 +22,13 @@ export function TenantLayout({ children, org }: TenantLayoutProps) {
   }
 
   // Apply theme CSS variables
+  const settings = org.settings as Record<string, any>;
   const themeStyle = org.settings && typeof org.settings === 'object' && 'ui_prefs' in org.settings 
     ? {
-        '--color-primary': (org.settings as any).ui_prefs?.theme?.primary || '#2E3D2F',
-        '--color-accent': (org.settings as any).ui_prefs?.theme?.accent || '#78A265',
-        '--color-surface': (org.settings as any).ui_prefs?.theme?.surface || '#FAFFFA',
-        '--color-cta': (org.settings as any).ui_prefs?.theme?.cta || '#6B5B95',
+        '--color-primary': settings.ui_prefs?.theme?.primary || '#2E3D2F',
+        '--color-accent': settings.ui_prefs?.theme?.accent || '#78A265',
+        '--color-surface': settings.ui_prefs?.theme?.surface || '#FAFFFA',
+        '--color-cta': settings.ui_prefs?.theme?.cta || '#6B5B95',
       } as React.CSSProperties
     : {};
 
