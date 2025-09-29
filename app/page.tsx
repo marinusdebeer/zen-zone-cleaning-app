@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { DashboardButton } from "@/ui/components/dashboard-button";
 
 export default async function HomePage() {
   const session = await auth();
@@ -29,12 +30,9 @@ export default async function HomePage() {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">
                 Welcome back, {session.user.name || session.user.email}!
               </h2>
-              <Link
-                href="/t/zenzone/dashboard"
+              <DashboardButton
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg text-center block transition-colors"
-              >
-                Go to Dashboard
-              </Link>
+              />
             </div>
           ) : (
             <>
