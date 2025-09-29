@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getOrgBySlug } from '@/server/tenancy';
 import { TenantLayout } from '@/ui/components/tenant-layout';
+import { SessionProvider } from '@/ui/components/session-provider';
 
 interface TenantLayoutProps {
   children: React.ReactNode;
@@ -22,5 +23,9 @@ export default async function SlugLayout({ children, params }: TenantLayoutProps
   }
 
   console.log('✅ SlugLayout: Rendering TenantLayout with org:', org.name);
-  return <TenantLayout org={org}>{children}</TenantLayout>;
+  return (
+    <SessionProvider>
+      <TenantLayout org={org}>{children}</TenantLayout>
+    </SessionProvider>
+  );
 }
