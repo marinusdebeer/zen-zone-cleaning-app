@@ -49,16 +49,25 @@ export const authConfig = {
       if (user) {
         token.userId = user.id;
         
-        // Get user organizations
+        // Get all organizations this user belongs to
+        // Supports multi-business: users can be members of multiple organizations
         const orgs = await getUserOrganizations(user.id);
         
-        // If user has only one org, select it automatically
+        // Auto-select organization if user only belongs to one
+        // For users with multiple orgs, they'll need to select via UI
         if (orgs.length === 1) {
+          token.selectedOrgId = orgs[0].id;
+          token.selectedOrgSlug = orgs[0].slug;
+          token.userRole = orgs[0].memberships[0]?.role;
+        } else if (orgs.length > 1 && !token.selectedOrgId) {
+          // Default to first org if multiple exist and none selected
+          // TODO: Add org switcher UI for multi-org users
           token.selectedOrgId = orgs[0].id;
           token.selectedOrgSlug = orgs[0].slug;
           token.userRole = orgs[0].memberships[0]?.role;
         }
         
+        // Store all organizations in session for future org switching
         token.userOrgs = orgs.map(org => ({
           id: org.id,
           name: org.name,

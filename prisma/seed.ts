@@ -10,8 +10,11 @@ async function main() {
 
   const environment = isDev ? 'development' : isPreview ? 'preview' : isProd ? 'production' : 'unknown';
   console.log(`🌱 Seeding database for ${environment} environment...`);
+  console.log('ℹ️  This seed supports multiple businesses - each organization is isolated by RLS');
 
-  // Create Zen Zone Cleaning organization
+  // ==================================================================
+  // ORGANIZATION 1: Zen Zone Cleaning (Primary/Demo Organization)
+  // ==================================================================
   const zenZoneOrg = await prisma.organization.upsert({
     where: { slug: 'zenzone' },
     update: {},
@@ -109,11 +112,64 @@ async function main() {
 
   console.log(`✅ Created membership: ${membership.role} for ${ownerUser.email} in ${zenZoneOrg.name}`);
 
-  console.log('🎉 Seeding completed successfully!');
+  // ==================================================================
+  // ADDITIONAL ORGANIZATIONS (Optional - Add your clients here)
+  // ==================================================================
+  // Example: Add more organizations as needed for your multi-business setup
+  // Each organization's data will be isolated by Row Level Security
+  
+  // Uncomment and customize to add more organizations:
+  /*
+  const org2 = await prisma.organization.upsert({
+    where: { slug: 'acme-cleaning' },
+    update: {},
+    create: {
+      name: 'Acme Cleaning Services',
+      slug: 'acme-cleaning',
+      industry: 'cleaning',
+      settings: {
+        features: {
+          quotes: true,
+          invoices: true,
+        },
+      },
+    },
+  });
+
+  const org2Owner = await prisma.user.upsert({
+    where: { email: 'owner@acmecleaning.com' },
+    update: {},
+    create: {
+      email: 'owner@acmecleaning.com',
+      name: 'Acme Owner',
+      passwordHash: await bcrypt.hash('password123', 10),
+    },
+  });
+
+  await prisma.membership.upsert({
+    where: {
+      userId_orgId: {
+        userId: org2Owner.id,
+        orgId: org2.id,
+      },
+    },
+    update: {},
+    create: {
+      userId: org2Owner.id,
+      orgId: org2.id,
+      role: 'OWNER',
+    },
+  });
+
+  console.log(`✅ Created organization: ${org2.name}`);
+  */
+
+  console.log('\n🎉 Seeding completed successfully!');
   console.log('\n📝 Login credentials:');
   console.log('Email: owner@zenzonecleaning.com');
   console.log('Password: password123');
   console.log('Organization: Zen Zone Cleaning');
+  console.log('\n💡 To add more organizations, edit prisma/seed.ts');
 }
 
 main()
