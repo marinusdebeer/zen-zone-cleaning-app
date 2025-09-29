@@ -4,11 +4,16 @@
   --background: #ffffff;
   --foreground: #171717;
   
-  /* Default theme colors - will be overridden by tenant-specific values */
-  --color-primary: #2E3D2F;
-  --color-accent: #78A265;
-  --color-surface: #FAFFFA;
-  --color-cta: #6B5B95;
+  /* Zen Zone Cleaning Brand Colors */
+  --color-primary: #2e3d2f;        /* Dark green */
+  --color-secondary: #4a7c59;      /* Medium green */
+  --color-accent: #4a8c37;         /* Action green */
+  --color-light-accent: #78A265;   /* Light green accents */
+  --color-surface: #f7faf7;        /* Light green-tinted white */
+  --color-dark-bg: #0c1110;        /* Very dark green */
+  
+  /* Legacy colors for compatibility */
+  --color-cta: #4a8c37;
 }
 
 @theme inline {
@@ -20,7 +25,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0c1110;
     --foreground: #ededed;
   }
 }
@@ -29,6 +34,25 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
 }
 
 /* Utility classes for theme colors */
@@ -40,12 +64,28 @@ body {
   background-color: var(--color-primary);
 }
 
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
+
 .text-accent {
   color: var(--color-accent);
 }
 
 .bg-accent {
   background-color: var(--color-accent);
+}
+
+.text-light-accent {
+  color: var(--color-light-accent);
+}
+
+.bg-light-accent {
+  background-color: var(--color-light-accent);
 }
 
 .text-surface {
@@ -62,4 +102,10 @@ body {
 
 .bg-cta {
   background-color: var(--color-cta);
+}
+
+/* Focus styles for better accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }

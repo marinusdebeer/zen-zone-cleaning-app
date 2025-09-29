@@ -113,7 +113,7 @@ async function main() {
   console.log('\n📝 Login credentials:');
   console.log('Email: owner@zenzonecleaning.com');
   console.log('Password: password123');
-  console.log('Organization: /t/zenzone');
+  console.log('Organization: Zen Zone Cleaning');
 }
 
 main()

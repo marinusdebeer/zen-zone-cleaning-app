@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { createClient } from '@/server/actions/clients';
 
 interface ClientFormProps {
-  orgSlug: string;
+  orgId: string;
 }
 
-export function ClientForm({ orgSlug }: ClientFormProps) {
+export function ClientForm({ orgId }: ClientFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -32,7 +32,7 @@ export function ClientForm({ orgSlug }: ClientFormProps) {
         custom: {},
       };
 
-      await createClient(orgSlug, data);
+      await createClient(orgId, data);
       setSuccess(true);
       
       // Reset form

@@ -28,14 +28,8 @@ export default function SignIn() {
       return;
     }
 
-    // Get the session to check for org selection
-    const session = await getSession() as any;
-    if (session?.selectedOrgSlug) {
-      router.push(`/t/${session.selectedOrgSlug}/dashboard`);
-    } else {
-      // Handle case where user has multiple orgs (future enhancement)
-      router.push('/');
-    }
+    // Redirect to dashboard after successful login
+    router.push('/dashboard');
   };
 
   return (

@@ -1,10 +1,10 @@
-# Zen Zone Cleaning - Multi-Tenant SaaS Starter
+# Zen Zone Cleaning - Service Business Management App
 
-A production-ready Next.js multi-tenant SaaS application for service businesses, starting with cleaning companies.
+A production-ready Next.js application for managing service businesses, with built-in database multi-tenancy for data isolation.
 
 ## Features
 
-- **Multi-tenant architecture** with Row Level Security (RLS)
+- **Database multi-tenancy** with Row Level Security (RLS) for secure data isolation
 - **Config-driven UI** and workflows via JSON settings
 - **Secure authentication** with Auth.js
 - **Type-safe APIs** with Prisma and Zod
@@ -64,17 +64,17 @@ A production-ready Next.js multi-tenant SaaS application for service businesses,
    ```
 
 5. **Visit the application:**
-   - Go to http://localhost:3000/t/zenzone/dashboard
+   - Go to http://localhost:3000
    - Login with: `owner@zenzonecleaning.com` / `password123`
 
 ## Project Structure
 
 ```
 /app                          # Next.js App Router pages
-  /(app)/t/[slug]/           # Tenant-specific routes
-    /dashboard/              # Organization dashboard
+  /(dashboard)/              # Dashboard routes (grouped without URL segment)
+    /dashboard/              # Main dashboard
     /clients/                # Client management
-    /jobs/                   # Job management & wizard
+    /jobs/                   # Job management
     /invoices/               # Invoice management
   /api/auth/                 # Auth.js API routes
   /auth/                     # Auth pages (signin, error)
@@ -110,11 +110,12 @@ A production-ready Next.js multi-tenant SaaS application for service businesses,
 - **LineItem:** Invoice line items
 - **Invoice:** Billing and payment tracking
 
-### Multi-Tenancy
+### Database Multi-Tenancy
 
-- **Row Level Security (RLS)** on all tenant data
-- **Automatic filtering** by organization ID
-- **Secure by default** - no cross-tenant data access
+- **Row Level Security (RLS)** ensures complete data isolation between organizations
+- **Automatic filtering** by organization ID in all queries
+- **Secure by default** - no cross-tenant data access possible
+- **Session-based** organization context (no URL-based tenancy)
 
 ## Configuration
 

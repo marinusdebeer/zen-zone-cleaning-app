@@ -1,10 +1,7 @@
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from 'next/link';
-import { getOrgBySlug } from '@/server/tenancy';
 import { getJobs } from '@/server/actions/jobs';
-
-interface JobsPageProps {
-  params: Promise<{ slug: string }>;
-}
 
 function formatDate(date: Date | null) {
   if (!date) return 'Not scheduled';
@@ -30,21 +27,27 @@ function getStatusColor(status: string) {
   }
 }
 
-export default async function JobsPage({ params }: JobsPageProps) {
-  const { slug } = await params;
-  const org = await getOrgBySlug(slug);
-  if (!org) {
-    return <div>Organization not found</div>;
+export default async function JobsPage() {
+  const session = await auth();
+  
+  if (!session?.user) {
+    redirect('/auth/signin');
   }
 
-  const jobs = await getJobs(org.id);
+  const selectedOrgId = (session as any).selectedOrgId;
+  
+  if (!selectedOrgId) {
+    return <div>No organization selected</div>;
+  }
+
+  const jobs = await getJobs(selectedOrgId);
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Jobs</h1>
         <Link
-          href={`/t/${slug}/jobs/new`}
+          href="/jobs/new"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium"
         >
           Create New Job
@@ -60,7 +63,7 @@ export default async function JobsPage({ params }: JobsPageProps) {
                 Create your first job to get started
               </p>
               <Link
-                href={`/t/${slug}/jobs/new`}
+                href="/jobs/new"
                 className="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
                 Create Job
@@ -119,7 +122,7 @@ export default async function JobsPage({ params }: JobsPageProps) {
                     
                     <div className="ml-4 flex flex-col space-y-2">
                       <Link
-                        href={`/t/${slug}/jobs/${job.id}`}
+                        href={`/jobs/${job.id}`}
                         className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                       >
                         View Details
@@ -127,7 +130,7 @@ export default async function JobsPage({ params }: JobsPageProps) {
                       
                       {job.status === 'Completed' && (
                         <Link
-                          href={`/t/${slug}/invoices/new?jobId=${job.id}`}
+                          href={`/invoices/new?jobId=${job.id}`}
                           className="text-green-600 hover:text-green-800 text-sm font-medium"
                         >
                           Create Invoice

@@ -1,7 +1,5 @@
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { DashboardButton } from "@/ui/components/dashboard-button";
 
 export default async function HomePage() {
   const session = await auth();
@@ -26,13 +24,16 @@ export default async function HomePage() {
         {/* Demo Access */}
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8 mb-12">
           {session?.user ? (
-            <div className="text-center">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <div className="text-center space-y-4">
+              <h2 className="text-2xl font-semibold text-gray-900">
                 Welcome back, {session.user.name || session.user.email}!
               </h2>
-              <DashboardButton
+              <Link
+                href="/dashboard"
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg text-center block transition-colors"
-              />
+              >
+                Go to Dashboard
+              </Link>
             </div>
           ) : (
             <>

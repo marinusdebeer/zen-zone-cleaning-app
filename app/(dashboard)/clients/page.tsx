@@ -1,20 +1,23 @@
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from 'next/link';
-import { getOrgBySlug } from '@/server/tenancy';
 import { getClients } from '@/server/actions/clients';
 import { ClientForm } from './client-form';
 
-interface ClientsPageProps {
-  params: Promise<{ slug: string }>;
-}
-
-export default async function ClientsPage({ params }: ClientsPageProps) {
-  const { slug } = await params;
-  const org = await getOrgBySlug(slug);
-  if (!org) {
-    return <div>Organization not found</div>;
+export default async function ClientsPage() {
+  const session = await auth();
+  
+  if (!session?.user) {
+    redirect('/auth/signin');
   }
 
-  const clients = await getClients(org.id);
+  const selectedOrgId = (session as any).selectedOrgId;
+  
+  if (!selectedOrgId) {
+    return <div>No organization selected</div>;
+  }
+
+  const clients = await getClients(selectedOrgId);
 
   return (
     <div className="space-y-6">
@@ -63,7 +66,7 @@ export default async function ClientsPage({ params }: ClientsPageProps) {
                           </div>
                         </div>
                         <Link
-                          href={`/t/${slug}/clients/${client.id}`}
+                          href={`/clients/${client.id}`}
                           className="text-blue-600 hover:text-blue-800 text-sm"
                         >
                           View Details
@@ -84,7 +87,7 @@ export default async function ClientsPage({ params }: ClientsPageProps) {
               <h3 className="text-lg font-medium text-gray-900 mb-4">
                 Add New Client
               </h3>
-              <ClientForm orgSlug={slug} />
+              <ClientForm orgId={selectedOrgId} />
             </div>
           </div>
         </div>

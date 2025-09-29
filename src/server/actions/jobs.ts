@@ -34,24 +34,19 @@ export async function getJob(orgId: string, jobId: string) {
   });
 }
 
-export async function createJob(orgSlug: string, data: unknown) {
+export async function createJob(orgId: string, data: unknown) {
   const session = await auth();
   if (!session?.user) {
     throw new Error('Unauthorized');
   }
 
-  const org = await getOrgBySlug(orgSlug);
-  if (!org) {
-    throw new Error('Organization not found');
-  }
-
   const validatedData = createJobSchema.parse(data);
 
-  return withOrgContext(org.id, async () => {
+  return withOrgContext(orgId, async () => {
     const job = await prisma.job.create({
       data: {
         ...validatedData,
-        orgId: org.id,
+        orgId: orgId,
       },
       include: {
         client: true,
@@ -59,7 +54,7 @@ export async function createJob(orgSlug: string, data: unknown) {
       },
     });
 
-    revalidatePath(`/t/${orgSlug}/jobs`);
+    revalidatePath('/jobs');
     return job;
   });
 }
@@ -83,12 +78,12 @@ export async function updateJob(orgId: string, data: unknown) {
       },
     });
 
-    revalidatePath(`/t/${orgId}/jobs`);
+    revalidatePath('/jobs');
     return job;
   });
 }
 
-export async function updateJobStatus(orgSlug: string, data: unknown) {
+export async function updateJobStatus(orgId: string, data: unknown) {
   const session = await auth();
   if (!session?.user) {
     throw new Error('Unauthorized');
@@ -131,7 +126,7 @@ export async function updateJobStatus(orgSlug: string, data: unknown) {
       },
     });
 
-    revalidatePath(`/t/${orgSlug}/jobs`);
+    revalidatePath('/jobs');
     return job;
   });
 }
@@ -147,7 +142,7 @@ export async function deleteJob(orgId: string, jobId: string) {
       where: { id: jobId },
     });
 
-    revalidatePath(`/t/${orgId}/jobs`);
+    revalidatePath('/jobs');
   });
 }
 

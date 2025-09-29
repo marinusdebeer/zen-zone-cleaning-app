@@ -37,20 +37,15 @@ export async function getInvoice(orgId: string, invoiceId: string) {
   });
 }
 
-export async function createInvoice(orgSlug: string, data: unknown) {
+export async function createInvoice(orgId: string, data: unknown) {
   const session = await auth();
   if (!session?.user) {
     throw new Error('Unauthorized');
   }
 
-  const org = await getOrgBySlug(orgSlug);
-  if (!org) {
-    throw new Error('Organization not found');
-  }
-
   const validatedData = createInvoiceSchema.parse(data);
 
-  return withOrgContext(org.id, async () => {
+  return withOrgContext(orgId, async () => {
     // Calculate total from line items
     const total = validatedData.lineItems.reduce((sum, item) => {
       const itemTotal = item.qty * item.unitPrice;
@@ -89,7 +84,7 @@ export async function createInvoice(orgSlug: string, data: unknown) {
       return createdInvoice;
     });
 
-    revalidatePath(`/t/${orgSlug}/invoices`);
+    revalidatePath('/invoices');
     return invoice;
   });
 }
@@ -127,7 +122,7 @@ export async function updateInvoice(orgId: string, data: unknown) {
       },
     });
 
-    revalidatePath(`/t/${orgId}/invoices`);
+    revalidatePath('/invoices');
     return invoice;
   });
 }
@@ -143,6 +138,6 @@ export async function deleteInvoice(orgId: string, invoiceId: string) {
       where: { id: invoiceId },
     });
 
-    revalidatePath(`/t/${orgId}/invoices`);
+    revalidatePath('/invoices');
   });
 }

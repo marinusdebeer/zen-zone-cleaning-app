@@ -30,28 +30,23 @@ export async function getClient(orgId: string, clientId: string) {
   });
 }
 
-export async function createClient(orgSlug: string, data: unknown) {
+export async function createClient(orgId: string, data: unknown) {
   const session = await auth();
   if (!session?.user) {
     throw new Error('Unauthorized');
   }
 
-  const org = await getOrgBySlug(orgSlug);
-  if (!org) {
-    throw new Error('Organization not found');
-  }
-
   const validatedData = createClientSchema.parse(data);
 
-  return withOrgContext(org.id, async () => {
+  return withOrgContext(orgId, async () => {
     const client = await prisma.client.create({
       data: {
         ...validatedData,
-        orgId: org.id,
+        orgId: orgId,
       },
     });
 
-    revalidatePath(`/t/${orgSlug}/clients`);
+    revalidatePath('/clients');
     return client;
   });
 }
@@ -71,7 +66,7 @@ export async function updateClient(orgId: string, data: unknown) {
       data: updateData,
     });
 
-    revalidatePath(`/t/${orgId}/clients`);
+    revalidatePath('/clients');
     return client;
   });
 }
@@ -87,6 +82,6 @@ export async function deleteClient(orgId: string, clientId: string) {
       where: { id: clientId },
     });
 
-    revalidatePath(`/t/${orgId}/clients`);
+    revalidatePath('/clients');
   });
 }
