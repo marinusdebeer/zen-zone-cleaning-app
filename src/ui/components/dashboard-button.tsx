@@ -76,6 +76,16 @@ export function DashboardButton({ className }: DashboardButtonProps) {
       
       <button
         onClick={() => {
+          console.log('🔗 Direct navigation to static tenant debug');
+          window.location.href = '/t/debug';
+        }}
+        className="w-full bg-purple-300 hover:bg-purple-400 text-white font-semibold py-1 px-4 rounded text-center block text-xs"
+      >
+        🟣 Static Tenant Debug
+      </button>
+      
+      <button
+        onClick={() => {
           console.log('🔗 Direct navigation to test');
           window.location.href = '/t/zenzone/test';
         }}

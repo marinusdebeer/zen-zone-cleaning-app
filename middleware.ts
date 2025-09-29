@@ -4,6 +4,11 @@ import type { NextRequest } from 'next/server';
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
+  // Debug logging for tenant routes
+  if (pathname.startsWith('/t/')) {
+    console.log('🔍 Middleware: Tenant route detected:', pathname);
+  }
+  
   // Skip middleware for API routes, static files, and auth routes
   if (
     pathname.startsWith('/api/') ||
@@ -15,6 +20,7 @@ export function middleware(request: NextRequest) {
   }
 
   // For now, just pass through - ready for future subdomain routing
+  console.log('🔍 Middleware: Processing path:', pathname);
   return NextResponse.next();
 }
 
