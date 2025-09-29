@@ -15,19 +15,38 @@ export function TenantLayout({ children, org }: TenantLayoutProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
   
+  console.log('🔍 TenantLayout: session status:', status, 'session:', !!session);
+  
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin');
+    // Only redirect if we're definitely unauthenticated AND not loading
+    if (status === 'unauthenticated' && status !== 'loading') {
+      console.log('🔄 TenantLayout: Redirecting to signin');
+      // Add a small delay to prevent rapid redirects
+      setTimeout(() => {
+        router.push('/auth/signin');
+      }, 100);
     }
   }, [status, router]);
   
+  // Show loading state while session is loading
   if (status === 'loading') {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    console.log('⏳ TenantLayout: Loading session...');
+    return <div className="min-h-screen flex items-center justify-center">Loading session...</div>;
   }
   
+  // If definitely unauthenticated, show redirecting message
   if (status === 'unauthenticated') {
-    return <div className="min-h-screen flex items-center justify-center">Redirecting...</div>;
+    console.log('🚫 TenantLayout: Unauthenticated, redirecting...');
+    return <div className="min-h-screen flex items-center justify-center">Redirecting to sign in...</div>;
   }
+  
+  // If authenticated but no session data yet, wait
+  if (!session?.user) {
+    console.log('⏳ TenantLayout: Waiting for session data...');
+    return <div className="min-h-screen flex items-center justify-center">Loading user data...</div>;
+  }
+  
+  console.log('✅ TenantLayout: Authenticated, rendering content');
 
   // Apply theme CSS variables
   const settings = org.settings as Record<string, any>;

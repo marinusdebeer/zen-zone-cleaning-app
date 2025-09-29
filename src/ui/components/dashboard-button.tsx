@@ -53,13 +53,25 @@ export function DashboardButton({ className }: DashboardButtonProps) {
         📊 Simple Dashboard
       </Link>
       
-      {/* Fallback button */}
+      {/* Direct navigation buttons */}
       <button
-        onClick={handleClick}
-        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded text-center block text-xs"
-        title="Fallback navigation"
+        onClick={() => {
+          console.log('🔗 Direct navigation to test');
+          window.location.href = '/t/zenzone/test';
+        }}
+        className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-1 px-4 rounded text-center block text-xs"
       >
-        🔄 Force Navigate
+        🔗 Direct Test Route
+      </button>
+      
+      <button
+        onClick={() => {
+          console.log('🔗 Direct navigation to dashboard');
+          window.location.href = '/t/zenzone/dashboard';
+        }}
+        className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-1 px-4 rounded text-center block text-xs"
+      >
+        🔗 Direct Dashboard
       </button>
     </div>
   );
