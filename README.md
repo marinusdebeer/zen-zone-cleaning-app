@@ -1,36 +1,208 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Zen Zone Cleaning - Multi-Tenant SaaS Starter
 
-## Getting Started
+A production-ready Next.js multi-tenant SaaS application for service businesses, starting with cleaning companies.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Multi-tenant architecture** with Row Level Security (RLS)
+- **Config-driven UI** and workflows via JSON settings
+- **Secure authentication** with Auth.js
+- **Type-safe APIs** with Prisma and Zod
+- **Responsive design** with Tailwind CSS
+- **Theme customization** per organization
+
+## Tech Stack
+
+- **Frontend:** Next.js 14+ with App Router, TypeScript, Tailwind CSS
+- **Backend:** PostgreSQL with Prisma ORM, Row Level Security
+- **Authentication:** Auth.js with credentials provider
+- **Validation:** Zod schemas
+- **Database:** PostgreSQL (Neon recommended)
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL database (local or Neon)
+- npm or yarn
+
+### Setup
+
+1. **Clone and install dependencies:**
+   ```bash
+   git clone <repository-url>
+   cd zen-zone-cleaning-app
+   npm install
+   ```
+
+2. **Environment setup:**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Update your `.env` file with:
+   ```
+   DATABASE_URL="postgresql://username:password@localhost:5432/zenzone?schema=public"
+   NEXTAUTH_URL="http://localhost:3000"
+   NEXTAUTH_SECRET="your-secret-key-here"
+   ```
+
+3. **Database setup:**
+   ```bash
+   npm run db:setup
+   ```
+   This will:
+   - Generate Prisma client
+   - Push schema to database
+   - Apply RLS migrations
+   - Seed with demo data
+
+4. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+5. **Visit the application:**
+   - Go to http://localhost:3000/t/zenzone/dashboard
+   - Login with: `owner@zenzonecleaning.com` / `password123`
+
+## Project Structure
+
+```
+/app                          # Next.js App Router pages
+  /(app)/t/[slug]/           # Tenant-specific routes
+    /dashboard/              # Organization dashboard
+    /clients/                # Client management
+    /jobs/                   # Job management & wizard
+    /invoices/               # Invoice management
+  /api/auth/                 # Auth.js API routes
+  /auth/                     # Auth pages (signin, error)
+
+/src
+  /server/                   # Server-side code
+    /actions/                # Server actions
+    /validators/             # Zod schemas
+    auth.ts                  # Auth.js configuration
+    db.ts                    # Prisma client
+    tenancy.ts              # Multi-tenant helpers
+  /ui/                       # UI components
+    /components/             # React components
+    registry.tsx             # Field component registry
+  /lib/                      # Utility functions
+
+/prisma
+  schema.prisma              # Database schema
+  seed.ts                   # Database seeding
+  /migrations/              # Database migrations
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Database Schema
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Core Models
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Organization:** Multi-tenant root with settings JSON
+- **User:** Authentication and profile data
+- **Membership:** User-organization relationships with roles
+- **Client:** Customer information with flexible contact data
+- **Property:** Client properties and locations
+- **Job:** Service jobs with configurable workflows
+- **LineItem:** Invoice line items
+- **Invoice:** Billing and payment tracking
 
-## Learn More
+### Multi-Tenancy
 
-To learn more about Next.js, take a look at the following resources:
+- **Row Level Security (RLS)** on all tenant data
+- **Automatic filtering** by organization ID
+- **Secure by default** - no cross-tenant data access
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Organizations can be customized via the `settings` JSON field:
 
-## Deploy on Vercel
+```json
+{
+  "ui_prefs": {
+    "theme": {
+      "primary": "#2E3D2F",
+      "accent": "#78A265", 
+      "surface": "#FAFFFA",
+      "cta": "#6B5B95"
+    }
+  },
+  "workflows": {
+    "jobLifecycle": {
+      "states": ["Draft", "Scheduled", "InProgress", "Completed"],
+      "transitions": { "Draft": ["Scheduled"], ... },
+      "createWizard": {
+        "steps": [
+          { "name": "Client", "fields": ["clientId"] },
+          { "name": "Details", "fields": ["title", "scheduledAt"] }
+        ]
+      }
+    }
+  }
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Available Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run prisma:generate` - Generate Prisma client
+- `npm run prisma:push` - Push schema to database
+- `npm run seed` - Seed database with demo data
+- `npm run db:setup` - Complete database setup
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Connect to Vercel
+3. Set environment variables in Vercel dashboard
+4. Deploy
+
+### Database (Neon)
+
+1. Create a Neon database
+2. Update `DATABASE_URL` in your environment
+3. Run `npm run db:setup` in Vercel's build settings
+
+## Customization
+
+### Adding New Fields
+
+1. Update the Prisma schema
+2. Add field to the component registry (`src/ui/registry.tsx`)
+3. Update organization settings to include the field
+4. Apply database migration
+
+### Theme Customization
+
+Update the organization's `settings.ui_prefs.theme` to customize colors. CSS variables are automatically applied.
+
+### Workflow Configuration
+
+Modify `settings.workflows.jobLifecycle` to customize:
+- Available states
+- State transitions  
+- Job creation wizard steps
+- Required fields
+
+## Security
+
+- **Row Level Security** prevents cross-tenant access
+- **Server Actions** validate all inputs with Zod
+- **Authentication** required for all tenant routes
+- **SQL injection protection** via Prisma
+- **XSS prevention** via React's built-in escaping
+
+## License
+
+MIT License - see LICENSE file for details
+
+## Support
+
+For questions or issues, please open a GitHub issue or contact the development team.

@@ -1,0 +1,94 @@
+import Link from 'next/link';
+import { getOrgBySlug } from '@/server/tenancy';
+import { getClients } from '@/server/actions/clients';
+import { ClientForm } from './client-form';
+
+interface ClientsPageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function ClientsPage({ params }: ClientsPageProps) {
+  const { slug } = await params;
+  const org = await getOrgBySlug(slug);
+  if (!org) {
+    return <div>Organization not found</div>;
+  }
+
+  const clients = await getClients(org.id);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Clients List */}
+        <div className="lg:col-span-2">
+          <div className="bg-white shadow rounded-lg">
+            <div className="px-4 py-5 sm:p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Client Directory
+              </h3>
+              {clients.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No clients found</p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    Create your first client using the form
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {clients.map((client) => (
+                    <div key={client.id} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-medium text-gray-900">{client.name}</h4>
+                          <div className="mt-1 space-y-1">
+                            {Array.isArray(client.emails) && client.emails.length > 0 && (
+                              <p className="text-sm text-gray-600">
+                                📧 {(client.emails as string[]).join(', ')}
+                              </p>
+                            )}
+                            {Array.isArray(client.phones) && client.phones.length > 0 && (
+                              <p className="text-sm text-gray-600">
+                                📞 {(client.phones as string[]).join(', ')}
+                              </p>
+                            )}
+                            {Array.isArray(client.addresses) && client.addresses.length > 0 && (
+                              <p className="text-sm text-gray-600">
+                                📍 {(client.addresses as string[]).join('; ')}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <Link
+                          href={`/t/${slug}/clients/${client.id}`}
+                          className="text-blue-600 hover:text-blue-800 text-sm"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Create Client Form */}
+        <div>
+          <div className="bg-white shadow rounded-lg">
+            <div className="px-4 py-5 sm:p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Add New Client
+              </h3>
+              <ClientForm orgSlug={slug} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

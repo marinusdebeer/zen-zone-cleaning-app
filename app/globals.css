@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  
+  /* Default theme colors - will be overridden by tenant-specific values */
+  --color-primary: #2E3D2F;
+  --color-accent: #78A265;
+  --color-surface: #FAFFFA;
+  --color-cta: #6B5B95;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Utility classes for theme colors */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.text-surface {
+  color: var(--color-surface);
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.text-cta {
+  color: var(--color-cta);
+}
+
+.bg-cta {
+  background-color: var(--color-cta);
+}
