@@ -1,7 +1,8 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { Organization } from '@/generated/prisma';
 
@@ -12,13 +13,20 @@ interface TenantLayoutProps {
 
 export function TenantLayout({ children, org }: TenantLayoutProps) {
   const { data: session, status } = useSession();
+  const router = useRouter();
+  
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin');
+    }
+  }, [status, router]);
   
   if (status === 'loading') {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
   
   if (status === 'unauthenticated') {
-    redirect('/auth/signin');
+    return <div className="min-h-screen flex items-center justify-center">Redirecting...</div>;
   }
 
   // Apply theme CSS variables
