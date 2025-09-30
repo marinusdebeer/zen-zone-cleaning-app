@@ -25,13 +25,13 @@ interface MessagesClientProps {
 export function MessagesClient({ conversations }: MessagesClientProps) {
   return (
     <FullPageWrapper>
-      <div className="flex flex-col h-full bg-[#f7faf7] dark:bg-gray-900">
+      <div className="flex flex-col h-full bg-brand-bg-secondary">
         {/* Header & Stats Bar */}
         <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-                <MessageSquare className="w-7 h-7 mr-2 text-[#4a7c59]" />
+                <MessageSquare className="w-7 h-7 mr-2 text-brand" />
                 Messages
               </h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">Communicate with your clients</p>
@@ -40,14 +40,14 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
 
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-[#f7faf7] dark:bg-gray-700/50 rounded-lg p-4">
+            <div className="bg-brand-bg border border-brand-border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Total Conversations</p>
                   <p className="text-xl font-bold text-gray-900 dark:text-white mt-1">{conversations.length}</p>
                 </div>
-                <div className="p-2 bg-[#4a7c59]/10 rounded-lg">
-                  <MessageSquare className="h-5 w-5 text-[#4a7c59]" />
+                <div className="p-2 bg-brand/10 rounded-lg">
+                  <MessageSquare className="h-5 w-5 text-brand" />
                 </div>
               </div>
             </div>
@@ -66,14 +66,14 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
               </div>
             </div>
 
-            <div className="bg-[#f7faf7] dark:bg-gray-700/50 rounded-lg p-4">
+            <div className="bg-brand-bg border border-brand-border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Avg. Response Time</p>
-                  <p className="text-xl font-bold text-[#4a7c59] mt-1">15m</p>
+                  <p className="text-xl font-bold text-brand mt-1">15m</p>
                 </div>
-                <div className="p-2 bg-[#4a7c59]/10 rounded-lg">
-                  <Clock className="h-5 w-5 text-[#4a7c59]" />
+                <div className="p-2 bg-brand/10 rounded-lg">
+                  <Clock className="h-5 w-5 text-brand" />
                 </div>
               </div>
             </div>
@@ -98,7 +98,7 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-start space-x-3 flex-1">
-                        <div className="w-10 h-10 bg-[#4a7c59] rounded-full flex items-center justify-center text-white font-semibold">
+                        <div className="w-10 h-10 bg-brand rounded-full flex items-center justify-center text-white font-semibold">
                           {conv.clientName.split(' ').map(n => n[0]).join('')}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -149,8 +149,8 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
                     <div
                       className={`max-w-[70%] rounded-lg p-3 ${
                         msg.sender === 'business'
-                          ? 'bg-[#4a7c59] text-white'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                          ? 'bg-brand text-white'
+                          : 'bg-brand-bg-tertiary'
                       }`}
                     >
                       <p className="text-sm">{msg.text}</p>
@@ -170,7 +170,7 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
                     placeholder="Type your message..."
                     className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
-                  <button className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors">
+                  <button className="bg-brand text-white font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all hover:bg-brand-dark">
                     <Send className="w-5 h-5" />
                   </button>
                 </div>

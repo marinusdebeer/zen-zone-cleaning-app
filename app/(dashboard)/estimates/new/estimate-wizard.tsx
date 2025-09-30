@@ -87,8 +87,8 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <FileText className="w-7 h-7 mr-2 text-[#4a7c59]" />
+          <h1 className="text-2xl font-bold flex items-center">
+            <FileText className="w-7 h-7 mr-2 text-brand" />
             Create New Estimate
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Prepare a quote for a client or lead</p>
@@ -112,8 +112,8 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Recipient Selection */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <Users className="w-5 h-5 mr-2 text-[#4a7c59]" />
+          <h2 className="text-lg font-semibold mb-4 flex items-center">
+            <Users className="w-5 h-5 mr-2 text-brand" />
             Recipient
           </h2>
           
@@ -125,11 +125,11 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
                 onClick={() => setFormData({ ...formData, forType: 'client', leadId: '' })}
                 className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
                   formData.forType === 'client'
-                    ? 'bg-[#f7faf7] dark:bg-gray-700 border-[#4a7c59]'
-                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                    ? 'bg-brand-bg-tertiary border-brand'
+                    : 'bg-brand-bg border border-brand-border rounded-lg p-4 shadow-sm hover:border-brand-border-hover'
                 }`}
               >
-                <Users className="w-5 h-5 mx-auto mb-2 text-[#4a7c59]" />
+                <Users className="w-5 h-5 mx-auto mb-2 text-brand" />
                 <p className="font-medium text-gray-900 dark:text-white">Existing Client</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">For current clients</p>
               </button>

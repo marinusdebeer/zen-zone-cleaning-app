@@ -126,78 +126,78 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
     switch (role) {
       case 'OWNER':
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-900/30 text-purple-300 border border-purple-700">
+          <span className="admin-badge-owner inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold">
             <Shield className="w-3 h-3 mr-1" />
             Owner
           </span>
         );
       case 'ADMIN':
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-900/30 text-blue-300 border border-blue-700">
+          <span className="admin-badge-admin inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold">
             <UsersIcon className="w-3 h-3 mr-1" />
             Admin
           </span>
         );
       case 'STAFF':
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-900/30 text-green-300 border border-green-700">
+          <span className="admin-badge-staff inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold">
             <User className="w-3 h-3 mr-1" />
             Staff
           </span>
         );
       default:
-        return <span className="text-gray-400">{role}</span>;
+        return <span className="admin-text-tertiary">{role}</span>;
     }
   };
 
   const getAvatarColor = (role: string) => {
     switch (role) {
       case 'OWNER':
-        return 'bg-gradient-to-br from-purple-500 to-purple-700';
+        return 'admin-brand-gradient-accent';
       case 'ADMIN':
-        return 'bg-gradient-to-br from-blue-500 to-blue-700';
+        return 'admin-brand-gradient';
       case 'STAFF':
-        return 'bg-gradient-to-br from-green-500 to-green-700';
+        return 'admin-brand-gradient';
       default:
-        return 'bg-gradient-to-br from-gray-500 to-gray-700';
+        return 'admin-bg-tertiary';
     }
   };
 
   return (
     <>
-      <div className="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
+      <div className="admin-card overflow-hidden">
         {/* Header */}
-        <div className="p-6 border-b border-gray-700">
+        <div className="pb-6 border-b admin-border">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-semibold text-white flex items-center">
-              <UsersIcon className="w-5 h-5 mr-2 text-blue-400" />
+            <h2 className="text-lg font-semibold flex items-center">
+              <UsersIcon className="w-5 h-5 mr-2 admin-icon-primary" />
               Team Members ({memberships.length})
             </h2>
             <button 
               onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-lg"
+              className="admin-btn-success inline-flex items-center px-4 py-2 rounded-lg shadow-lg"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add User
             </button>
           </div>
-          <p className="text-sm text-gray-400">Manage user access, roles, and passwords</p>
+          <p className="text-sm">Manage user access, roles, and passwords</p>
         
         {/* Success Message */}
         {successMessage && (
-          <div className="mt-4 bg-green-900/30 border border-green-600 rounded-lg p-3 flex items-center">
-            <CheckCircle className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" />
-            <p className="text-sm text-green-300">{successMessage}</p>
+          <div className="mt-4 admin-card-secondary border p-3 flex items-center" style={{ borderColor: 'var(--admin-success)' }}>
+            <CheckCircle className="w-5 h-5 admin-icon-success mr-2 flex-shrink-0" />
+            <p className="text-sm">{successMessage}</p>
           </div>
         )}
       </div>
       
       {/* Users List */}
-      <div className="divide-y divide-gray-700">
+      <div className="divide-y" style={{ borderColor: 'var(--admin-border)' }}>
         {memberships.map((membership) => (
           <div 
             key={membership.id} 
-            className="p-6 hover:bg-gray-750 transition-colors"
+            className="admin-table-row p-6"
           >
             <div className="flex items-start justify-between gap-6">
               {/* User Info */}
@@ -207,24 +207,24 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2 mb-1">
-                    <h3 className="font-semibold text-white text-base truncate">
+                    <h3 className="font-semibold text-base truncate">
                       {membership.user.name}
                     </h3>
                     {getRoleBadge(membership.role)}
                   </div>
-                  <div className="flex items-center text-sm text-gray-400 mb-3">
+                  <div className="flex items-center text-sm admin-text-secondary mb-3">
                     <Mail className="w-4 h-4 mr-1.5 flex-shrink-0" />
                     <span className="truncate">{membership.user.email}</span>
                   </div>
                   
                   {/* Role Selector */}
                   <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-500 font-medium">Change Role:</span>
+                    <span className="text-xs admin-text-tertiary font-medium">Change Role:</span>
                     <select
                       value={membership.role}
                       onChange={(e) => handleRoleChange(membership.id, e.target.value as any)}
                       disabled={loading === membership.id}
-                      className="px-3 py-1.5 bg-gray-700 border border-gray-600 text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 transition-colors"
+                      className="admin-input px-3 py-1.5 rounded-lg text-sm disabled:opacity-50"
                     >
                       <option value="OWNER">👑 Owner</option>
                       <option value="ADMIN">🔷 Admin</option>
@@ -239,7 +239,7 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
                 <button 
                   onClick={() => handlePasswordReset(membership.user.email, membership.user.name)}
                   disabled={loading === membership.user.email}
-                  className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 shadow-lg"
+                  className="admin-btn-primary inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg disabled:opacity-50 shadow-lg"
                   title="Send password reset email"
                 >
                   <Key className="w-4 h-4 mr-2" />
@@ -248,7 +248,7 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
                 <button 
                   onClick={() => handleRemoveUser(membership.id, membership.user.name, membership.user.email)}
                   disabled={loading === membership.id}
-                  className="inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 shadow-lg"
+                  className="admin-btn-danger inline-flex items-center justify-center px-4 py-2 text-sm rounded-lg disabled:opacity-50 shadow-lg"
                   title="Permanently delete user and remove access"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
@@ -261,11 +261,11 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
 
         {memberships.length === 0 && (
           <div className="text-center py-12">
-            <UsersIcon className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 mb-4">No team members yet</p>
+            <UsersIcon className="w-12 h-12 admin-text-tertiary mx-auto mb-4" />
+            <p className="mb-4">No team members yet</p>
             <button 
               onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="admin-btn-primary inline-flex items-center px-4 py-2 rounded-lg"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add First User
@@ -278,15 +278,15 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
     {/* Add User Modal */}
     {showAddModal && (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-gray-800 border border-gray-700 rounded-xl shadow-2xl max-w-md w-full">
+        <div className="admin-card max-w-md w-full shadow-2xl">
           {/* Modal Header */}
-          <div className="p-6 border-b border-gray-700 flex items-center justify-between">
+          <div className="pb-6 border-b admin-border flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-bold text-white flex items-center">
-                <Plus className="w-6 h-6 mr-2 text-green-400" />
+              <h3 className="text-xl font-bold flex items-center">
+                <Plus className="w-6 h-6 mr-2 admin-icon-success" />
                 Add New User
               </h3>
-              <p className="text-sm text-gray-400 mt-1">Create a new team member account</p>
+              <p className="text-sm mt-1">Create a new team member account</p>
             </div>
             <button
               onClick={() => {
@@ -294,7 +294,7 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
                 setAddUserError(null);
                 setTempPassword(null);
               }}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="admin-text-secondary hover:admin-text-primary transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
@@ -311,10 +311,10 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
 
             {/* Success Message with Temp Password */}
             {tempPassword && (
-              <div className="bg-green-900/30 border border-green-600 rounded-lg p-4">
+              <div className="admin-card-secondary border" style={{ borderColor: 'var(--admin-success)' }}>
                 <div className="flex items-center mb-2">
-                  <CheckCircle className="w-5 h-5 text-green-400 mr-2" />
-                  <p className="text-sm font-semibold text-green-300">User created successfully!</p>
+                  <CheckCircle className="w-5 h-5 admin-icon-success mr-2" />
+                  <p className="text-sm font-semibold">User created successfully!</p>
                 </div>
                 <div className="bg-gray-900 border border-gray-700 rounded p-3 mt-3">
                   <p className="text-xs text-gray-400 mb-1">Temporary Password:</p>
@@ -326,7 +326,7 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
 
             {/* Name Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium mb-2">
                 Full Name
               </label>
               <input
@@ -335,14 +335,14 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
                 onChange={(e) => setAddUserForm({ ...addUserForm, name: e.target.value })}
                 required
                 disabled={addUserLoading || !!tempPassword}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-50"
+                className="admin-input w-full px-4 py-2 rounded-lg disabled:opacity-50"
                 placeholder="John Doe"
               />
             </div>
 
             {/* Email Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium mb-2">
                 Email Address
               </label>
               <input
@@ -351,21 +351,21 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
                 onChange={(e) => setAddUserForm({ ...addUserForm, email: e.target.value })}
                 required
                 disabled={addUserLoading || !!tempPassword}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-50"
+                className="admin-input w-full px-4 py-2 rounded-lg disabled:opacity-50"
                 placeholder="john@example.com"
               />
             </div>
 
             {/* Role Select */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium mb-2">
                 Role
               </label>
               <select
                 value={addUserForm.role}
                 onChange={(e) => setAddUserForm({ ...addUserForm, role: e.target.value as any })}
                 disabled={addUserLoading || !!tempPassword}
-                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-50"
+                className="admin-input w-full px-4 py-2 rounded-lg disabled:opacity-50"
               >
                 <option value="STAFF">👤 Staff - Basic access</option>
                 <option value="ADMIN">🔷 Admin - Full management access</option>
@@ -375,8 +375,8 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
 
             {/* Info Note */}
             {!tempPassword && (
-              <div className="bg-blue-900/20 border border-blue-700/50 rounded-lg p-3">
-                <p className="text-xs text-blue-300">
+              <div className="admin-card-secondary">
+                <p className="text-xs">
                   ℹ️ A temporary password will be generated and sent via email. The user can change it after their first login.
                 </p>
               </div>
@@ -393,14 +393,14 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
                       setAddUserError(null);
                     }}
                     disabled={addUserLoading}
-                    className="flex-1 px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
+                    className="admin-icon-button flex-1 px-4 py-2 rounded-lg disabled:opacity-50"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={addUserLoading}
-                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 font-semibold"
+                    className="admin-btn-success flex-1 px-4 py-2 rounded-lg disabled:opacity-50"
                   >
                     {addUserLoading ? 'Creating...' : 'Create User'}
                   </button>
@@ -413,7 +413,7 @@ export function UserManagementTable({ memberships, orgId }: UserManagementTableP
                     setTempPassword(null);
                     setAddUserError(null);
                   }}
-                  className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold"
+                  className="admin-btn-success w-full px-4 py-2 rounded-lg"
                 >
                   Done
                 </button>

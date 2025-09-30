@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { SessionProvider } from "@/ui/components/session-provider";
-import { ThemeProvider } from "@/ui/components/theme-provider";
 import { AdminHeader } from "@/ui/components/admin-header";
 import Link from 'next/link';
 import { Building, BarChart3, Settings, BookOpen } from 'lucide-react';
@@ -25,56 +24,42 @@ export default async function AdminLayout({
   }
 
   return (
-    <ThemeProvider>
-      <SessionProvider>
-        <div className="min-h-screen bg-gray-900 dark:bg-gray-950">
-          {/* Admin Header */}
-          <AdminHeader />
+    <SessionProvider>
+      <div className="admin-layout min-h-screen bg-gray-50 dark:bg-gray-950">
+        {/* Admin Header */}
+        <AdminHeader />
 
-          {/* Admin Navigation */}
-          <nav className="bg-[#1e40af] border-b border-blue-800 dark:bg-gray-800 dark:border-gray-700">
-            <div className="px-6">
-              <div className="flex space-x-1">
-                <Link
-                  href="/admin"
-                  className="px-4 py-3 text-sm font-medium text-blue-100 hover:text-white hover:bg-blue-800 dark:text-gray-300 dark:hover:bg-gray-700 rounded-t-lg transition-colors"
-                >
-                  <Building className="w-4 h-4 inline mr-2" />
-                  Organizations
-                </Link>
-                <Link
-                  href="/admin/analytics"
-                  className="px-4 py-3 text-sm font-medium text-blue-100 hover:text-white hover:bg-blue-800 dark:text-gray-300 dark:hover:bg-gray-700 rounded-t-lg transition-colors"
-                >
-                  <BarChart3 className="w-4 h-4 inline mr-2" />
-                  Analytics
-                </Link>
-                <Link
-                  href="/admin/docs"
-                  className="px-4 py-3 text-sm font-medium text-blue-100 hover:text-white hover:bg-blue-800 dark:text-gray-300 dark:hover:bg-gray-700 rounded-t-lg transition-colors"
-                >
-                  <BookOpen className="w-4 h-4 inline mr-2" />
-                  Docs
-                </Link>
-                <Link
-                  href="/admin/settings"
-                  className="px-4 py-3 text-sm font-medium text-blue-100 hover:text-white hover:bg-blue-800 dark:text-gray-300 dark:hover:bg-gray-700 rounded-t-lg transition-colors"
-                >
-                  <Settings className="w-4 h-4 inline mr-2" />
-                  Settings
-                </Link>
-              </div>
+        {/* Admin Navigation */}
+        <nav className="admin-nav">
+          <div className="px-6">
+            <div className="flex space-x-1">
+              <Link href="/admin" className="admin-nav-link px-4 py-3 text-sm font-medium rounded-t-lg">
+                <Building className="w-4 h-4 inline mr-2" />
+                Organizations
+              </Link>
+              <Link href="/admin/analytics" className="admin-nav-link px-4 py-3 text-sm font-medium rounded-t-lg">
+                <BarChart3 className="w-4 h-4 inline mr-2" />
+                Analytics
+              </Link>
+              <Link href="/admin/docs" className="admin-nav-link px-4 py-3 text-sm font-medium rounded-t-lg">
+                <BookOpen className="w-4 h-4 inline mr-2" />
+                Docs
+              </Link>
+              <Link href="/admin/settings" className="admin-nav-link px-4 py-3 text-sm font-medium rounded-t-lg">
+                <Settings className="w-4 h-4 inline mr-2" />
+                Settings
+              </Link>
             </div>
-          </nav>
+          </div>
+        </nav>
 
-          {/* Main Content */}
-          <main className="p-6">
-            <div className="max-w-7xl mx-auto">
-              {children}
-            </div>
-          </main>
-        </div>
-      </SessionProvider>
-    </ThemeProvider>
+        {/* Main Content */}
+        <main className="p-6">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
+      </div>
+    </SessionProvider>
   );
 }

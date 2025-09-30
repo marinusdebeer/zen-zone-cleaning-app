@@ -70,7 +70,7 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
       <div className="flex items-center justify-between">
         <Link
           href="/admin/docs"
-          className="px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors inline-flex items-center"
+          className="admin-icon-button px-4 py-2 rounded-lg inline-flex items-center"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Docs
@@ -82,11 +82,11 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
       </div>
 
       {/* Document */}
-      <div className="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden">
+      <div className="admin-card overflow-hidden">
         {/* Document Header */}
-        <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-b border-gray-700 p-6">
-          <h1 className="text-3xl font-bold text-white flex items-center">
-            <FileText className="w-8 h-8 mr-3 text-blue-400" />
+        <div className="admin-brand-gradient-hero border-b admin-border p-6">
+          <h1 className="text-3xl font-bold flex items-center">
+            <FileText className="w-8 h-8 mr-3 admin-icon-primary" />
             {title}
           </h1>
         </div>
@@ -98,15 +98,15 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
       </div>
 
       {/* Footer Navigation */}
-      <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
+      <div className="admin-card">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-400 mb-1">Need help?</p>
-            <p className="text-white font-medium">Check out the other documentation guides</p>
+            <p className="text-sm admin-text-tertiary mb-1">Need help?</p>
+            <p className="font-medium">Check out the other documentation guides</p>
           </div>
           <Link
             href="/admin/docs"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center"
+            className="admin-btn-primary px-4 py-2 rounded-lg inline-flex items-center"
           >
             View All Docs
             <ExternalLink className="w-4 h-4 ml-2" />

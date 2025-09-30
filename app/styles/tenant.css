@@ -1,0 +1,193 @@
+:root {
+  --tenant-primary: #9333ea;
+  --tenant-primary-dark: #7e22ce;
+  --tenant-primary-light: #a855f7;
+  --tenant-primary-hover: #8b28d4;
+  --tenant-accent: #c026d3;
+  --tenant-accent-light: #d946ef;
+  --tenant-accent-hover: #b020c0;
+  
+  --tenant-bg: #f5e6ff;
+  --tenant-bg-secondary: #e9d5ff;
+  --tenant-bg-tertiary: #d8b4fe;
+  
+  --tenant-border: #c084fc;
+  --tenant-border-hover: #a855f7;
+  
+  --tenant-text-primary: #3b0764;
+  --tenant-text-secondary: #581c87;
+  --tenant-text-tertiary: #7e22ce;
+  
+  --tenant-success: #10b981;
+  --tenant-warning: #f59e0b;
+  --tenant-danger: #ef4444;
+  --tenant-info: #3b82f6;
+  
+  --tenant-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --tenant-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --tenant-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+.dark {
+  --tenant-primary: #fb923c;
+  --tenant-primary-dark: #ea580c;
+  --tenant-primary-light: #fdba74;
+  --tenant-primary-hover: #f97316;
+  --tenant-accent: #fbbf24;
+  --tenant-accent-light: #fcd34d;
+  --tenant-accent-hover: #f59e0b;
+  
+  --tenant-bg: #431407;
+  --tenant-bg-secondary: #7c2d12;
+  --tenant-bg-tertiary: #9a3412;
+  
+  --tenant-border: #c2410c;
+  --tenant-border-hover: #ea580c;
+  
+  --tenant-text-primary: #ffedd5;
+  --tenant-text-secondary: #fed7aa;
+  --tenant-text-tertiary: #fdba74;
+  
+  --tenant-success: #10b981;
+  --tenant-warning: #f59e0b;
+  --tenant-danger: #ef4444;
+  --tenant-info: #3b82f6;
+  
+  --tenant-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+  --tenant-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+  --tenant-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+}
+
+.tenant-layout {
+  color: var(--tenant-text-secondary);
+}
+
+.tenant-layout h1,
+.tenant-layout h2,
+.tenant-layout h3,
+.tenant-layout h4,
+.tenant-layout h5,
+.tenant-layout h6 {
+  color: var(--tenant-text-primary);
+}
+
+.tenant-layout a:not([class*="btn"]):not([class*="bg-"]) {
+  color: var(--tenant-primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.tenant-layout a:not([class*="btn"]):not([class*="bg-"]):hover {
+  color: var(--tenant-primary-dark);
+}
+
+.tenant-layout button,
+.tenant-layout a[class*="btn"],
+.tenant-layout .tenant-card,
+.tenant-layout input,
+.tenant-layout select,
+.tenant-layout textarea {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tenant-header {
+  background-color: var(--tenant-primary-dark);
+  border-bottom: 1px solid var(--tenant-primary);
+  color: white;
+}
+
+.tenant-sidebar {
+  background-color: var(--tenant-primary-light);
+  color: white;
+}
+
+.tenant-btn {
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: var(--tenant-shadow-sm);
+}
+
+.tenant-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--tenant-shadow-md);
+}
+
+.tenant-btn-primary {
+  background-color: var(--tenant-primary);
+  color: white !important;
+}
+
+.tenant-btn-primary:hover {
+  background-color: var(--tenant-primary-hover);
+}
+
+.tenant-btn-secondary {
+  background-color: var(--tenant-accent);
+  color: white !important;
+}
+
+.tenant-btn-secondary:hover {
+  background-color: var(--tenant-accent-hover);
+}
+
+.tenant-card {
+  background-color: var(--tenant-bg);
+  border: 1px solid var(--tenant-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: var(--tenant-shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.tenant-card:hover {
+  box-shadow: var(--tenant-shadow-md);
+  border-color: var(--tenant-border-hover);
+}
+
+.tenant-card-flat {
+  background-color: var(--tenant-bg-secondary);
+  border: 1px solid var(--tenant-border);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.tenant-gradient-brand {
+  background: linear-gradient(135deg, var(--tenant-primary) 0%, var(--tenant-primary-dark) 100%);
+}
+
+.tenant-gradient-accent {
+  background: linear-gradient(135deg, var(--tenant-primary) 0%, var(--tenant-accent) 100%);
+}
+
+.tenant-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.tenant-badge-success {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: var(--tenant-success);
+  border: 1px solid var(--tenant-success);
+}
+
+.tenant-badge-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--tenant-warning);
+  border: 1px solid var(--tenant-warning);
+}
+
+.tenant-badge-danger {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--tenant-danger);
+  border: 1px solid var(--tenant-danger);
+}
+
+.tenant-badge-info {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--tenant-info);
+  border: 1px solid var(--tenant-info);
+}

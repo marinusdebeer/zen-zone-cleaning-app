@@ -24,6 +24,8 @@ model Organization {
   industry String
   timezone String? @default("America/Toronto")
   settings Json    @default("{}")
+  
+  // No custom theming - all tenants use default colors
 
   // Relations
   memberships Membership[]

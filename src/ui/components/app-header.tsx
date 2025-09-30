@@ -100,26 +100,26 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
   }, [showUserMenu, showNotifications, showMessages, showSearchResults]);
 
   return (
-    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 transition-colors">
+    <header className="bg-brand-dark border-b border-brand sticky top-0 z-40 transition-colors">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left side - Logo and Company Name */}
           <div className="flex items-center">
             <button
               onClick={onMenuClick}
-              className="p-2 rounded-md lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-2 rounded-md lg:hidden hover:bg-brand/70"
             >
-              <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+              <Menu className="h-6 w-6 text-white" />
             </button>
             
             <div className="flex items-center ml-2 lg:ml-0">
               {/* Logo */}
-              <div className="w-10 h-10 bg-gradient-to-br from-[#2e3d2f] to-[#4a7c59] rounded-lg flex items-center justify-center text-white font-bold text-lg">
+              <div className="bg-gradient-to-br from-brand to-brand-dark w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-lg">
                 ZZ
               </div>
               <div className="ml-3">
-                <h1 className="text-xl font-semibold text-[#2e3d2f] dark:text-white">Zen Zone Cleaning</h1>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Service Management System</p>
+                <h1 className="text-xl font-semibold text-white">Zen Zone Cleaning</h1>
+                <p className="text-xs text-white/70">Service Management System</p>
               </div>
             </div>
           </div>
@@ -128,9 +128,9 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <div className="flex-1 max-w-2xl mx-4 hidden md:block relative">
             <div className="relative">
               {searchLoading ? (
-                <Loader2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 animate-spin" />
+                <Loader2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50 animate-spin" />
               ) : (
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
               )}
               <input
                 type="search"
@@ -141,7 +141,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   e.stopPropagation();
                   if (searchResults) setShowSearchResults(true);
                 }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 bg-white dark:bg-gray-700"
+                className="w-full pl-10 pr-4 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-white focus:border-transparent bg-white/10 text-white placeholder:text-white/50"
               />
             </div>
 
@@ -389,13 +389,13 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                 e.stopPropagation();
                 toggleTheme();
               }}
-              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 rounded-md hover:bg-brand/70 transition-colors"
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
               {theme === 'light' ? (
-                <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <Moon className="h-5 w-5 text-white/70" />
               ) : (
-                <Sun className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <Sun className="h-5 w-5 text-white/70" />
               )}
             </button>
 
@@ -424,11 +424,11 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowMessages(false);
                   setShowUserMenu(false);
                 }}
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative"
+                className="p-2 rounded-md hover:bg-brand/70 relative"
               >
-                <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <Bell className="h-5 w-5 text-white/70" />
                 {unreadNotifications > 0 && (
-                  <span className="absolute top-1 right-1 h-2 w-2 bg-[#4a8c37] rounded-full"></span>
+                  <span className="absolute top-1 right-1 h-2 w-2 bg-brand-accent rounded-full"></span>
                 )}
               </button>
 
@@ -453,7 +453,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                     </div>
                   </div>
                   <div className="p-3 border-t border-gray-200 dark:border-gray-700">
-                    <a href="/notifications" className="text-sm text-[#4a7c59] hover:text-[#4a8c37] font-medium">
+                    <a href="/notifications" className="text-sm text-brand hover:text-brand-dark font-medium">
                       View all notifications
                     </a>
                   </div>
@@ -470,11 +470,11 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowNotifications(false);
                   setShowUserMenu(false);
                 }}
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative"
+                className="p-2 rounded-md hover:bg-brand/70 relative"
               >
-                <MessageSquare className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <MessageSquare className="h-5 w-5 text-white/70" />
                 {unreadMessages > 0 && (
-                  <span className="absolute top-1 right-1 h-2 w-2 bg-[#4a8c37] rounded-full"></span>
+                  <span className="absolute top-1 right-1 h-2 w-2 bg-brand-accent rounded-full"></span>
                 )}
               </button>
 
@@ -507,7 +507,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                     </div>
                   </div>
                   <div className="p-3 border-t border-gray-200 dark:border-gray-700">
-                    <a href="/messages" className="text-sm text-[#4a7c59] hover:text-[#4a8c37] font-medium">
+                    <a href="/messages" className="text-sm text-brand hover:text-brand-dark font-medium">
                       View all messages
                     </a>
                   </div>
@@ -524,12 +524,12 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowNotifications(false);
                   setShowMessages(false);
                 }}
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="flex items-center space-x-2 p-2 rounded-md hover:bg-brand/70"
               >
-                <div className="w-8 h-8 bg-[#4a7c59] rounded-full flex items-center justify-center text-white text-sm font-medium">
+                <div className="w-8 h-8 bg-brand-accent rounded-full flex items-center justify-center text-white text-sm font-medium">
                   {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
-                <ChevronDown className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                <ChevronDown className="h-4 w-4 text-white/70" />
               </button>
 
               {/* User Dropdown */}

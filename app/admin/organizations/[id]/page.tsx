@@ -63,7 +63,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
     return (
       <div className="text-center py-12">
         <div className="text-red-400 text-lg">Organization not found</div>
-        <Link href="/admin" className="text-blue-400 hover:text-blue-300 mt-4 inline-block">
+        <Link href="/admin" className="admin-link mt-4 inline-block">
           ← Back to Organizations
         </Link>
       </div>
@@ -81,31 +81,31 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center space-x-2 text-sm">
-        <Link href="/admin" className="text-gray-400 hover:text-white transition-colors">
+        <Link href="/admin" className="admin-link">
           Organizations
         </Link>
-        <span className="text-gray-600">/</span>
-        <span className="text-white font-medium">{org.name}</span>
+        <span className="text-gray-400 dark:text-gray-600">/</span>
+        <span className="font-medium">{org.name}</span>
       </div>
 
       {/* Header with Hero Section */}
-      <div className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-xl p-8 shadow-xl">
+      <div className="admin-brand-gradient-hero rounded-xl p-8 shadow-xl border">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-start space-x-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+            <div className="admin-brand-gradient-accent w-16 h-16 rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
               {org.name.substring(0, 2).toUpperCase()}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{org.name}</h1>
+              <h1 className="text-3xl font-bold mb-2">{org.name}</h1>
               <div className="flex items-center space-x-4 text-sm">
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-900/30 text-green-400 border border-green-600">
+                <span className="admin-badge-success admin-badge-success-text inline-flex items-center px-3 py-1 rounded-full text-xs font-medium">
                   <CheckCircle className="w-3 h-3 mr-1" />
                   Active
                 </span>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-700 text-gray-300 capitalize">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300 capitalize">
                   {org.industry || 'Cleaning'}
                 </span>
-                <span className="text-gray-400 flex items-center">
+                <span className="text-gray-600 dark:text-gray-400 flex items-center">
                   <Clock className="w-3 h-3 mr-1" />
                   {accountAge} days old
                 </span>
@@ -122,7 +122,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             </Link>
             <Link
               href={`/admin/organizations/${org.id}/edit`}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center shadow-lg"
+              className="admin-btn-primary px-4 py-2 rounded-lg inline-flex items-center shadow-lg"
             >
               <Edit className="w-4 h-4 mr-2" />
               Edit
@@ -131,14 +131,14 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         </div>
 
         {/* Quick Info */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-gray-700">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gray-700 rounded-lg">
-              <Calendar className="w-5 h-5 text-blue-400" />
+            <div className="admin-stat-icon-container p-2 rounded-lg">
+              <Calendar className="w-5 h-5 admin-icon-primary" />
             </div>
             <div>
-              <p className="text-xs text-gray-400">Created</p>
-              <p className="text-sm font-semibold text-white">
+              <p className="text-xs text-gray-600 dark:text-gray-400">Created</p>
+              <p className="text-sm font-semibold">
                 {new Date(org.createdAt).toLocaleDateString('en-US', {
                   month: 'long',
                   day: 'numeric',
@@ -148,21 +148,21 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gray-700 rounded-lg">
-              <Users className="w-5 h-5 text-green-400" />
+            <div className="admin-stat-icon-container p-2 rounded-lg">
+              <Users className="w-5 h-5 admin-icon-success" />
             </div>
             <div>
-              <p className="text-xs text-gray-400">Team Size</p>
-              <p className="text-sm font-semibold text-white">{totalUsers} members</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Team Size</p>
+              <p className="text-sm font-semibold">{totalUsers} members</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gray-700 rounded-lg">
-              <Shield className="w-5 h-5 text-purple-400" />
+            <div className="admin-stat-icon-container p-2 rounded-lg">
+              <Shield className="w-5 h-5 admin-icon-secondary" />
             </div>
             <div>
-              <p className="text-xs text-gray-400">Owner</p>
-              <p className="text-sm font-semibold text-white">{owner?.user.name || 'N/A'}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Owner</p>
+              <p className="text-sm font-semibold">{owner?.user.name || 'N/A'}</p>
             </div>
           </div>
         </div>
@@ -171,123 +171,123 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       {/* Stats Overview - Two Rows */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Business Metrics */}
-        <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <div className="admin-card">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-white flex items-center">
-              <TrendingUp className="w-5 h-5 mr-2 text-green-400" />
+            <h2 className="text-lg font-semibold flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 admin-icon-success" />
               Business Metrics
             </h2>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
+            <div className="admin-card-secondary">
               <div className="flex items-center justify-between mb-2">
-                <Activity className="w-5 h-5 text-yellow-400" />
-                <span className="text-xs text-gray-400">Leads</span>
+                <Activity className="w-5 h-5 admin-icon-warning" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Leads</span>
               </div>
-              <p className="text-2xl font-bold text-white">{org._count.leads}</p>
+              <p className="text-2xl font-bold">{org._count.leads}</p>
             </div>
-            <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
+            <div className="admin-card-secondary">
               <div className="flex items-center justify-between mb-2">
-                <Users className="w-5 h-5 text-blue-400" />
-                <span className="text-xs text-gray-400">Clients</span>
+                <Users className="w-5 h-5 admin-icon-primary" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Clients</span>
               </div>
-              <p className="text-2xl font-bold text-white">{org._count.clients}</p>
+              <p className="text-2xl font-bold">{org._count.clients}</p>
             </div>
-            <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
+            <div className="admin-card-secondary">
               <div className="flex items-center justify-between mb-2">
-                <FileText className="w-5 h-5 text-purple-400" />
-                <span className="text-xs text-gray-400">Estimates</span>
+                <FileText className="w-5 h-5 admin-icon-secondary" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Estimates</span>
               </div>
-              <p className="text-2xl font-bold text-white">{org._count.estimates}</p>
+              <p className="text-2xl font-bold">{org._count.estimates}</p>
             </div>
-            <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
+            <div className="admin-card-secondary">
               <div className="flex items-center justify-between mb-2">
-                <DollarSign className="w-5 h-5 text-green-400" />
-                <span className="text-xs text-gray-400">Properties</span>
+                <DollarSign className="w-5 h-5 admin-icon-success" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Properties</span>
               </div>
-              <p className="text-2xl font-bold text-white">{org._count.properties}</p>
+              <p className="text-2xl font-bold">{org._count.properties}</p>
             </div>
           </div>
         </div>
 
         {/* Operations Metrics */}
-        <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <div className="admin-card">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-white flex items-center">
-              <Briefcase className="w-5 h-5 mr-2 text-blue-400" />
+            <h2 className="text-lg font-semibold flex items-center">
+              <Briefcase className="w-5 h-5 mr-2 admin-icon-primary" />
               Operations
             </h2>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
+            <div className="admin-card-secondary">
               <div className="flex items-center justify-between mb-2">
-                <Briefcase className="w-5 h-5 text-blue-400" />
-                <span className="text-xs text-gray-400">Jobs</span>
+                <Briefcase className="w-5 h-5 admin-icon-primary" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Jobs</span>
               </div>
-              <p className="text-2xl font-bold text-white">{org._count.jobs}</p>
+              <p className="text-2xl font-bold">{org._count.jobs}</p>
             </div>
-            <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
+            <div className="admin-card-secondary">
               <div className="flex items-center justify-between mb-2">
-                <Calendar className="w-5 h-5 text-indigo-400" />
-                <span className="text-xs text-gray-400">Visits</span>
+                <Calendar className="w-5 h-5 admin-icon-info" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Visits</span>
               </div>
-              <p className="text-2xl font-bold text-white">{org._count.visits}</p>
+              <p className="text-2xl font-bold">{org._count.visits}</p>
             </div>
-            <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
+            <div className="admin-card-secondary">
               <div className="flex items-center justify-between mb-2">
-                <FileText className="w-5 h-5 text-yellow-400" />
-                <span className="text-xs text-gray-400">Invoices</span>
+                <FileText className="w-5 h-5 admin-icon-warning" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Invoices</span>
               </div>
-              <p className="text-2xl font-bold text-white">{org._count.invoices}</p>
+              <p className="text-2xl font-bold">{org._count.invoices}</p>
             </div>
-            <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
+            <div className="admin-card-secondary">
               <div className="flex items-center justify-between mb-2">
-                <Users className="w-5 h-5 text-green-400" />
-                <span className="text-xs text-gray-400">Team</span>
+                <Users className="w-5 h-5 admin-icon-success" />
+                <span className="text-xs text-gray-600 dark:text-gray-400">Team</span>
               </div>
-              <p className="text-2xl font-bold text-white">{totalUsers}</p>
+              <p className="text-2xl font-bold">{totalUsers}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Team Breakdown */}
-      <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4 flex items-center">
-          <Users className="w-5 h-5 mr-2 text-blue-400" />
+      <div className="admin-card">
+        <h2 className="text-lg font-semibold mb-4 flex items-center">
+          <Users className="w-5 h-5 mr-2 admin-icon-primary" />
           Team Breakdown
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-gradient-to-br from-purple-900/30 to-purple-800/20 border border-purple-700 rounded-lg p-4">
+          <div className="admin-card-secondary">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-purple-300 font-medium">Owners</p>
-                <p className="text-3xl font-bold text-white mt-1">1</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--admin-secondary)' }}>Owners</p>
+                <p className="text-3xl font-bold mt-1">1</p>
               </div>
-              <div className="w-12 h-12 bg-purple-600/30 rounded-lg flex items-center justify-center">
-                <Shield className="w-6 h-6 text-purple-400" />
+              <div className="admin-stat-icon-container w-12 h-12 rounded-lg flex items-center justify-center">
+                <Shield className="w-6 h-6 admin-icon-secondary" />
               </div>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-blue-900/30 to-blue-800/20 border border-blue-700 rounded-lg p-4">
+          <div className="admin-card-secondary">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-300 font-medium">Admins</p>
-                <p className="text-3xl font-bold text-white mt-1">{adminCount}</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--admin-primary)' }}>Admins</p>
+                <p className="text-3xl font-bold mt-1">{adminCount}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-600/30 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-400" />
+              <div className="admin-stat-icon-container w-12 h-12 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 admin-icon-primary" />
               </div>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-green-900/30 to-green-800/20 border border-green-700 rounded-lg p-4">
+          <div className="admin-card-secondary">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-green-300 font-medium">Staff</p>
-                <p className="text-3xl font-bold text-white mt-1">{staffCount}</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--admin-success)' }}>Staff</p>
+                <p className="text-3xl font-bold mt-1">{staffCount}</p>
               </div>
-              <div className="w-12 h-12 bg-green-600/30 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-green-400" />
+              <div className="admin-stat-icon-container w-12 h-12 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 admin-icon-success" />
               </div>
             </div>
           </div>
@@ -298,24 +298,24 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       <UserManagementTable memberships={org.memberships as any} orgId={org.id} />
 
       {/* Organization Info */}
-      <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Organization Details</h2>
+      <div className="admin-card">
+        <h2 className="text-lg font-semibold mb-4">Organization Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <p className="text-sm text-gray-400 mb-1">Organization ID</p>
-            <p className="text-sm font-mono text-gray-300 bg-gray-900 px-3 py-2 rounded border border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Organization ID</p>
+            <p className="text-sm font-mono text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900 px-3 py-2 rounded border border-gray-200 dark:border-gray-700">
               {org.id}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-400 mb-1">URL Slug</p>
-            <p className="text-sm font-mono text-gray-300 bg-gray-900 px-3 py-2 rounded border border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">URL Slug</p>
+            <p className="text-sm font-mono text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900 px-3 py-2 rounded border border-gray-200 dark:border-gray-700">
               /{org.slug}
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-400 mb-1">Created Date</p>
-            <p className="text-sm text-gray-300 bg-gray-900 px-3 py-2 rounded border border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Created Date</p>
+            <p className="text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900 px-3 py-2 rounded border border-gray-200 dark:border-gray-700">
               {new Date(org.createdAt).toLocaleString('en-US', {
                 dateStyle: 'full',
                 timeStyle: 'short',
@@ -323,8 +323,8 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-400 mb-1">Last Updated</p>
-            <p className="text-sm text-gray-300 bg-gray-900 px-3 py-2 rounded border border-gray-700">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Last Updated</p>
+            <p className="text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900 px-3 py-2 rounded border border-gray-200 dark:border-gray-700">
               {new Date(org.updatedAt).toLocaleString('en-US', {
                 dateStyle: 'full',
                 timeStyle: 'short',
@@ -335,12 +335,12 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       </div>
 
       {/* Privacy Notice */}
-      <div className="bg-blue-900/20 border border-blue-700/50 rounded-xl p-6">
+      <div className="admin-card-secondary">
         <div className="flex items-start space-x-3">
-          <Shield className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+          <Shield className="w-5 h-5 admin-icon-info mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="text-sm font-semibold text-blue-300 mb-1">Privacy & Data Protection</h3>
-            <p className="text-sm text-blue-200/80">
+            <h3 className="text-sm font-semibold mb-1">Privacy & Data Protection</h3>
+            <p className="text-sm">
               As a super administrator, you can see high-level metrics and manage users. 
               Sensitive business data (client details, job specifics, invoice amounts, payment information) 
               remains private to the organization and is not accessible here. Organization owners have 

@@ -131,15 +131,15 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <Users className="w-7 h-7 mr-2 text-[#4a7c59]" />
+          <h1 className="text-2xl font-bold flex items-center">
+            <Users className="w-7 h-7 mr-2 text-brand" />
             Clients
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">Manage your client relationships</p>
+          <p className="text-brand-text-tertiary mt-1">Manage your client relationships</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors flex items-center shadow-sm"
+          className="bg-brand text-white font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all hover:bg-brand-dark flex items-center"
         >
           <Plus className="w-5 h-5 mr-2" />
           Add Client
@@ -232,7 +232,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
           {!searchTerm && (
             <button
               onClick={() => setShowAddModal(true)}
-              className="px-6 py-3 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors inline-flex items-center"
+              className="bg-brand text-white font-semibold px-6 py-3 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all hover:bg-brand-dark inline-flex items-center"
             >
               <Plus className="w-5 h-5 mr-2" />
               Add Your First Client
@@ -328,7 +328,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                     <td className="px-6 py-4 text-right">
                       <Link
                         href={`/clients/${client.id}`}
-                        className="text-[#4a7c59] hover:text-[#4a8c37] font-medium text-sm inline-flex items-center"
+                        className="text-brand hover:text-brand-dark font-medium text-sm inline-flex items-center"
                       >
                         View
                         <ArrowRight className="w-4 h-4 ml-1" />
@@ -350,7 +350,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
             <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-white dark:bg-gray-800 z-10">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-                  <UserPlus className="w-6 h-6 mr-2 text-[#4a7c59]" />
+                  <UserPlus className="w-6 h-6 mr-2 text-brand" />
                   Add New Client
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">Create a new client record</p>
@@ -431,7 +431,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 font-medium"
+                  className="flex-1 bg-brand text-white font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all hover:bg-brand-dark disabled:opacity-50"
                 >
                   {loading ? 'Adding...' : 'Add Client'}
                 </button>

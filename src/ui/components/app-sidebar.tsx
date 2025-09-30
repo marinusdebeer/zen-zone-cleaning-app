@@ -125,7 +125,7 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full bg-[#2e3d2f] dark:bg-gray-950 text-white z-30
+          bg-brand-light text-white fixed top-0 left-0 h-full z-30
           transform transition-all duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0 lg:fixed
@@ -136,7 +136,7 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
         <div className="lg:hidden p-4 flex justify-end">
           <button
             onClick={onClose}
-            className="p-2 rounded-md hover:bg-[#4a7c59] transition-colors"
+            className="p-2 rounded-md hover:bg-brand-accent transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -146,7 +146,7 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
           {/* Logo section (for mobile) */}
           <div className={`p-4 border-b border-white/10 lg:hidden ${isCollapsed ? 'hidden' : ''}`}>
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-br from-white to-[#78A265] rounded-lg flex items-center justify-center text-[#2e3d2f] font-bold text-lg">
+              <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-brand font-bold text-lg">
                 ZZ
               </div>
               {!isCollapsed && (
@@ -162,7 +162,7 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
           <div className="hidden lg:flex items-center justify-end h-16 px-4 border-b border-white/10">
             <button
               onClick={toggleCollapse}
-              className="p-2 rounded-md hover:bg-[#4a7c59] transition-colors"
+              className="p-2 rounded-md hover:bg-brand-accent transition-colors"
               title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
               {isCollapsed ? (
@@ -189,13 +189,13 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
                       transition-all duration-200
                       ${isCollapsed ? 'justify-center px-3 py-3' : 'space-x-3 px-3 py-2'}
                       ${active 
-                        ? 'bg-[#4a7c59] text-white shadow-lg' 
-                        : 'text-gray-300 hover:bg-[#3a4d3b] hover:text-white'
+                        ? 'bg-brand text-white shadow-lg' 
+                        : 'text-gray-300 hover:bg-brand-dark hover:text-white'
                       }
                     `}
                     title={isCollapsed ? item.label : undefined}
                   >
-                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-white' : 'text-gray-400'}`} />
+                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-white' : 'text-white/50'}`} />
                     {!isCollapsed && <span className="font-medium">{item.label}</span>}
                   </Link>
                 );
@@ -220,13 +220,13 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
                       transition-all duration-200
                       ${isCollapsed ? 'justify-center px-3 py-3' : 'space-x-3 px-3 py-2'}
                       ${active 
-                        ? 'bg-[#4a7c59] text-white shadow-lg' 
-                        : 'text-gray-300 hover:bg-[#3a4d3b] hover:text-white'
+                        ? 'bg-brand text-white shadow-lg' 
+                        : 'text-gray-300 hover:bg-brand-dark hover:text-white'
                       }
                     `}
                     title={isCollapsed ? item.label : undefined}
                   >
-                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-white' : 'text-gray-400'}`} />
+                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-white' : 'text-white/50'}`} />
                     {!isCollapsed && <span className="font-medium">{item.label}</span>}
                   </Link>
                 );

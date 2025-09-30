@@ -20,17 +20,9 @@ async function main() {
     update: {},
     create: {
       name: 'Zen Zone Cleaning',
-      slug: 'zenzone',
+      slug: 'zen-zone-cleaning',
       industry: 'cleaning',
       settings: {
-        ui_prefs: {
-          theme: {
-            primary: '#2E3D2F',
-            accent: '#78A265',
-            surface: '#FAFFFA',
-            cta: '#6B5B95',
-          },
-        },
         features: {
           quotes: true,
           invoices: true,

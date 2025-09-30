@@ -14,7 +14,7 @@ export function DashboardWrapper({ children }: DashboardWrapperProps) {
   const { isCollapsed } = useSidebar();
 
   return (
-    <div className="min-h-screen bg-[#f7faf7] dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-brand-bg-secondary transition-colors">
       {/* Sidebar */}
       <AppSidebar 
         isOpen={sidebarOpen} 
@@ -27,7 +27,7 @@ export function DashboardWrapper({ children }: DashboardWrapperProps) {
         <AppHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
         {/* Page content */}
-        <main className="flex-1 p-6 bg-[#f7faf7] dark:bg-gray-900">
+        <main className="flex-1 p-6 bg-brand-bg-secondary">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>

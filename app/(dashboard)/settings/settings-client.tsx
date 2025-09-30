@@ -5,7 +5,6 @@ import {
   Building, 
   User, 
   Lock, 
-  Palette, 
   Clock, 
   Briefcase,
   Save,
@@ -18,7 +17,6 @@ import {
   updateOrganizationInfo,
   updateBusinessHours,
   updateServices,
-  updateBranding,
   updateUserProfile,
   changePassword,
 } from '@/server/actions/settings';
@@ -32,7 +30,7 @@ interface SettingsClientProps {
   };
 }
 
-type Tab = 'organization' | 'account' | 'security' | 'hours' | 'services' | 'branding';
+type Tab = 'organization' | 'account' | 'security' | 'hours' | 'services';
 
 export function SettingsClient({ organization, user }: SettingsClientProps) {
   const router = useRouter();
@@ -87,12 +85,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
     ]
   );
 
-  // Branding State
-  const [branding, setBranding] = useState({
-    primaryColor: organization?.settings?.branding?.primaryColor || '#2e3d2f',
-    secondaryColor: organization?.settings?.branding?.secondaryColor || '#4a7c59',
-    accentColor: organization?.settings?.branding?.accentColor || '#4a8c37',
-  });
+  // No branding customization - removed
 
   const showSuccess = (message: string) => {
     setSuccessMessage(message);
@@ -182,26 +175,12 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
     }
   };
 
-  const handleSaveBranding = async () => {
-    setLoading(true);
-    try {
-      await updateBranding(branding);
-      showSuccess('Branding updated successfully!');
-      router.refresh();
-    } catch (error) {
-      showError(error instanceof Error ? error.message : 'Failed to update branding');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const tabs = [
     { id: 'organization' as Tab, label: 'Organization', icon: Building },
     { id: 'account' as Tab, label: 'Account', icon: User },
     { id: 'security' as Tab, label: 'Security', icon: Lock },
     { id: 'hours' as Tab, label: 'Business Hours', icon: Clock },
     { id: 'services' as Tab, label: 'Services', icon: Briefcase },
-    { id: 'branding' as Tab, label: 'Branding', icon: Palette },
   ];
 
   return (
@@ -555,76 +534,6 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
             </div>
             <button
               onClick={handleSaveServices}
-              disabled={loading}
-              className="px-6 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 flex items-center"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {loading ? 'Saving...' : 'Save Changes'}
-            </button>
-          </div>
-        )}
-
-        {/* Branding Tab */}
-        {activeTab === 'branding' && (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Brand Colors</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Primary Color</label>
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="color"
-                      value={branding.primaryColor}
-                      onChange={(e) => setBranding({ ...branding, primaryColor: e.target.value })}
-                      className="h-12 w-full rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={branding.primaryColor}
-                      onChange={(e) => setBranding({ ...branding, primaryColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-mono text-gray-900 dark:text-white"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Secondary Color</label>
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="color"
-                      value={branding.secondaryColor}
-                      onChange={(e) => setBranding({ ...branding, secondaryColor: e.target.value })}
-                      className="h-12 w-full rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={branding.secondaryColor}
-                      onChange={(e) => setBranding({ ...branding, secondaryColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-mono text-gray-900 dark:text-white"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Accent Color</label>
-                  <div className="flex items-center space-x-3">
-                    <input
-                      type="color"
-                      value={branding.accentColor}
-                      onChange={(e) => setBranding({ ...branding, accentColor: e.target.value })}
-                      className="h-12 w-full rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      value={branding.accentColor}
-                      onChange={(e) => setBranding({ ...branding, accentColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-mono text-gray-900 dark:text-white"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={handleSaveBranding}
               disabled={loading}
               className="px-6 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 flex items-center"
             >

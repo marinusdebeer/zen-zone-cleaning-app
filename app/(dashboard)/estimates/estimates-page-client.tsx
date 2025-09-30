@@ -69,8 +69,8 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <FileText className="w-7 h-7 mr-2 text-[#4a7c59]" />
+          <h1 className="text-2xl font-bold flex items-center">
+            <FileText className="w-7 h-7 mr-2 text-brand" />
             Estimates
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Manage quotes and service estimates</p>
@@ -92,7 +92,7 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Estimates</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{stats.total}</p>
             </div>
-            <FileText className="h-8 w-8 text-[#4a7c59]" />
+            <FileText className="h-8 w-8 text-brand" />
           </div>
         </div>
 
@@ -139,8 +139,8 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
             onClick={() => setStatusFilter('ALL')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               statusFilter === 'ALL'
-                ? 'bg-[#4a7c59] text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? 'bg-brand text-white'
+                : 'bg-brand-bg-secondary hover:bg-brand-bg-tertiary'
             }`}
           >
             All ({stats.total})
@@ -151,8 +151,8 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
               onClick={() => setStatusFilter(status)}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                 statusFilter === status
-                  ? 'bg-[#4a7c59] text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-brand text-white'
+                  : 'bg-brand-bg-secondary hover:bg-brand-bg-tertiary'
               }`}
             >
               {status} ({statusCounts[status] || 0})
@@ -258,14 +258,14 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
                       )}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <p className="text-sm font-semibold text-[#4a7c59]">
+                      <p className="text-sm font-semibold text-brand">
                         ${estimate.amount.toFixed(2)}
                       </p>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <Link
                         href={`/estimates/${estimate.id}`}
-                        className="text-[#4a7c59] hover:text-[#4a8c37] font-medium text-sm inline-flex items-center"
+                        className="text-brand hover:text-brand-dark font-medium text-sm inline-flex items-center"
                       >
                         View
                         <ArrowRight className="w-4 h-4 ml-1" />

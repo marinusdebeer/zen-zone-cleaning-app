@@ -4,6 +4,7 @@ import { signIn, getSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -24,7 +25,7 @@ export default function SignIn() {
     });
 
     if (result?.error) {
-      setError('Invalid credentials');
+      setError('Invalid email or password. Please try again.');
       setLoading(false);
       return;
     }
@@ -38,77 +39,134 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#3b82f6] to-[#1e40af] rounded-2xl text-white font-bold text-3xl mb-4 shadow-xl">
+    <div className="admin-layout min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 px-4 sm:px-6 lg:px-8 transition-colors">
+      <div className="max-w-md w-full">
+        {/* Logo and Header */}
+        <div className="text-center mb-8">
+          <div className="admin-brand-gradient inline-flex items-center justify-center w-20 h-20 rounded-2xl text-white font-bold text-3xl mb-6 shadow-2xl transform hover:scale-105 transition-transform duration-200">
             CF
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">CleanFlow</h1>
-          <p className="text-gray-600">Complete Business Management for Cleaning Services</p>
-          <h2 className="mt-6 text-2xl font-bold text-gray-900">
-            Sign in to your account
-          </h2>
+          <h1 className="text-4xl font-bold mb-2 tracking-tight">
+            CleanFlow
+          </h1>
+          <p className="text-sm">
+            Complete Business Management for Cleaning Services
+          </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <input
-                type="email"
-                required
-                className="rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                required
-                className="rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
 
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
-          )}
+        {/* Sign In Card */}
+        <div className="admin-bg rounded-2xl shadow-xl overflow-hidden border admin-border">
+          <div className="px-8 py-10">
+            <h2 className="text-2xl font-bold text-center mb-8">
+              Sign in to your account
+            </h2>
 
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-[#1e40af] to-[#3b82f6] hover:from-[#1e3a8a] hover:to-[#2563eb] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-all shadow-lg"
-            >
-              {loading ? 'Signing in...' : 'Sign in'}
-            </button>
-          </div>
-
-          <div className="text-center space-y-3 mt-4">
-            <Link
-              href="/auth/forgot-password"
-              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Forgot your password?
-            </Link>
-            
-            <div className="text-xs text-gray-600 space-y-2 pt-4 border-t border-gray-200">
-              <p className="font-semibold text-gray-700">Demo Accounts:</p>
-              <div className="bg-blue-50 p-2 rounded">
-                <p className="font-medium">🛡️ Super Admin:</p>
-                <p>marinusdebeer@gmail.com / password123</p>
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {/* Email Input */}
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                  Email address
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 admin-text-tertiary" />
+                  </div>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    className="admin-input block w-full pl-10 pr-3 py-3 rounded-lg"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
               </div>
-              <div className="bg-green-50 p-2 rounded">
-                <p className="font-medium">👤 Zen Zone Admin:</p>
-                <p>admin@zenzonecleaning.com / password123</p>
+
+              {/* Password Input */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 admin-text-tertiary" />
+                  </div>
+                  <input
+                    id="password"
+                    type="password"
+                    required
+                    autoComplete="current-password"
+                    className="admin-input block w-full pl-10 pr-3 py-3 rounded-lg"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="admin-error-message flex items-center gap-2 p-3 rounded-lg">
+                  <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                  <p className="text-sm">{error}</p>
+                </div>
+              )}
+
+              {/* Forgot Password Link */}
+              <div className="flex items-center justify-end">
+                <Link
+                  href="/auth/forgot-password"
+                  className="admin-link text-sm font-medium"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="admin-brand-gradient w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-white font-semibold focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 border-transparent"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Signing in...</span>
+                  </>
+                ) : (
+                  <span>Sign in</span>
+                )}
+              </button>
+            </form>
           </div>
-        </form>
+
+          {/* Footer */}
+          <div className="admin-bg-secondary px-8 py-4 border-t admin-border">
+            <p className="text-xs text-center">
+              Don't have an account?{' '}
+              <Link
+                href="/auth/signup"
+                className="admin-link font-medium"
+              >
+                Contact us to get started
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        {/* Additional Info */}
+        <p className="admin-text-tertiary mt-8 text-center text-xs">
+          By signing in, you agree to our{' '}
+          <Link href="/terms" className="admin-link underline">
+            Terms of Service
+          </Link>{' '}
+          and{' '}
+          <Link href="/privacy" className="admin-link underline">
+            Privacy Policy
+          </Link>
+        </p>
       </div>
     </div>
   );

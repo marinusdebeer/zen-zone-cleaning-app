@@ -36,42 +36,42 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
       description: 'Schedule a cleaning job',
       icon: Briefcase,
       href: '/jobs/new',
-      color: 'from-[#4a7c59] to-[#4a8c37]',
+      color: 'from-brand to-brand-dark',
     },
     {
       label: 'New Lead',
       description: 'Capture a potential client',
       icon: UserPlus,
       href: '/leads?action=create',
-      color: 'from-yellow-500 to-orange-500',
+      color: 'from-brand to-brand-dark',
     },
     {
       label: 'New Client',
       description: 'Add a client to your database',
       icon: Users,
       href: '/clients?action=create',
-      color: 'from-blue-500 to-indigo-500',
+      color: 'from-brand to-brand-dark',
     },
     {
       label: 'New Estimate',
       description: 'Create a quote for services',
       icon: FileText,
       href: '/estimates/new',
-      color: 'from-purple-500 to-pink-500',
+      color: 'from-brand to-brand-dark',
     },
     {
       label: 'New Invoice',
       description: 'Bill a client for services',
       icon: Receipt,
       href: '/invoices/new',
-      color: 'from-green-500 to-emerald-500',
+      color: 'from-brand to-brand-dark',
     },
     {
       label: 'Record Payment',
       description: 'Log a payment received',
       icon: DollarSign,
       href: '/payments?action=create',
-      color: 'from-emerald-500 to-teal-500',
+      color: 'from-brand to-brand-dark',
     },
   ];
 
@@ -84,8 +84,8 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
         }}
         className={`p-3 rounded-full transition-all shadow-lg ${
           showMenu 
-            ? 'bg-gray-700 text-white rotate-45' 
-            : 'bg-gradient-to-r from-[#4a8c37] to-[#4a7c59] text-white hover:from-[#4a7c59] hover:to-[#4a8c37]'
+            ? 'bg-brand-dark text-white rotate-45' 
+            : 'bg-gradient-to-r from-brand to-brand-dark text-white hover:from-brand-dark hover:to-brand'
         }`}
         title="Create new..."
       >
@@ -112,7 +112,7 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
                     <Icon className="w-5 h-5 text-white" />
                   </div>
                   <div className="ml-3 flex-1">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-[#4a7c59]">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-brand">
                       {option.label}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{option.description}</p>

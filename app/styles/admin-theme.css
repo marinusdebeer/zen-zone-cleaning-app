@@ -1,0 +1,113 @@
+/* ==============================================
+   CLEANFLOW ADMIN PLATFORM THEME
+   This is the main CleanFlow branding for admin dashboard
+   ============================================== */
+
+:root {
+  /* CleanFlow Brand Colors - Change here to rebrand the platform */
+  --cleanflow-primary: #14b8a6;         /* Teal-500 - Modern, professional */
+  --cleanflow-primary-dark: #0f766e;    /* Teal-700 - Deep teal */
+  --cleanflow-primary-light: #2dd4bf;   /* Teal-400 - Bright teal */
+  --cleanflow-accent: #f97316;          /* Orange-500 - Vibrant coral */
+  --cleanflow-accent-light: #fb923c;    /* Orange-400 - Bright coral */
+  
+  /* CleanFlow Background Colors - Light Mode */
+  --cleanflow-bg: #ffffff;              /* Pure white */
+  --cleanflow-bg-secondary: #f9fafb;    /* Gray-50 - Neutral light */
+  --cleanflow-bg-tertiary: #f3f4f6;     /* Gray-100 - Light gray */
+  --cleanflow-border: #e5e7eb;          /* Gray-200 - Clear border */
+  --cleanflow-border-hover: #d1d5db;    /* Gray-300 - Visible border */
+  
+  /* CleanFlow Text Colors - Light Mode */
+  --cleanflow-text-primary: #111827;    /* Gray-900 - Dark readable text */
+  --cleanflow-text-secondary: #4b5563;  /* Gray-600 - Medium text */
+  --cleanflow-text-tertiary: #6b7280;   /* Gray-500 - Light text */
+  
+  /* Admin Theme - Light Mode */
+  --admin-primary: var(--cleanflow-primary);
+  --admin-primary-hover: var(--cleanflow-primary-dark);
+  --admin-primary-light: var(--cleanflow-primary-light);
+  
+  --admin-secondary: var(--cleanflow-accent);
+  --admin-secondary-hover: #ea580c;
+  --admin-secondary-light: var(--cleanflow-accent-light);
+  
+  --admin-success: #22c55e;
+  --admin-success-hover: #16a34a;
+  --admin-success-light: #4ade80;
+  
+  --admin-warning: #eab308;
+  --admin-warning-hover: #ca8a04;
+  --admin-warning-light: #facc15;
+  
+  --admin-danger: #ef4444;
+  --admin-danger-hover: #dc2626;
+  --admin-danger-light: #f87171;
+  
+  --admin-info: #06b6d4;
+  --admin-info-hover: #0891b2;
+  --admin-info-light: #22d3ee;
+  
+  /* Light mode surfaces - Use brand colors */
+  --admin-bg: var(--cleanflow-bg);
+  --admin-bg-secondary: var(--cleanflow-bg-secondary);
+  --admin-bg-tertiary: var(--cleanflow-bg-tertiary);
+  --admin-border: var(--cleanflow-border);
+  --admin-border-hover: var(--cleanflow-border-hover);
+  
+  /* Light mode text - Use brand colors */
+  --admin-text-primary: var(--cleanflow-text-primary);
+  --admin-text-secondary: var(--cleanflow-text-secondary);
+  --admin-text-tertiary: var(--cleanflow-text-tertiary);
+}
+
+.dark {
+  /* CleanFlow Background Colors - Dark Mode */
+  --cleanflow-bg-dark: #0f172a;         /* Slate-900 - Deep dark */
+  --cleanflow-bg-secondary-dark: #1e293b; /* Slate-800 - Slightly lighter */
+  --cleanflow-bg-tertiary-dark: #334155; /* Slate-700 - Medium dark */
+  --cleanflow-border-dark: #334155;     /* Slate-700 - Subtle border */
+  --cleanflow-border-hover-dark: #475569; /* Slate-600 - Visible border */
+  
+  /* CleanFlow Text Colors - Dark Mode */
+  --cleanflow-text-primary-dark: #f1f5f9; /* Slate-100 - Very light, readable */
+  --cleanflow-text-secondary-dark: #cbd5e1; /* Slate-300 - Light gray */
+  --cleanflow-text-tertiary-dark: #94a3b8; /* Slate-400 - Medium gray */
+  
+  /* Admin Theme - Dark Mode */
+  --admin-primary: var(--cleanflow-primary);
+  --admin-primary-hover: var(--cleanflow-primary-light);
+  --admin-primary-light: var(--cleanflow-primary-dark);
+  
+  --admin-secondary: var(--cleanflow-accent-light);
+  --admin-secondary-hover: #fdba74;
+  --admin-secondary-light: var(--cleanflow-accent);
+  
+  --admin-success: #22c55e;
+  --admin-success-hover: #4ade80;
+  --admin-success-light: #16a34a;
+  
+  --admin-warning: #facc15;
+  --admin-warning-hover: #fde047;
+  --admin-warning-light: #eab308;
+  
+  --admin-danger: #ef4444;
+  --admin-danger-hover: #f87171;
+  --admin-danger-light: #dc2626;
+  
+  --admin-info: #22d3ee;
+  --admin-info-hover: #67e8f9;
+  --admin-info-light: #06b6d4;
+  
+  /* Dark mode surfaces - Use brand colors */
+  --admin-bg: var(--cleanflow-bg-dark);
+  --admin-bg-secondary: var(--cleanflow-bg-secondary-dark);
+  --admin-bg-tertiary: var(--cleanflow-bg-tertiary-dark);
+  --admin-border: var(--cleanflow-border-dark);
+  --admin-border-hover: var(--cleanflow-border-hover-dark);
+  
+  /* Dark mode text - Use brand colors */
+  --admin-text-primary: var(--cleanflow-text-primary-dark);
+  --admin-text-secondary: var(--cleanflow-text-secondary-dark);
+  --admin-text-tertiary: var(--cleanflow-text-tertiary-dark);
+}

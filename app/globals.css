@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Theme System - Clean and Consolidated */
+@import "./styles/admin-theme.css";          /* Admin CSS variables */
+@import "./styles/admin-components.css";     /* Admin components */
+@import "./styles/tenant.css";               /* Tenant (all-in-one) */
+
 @variant dark (&:is(.dark *));
 
 @theme {
@@ -7,23 +12,71 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
-  --color-background: #ffffff;
-  --color-foreground: #171717;
   
-  /* Zen Zone Cleaning Brand Colors */
-  --color-primary: #2e3d2f;
-  --color-secondary: #4a7c59;
-  --color-accent: #4a8c37;
-  --color-light-accent: #78A265;
-  --color-surface: #f7faf7;
-  --color-dark-bg: #0c1110;
-  --color-cta: #4a8c37;
+  /* Admin Brand Colors */
+  --color-admin: var(--admin-primary);
+  --color-admin-dark: var(--admin-primary-hover);
+  --color-admin-light: var(--admin-primary-light);
+  --color-admin-accent: var(--admin-secondary);
+  --color-admin-accent-light: var(--admin-secondary-light);
+  --color-admin-success: var(--admin-success);
+  --color-admin-warning: var(--admin-warning);
+  --color-admin-danger: var(--admin-danger);
+  --color-admin-info: var(--admin-info);
   
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-:root {
+/* Tenant Brand Utilities - Dynamic Tailwind classes */
+/* These update automatically with dark mode */
+@layer utilities {
+  /* Brand Colors */
+  .bg-brand { background-color: var(--tenant-primary); }
+  .bg-brand-dark { background-color: var(--tenant-primary-dark); }
+  .bg-brand-light { background-color: var(--tenant-primary-light); }
+  .bg-brand-accent { background-color: var(--tenant-accent); }
+  
+  .text-brand { color: var(--tenant-primary); }
+  .text-brand-dark { color: var(--tenant-primary-dark); }
+  .text-brand-light { color: var(--tenant-primary-light); }
+  
+  .border-brand { border-color: var(--tenant-primary); }
+  .border-brand-dark { border-color: var(--tenant-primary-dark); }
+  
+  /* Backgrounds */
+  .bg-brand-bg { background-color: var(--tenant-bg); }
+  .bg-brand-bg-secondary { background-color: var(--tenant-bg-secondary); }
+  .bg-brand-bg-tertiary { background-color: var(--tenant-bg-tertiary); }
+  
+  /* Borders */
+  .border-brand-border { border-color: var(--tenant-border); }
+  .border-brand-border-hover { border-color: var(--tenant-border-hover); }
+  
+  /* Text */
+  .text-brand-text { color: var(--tenant-text-primary); }
+  .text-brand-text-secondary { color: var(--tenant-text-secondary); }
+  .text-brand-text-tertiary { color: var(--tenant-text-tertiary); }
+  
+  /* Status */
+  .text-brand-success { color: var(--tenant-success); }
+  .text-brand-warning { color: var(--tenant-warning); }
+  .text-brand-danger { color: var(--tenant-danger); }
+  .text-brand-info { color: var(--tenant-info); }
+  
+  .bg-brand-success { background-color: var(--tenant-success); }
+  .bg-brand-warning { background-color: var(--tenant-warning); }
+  .bg-brand-danger { background-color: var(--tenant-danger); }
+  .bg-brand-info { background-color: var(--tenant-info); }
+  
+  .border-l-brand { border-left-color: var(--tenant-primary); }
+  .border-l-brand-success { border-left-color: var(--tenant-success); }
+  .border-l-brand-warning { border-left-color: var(--tenant-warning); }
+  .border-l-brand-danger { border-left-color: var(--tenant-danger); }
+  .border-l-brand-info { border-left-color: var(--tenant-info); }
+}
+
+  :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -67,54 +120,10 @@ body {
   background: var(--color-primary);
 }
 
-/* Utility classes for theme colors */
-.text-primary {
-  color: var(--color-primary);
-}
-
-.bg-primary {
-  background-color: var(--color-primary);
-}
-
-.text-secondary {
-  color: var(--color-secondary);
-}
-
-.bg-secondary {
-  background-color: var(--color-secondary);
-}
-
-.text-accent {
-  color: var(--color-accent);
-}
-
-.bg-accent {
-  background-color: var(--color-accent);
-}
-
-.text-light-accent {
-  color: var(--color-light-accent);
-}
-
-.bg-light-accent {
-  background-color: var(--color-light-accent);
-}
-
-.text-surface {
-  color: var(--color-surface);
-}
-
-.bg-surface {
-  background-color: var(--color-surface);
-}
-
-.text-cta {
-  color: var(--color-cta);
-}
-
-.bg-cta {
-  background-color: var(--color-cta);
-}
+/* ==============================================
+   BASE STYLES ONLY
+   All theme-specific styles moved to /styles folder
+   ============================================== */
 
 /* Focus styles for better accessibility */
 *:focus-visible {

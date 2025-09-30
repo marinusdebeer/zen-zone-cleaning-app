@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/ui/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Zen Zone Cleaning",
-  description: "Multi-tenant cleaning service management",
+  title: "CleanFlow",
+  description: "Complete Business Management for Cleaning Services",
 };
 
 export default function RootLayout({
@@ -21,26 +22,45 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                const theme = localStorage.getItem('theme');
-                const html = document.documentElement;
-                if (theme === 'dark') {
-                  html.classList.remove('light');
-                  html.classList.add('dark');
-                } else if (theme === 'light') {
-                  html.classList.remove('dark');
-                  html.classList.add('light');
-                } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                  html.classList.add('dark');
-                } else {
-                  html.classList.add('light');
+                // Get manual theme and timestamp
+                const manualTheme = localStorage.getItem('theme');
+                const manualTimestamp = parseInt(localStorage.getItem('theme_timestamp') || '0', 10);
+                
+                // Get system theme and timestamp
+                const systemThemeSaved = localStorage.getItem('system_theme');
+                const systemTimestamp = parseInt(localStorage.getItem('system_theme_timestamp') || '0', 10);
+                
+                // Get current system preference
+                const systemIsDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                const currentSystemTheme = systemIsDark ? 'dark' : 'light';
+                const now = Date.now();
+                
+                // Check if system theme changed
+                let actualSystemTimestamp = systemTimestamp;
+                if (currentSystemTheme !== systemThemeSaved) {
+                  actualSystemTimestamp = now;
+                  localStorage.setItem('system_theme', currentSystemTheme);
+                  localStorage.setItem('system_theme_timestamp', now.toString());
                 }
+                
+                // Use whichever changed most recently
+                let activeTheme;
+                if (manualTimestamp > actualSystemTimestamp) {
+                  activeTheme = manualTheme || currentSystemTheme;
+                } else {
+                  activeTheme = currentSystemTheme;
+                }
+                
+                document.documentElement.classList.toggle('dark', activeTheme === 'dark');
               } catch (e) {}
             `,
           }}
         />
       </head>
       <body className={inter.className}>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -84,8 +84,8 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <Briefcase className="w-7 h-7 mr-2 text-[#4a7c59]" />
+          <h1 className="text-2xl font-bold flex items-center">
+            <Briefcase className="w-7 h-7 mr-2 text-brand" />
             Jobs
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Manage and track all your cleaning jobs</p>
@@ -107,7 +107,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Jobs</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{totalJobs}</p>
             </div>
-            <Briefcase className="h-8 w-8 text-[#4a7c59]" />
+            <Briefcase className="h-8 w-8 text-brand" />
           </div>
         </div>
 
@@ -162,8 +162,8 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
             onClick={() => setStatusFilter('ALL')}
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               statusFilter === 'ALL'
-                ? 'bg-[#4a7c59] text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? 'bg-brand text-white'
+                : 'bg-brand-bg-secondary hover:bg-brand-bg-tertiary'
             }`}
           >
             All ({totalJobs})
@@ -174,8 +174,8 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
               onClick={() => setStatusFilter(status)}
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                 statusFilter === status
-                  ? 'bg-[#4a7c59] text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  ? 'bg-brand text-white'
+                  : 'bg-brand-bg-secondary hover:bg-brand-bg-tertiary'
               }`}
             >
               {status} ({statusCounts[status] || 0})
@@ -202,7 +202,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
           {!searchTerm && (
             <Link
               href="/jobs/new"
-              className="px-6 py-3 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors inline-flex items-center"
+              className="bg-brand text-white font-semibold px-6 py-3 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all hover:bg-brand-dark inline-flex items-center"
             >
               <Plus className="w-5 h-5 mr-2" />
               Create Your First Job
@@ -314,7 +314,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                     </td>
                     <td className="px-6 py-4 text-right">
                       {job.estimatedCost ? (
-                        <p className="text-sm font-semibold text-[#4a7c59]">
+                        <p className="text-sm font-semibold text-brand">
                           ${job.estimatedCost.toFixed(2)}
                         </p>
                       ) : (
@@ -324,7 +324,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                     <td className="px-6 py-4 text-right">
                       <Link
                         href={`/jobs/${job.id}`}
-                        className="text-[#4a7c59] hover:text-[#4a8c37] font-medium text-sm inline-flex items-center"
+                        className="text-brand hover:text-brand-dark font-medium text-sm inline-flex items-center"
                       >
                         View
                         <ArrowRight className="w-4 h-4 ml-1" />

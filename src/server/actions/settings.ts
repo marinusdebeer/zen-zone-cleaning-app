@@ -110,37 +110,6 @@ export async function updateServices(services: { name: string; description?: str
   return { success: true };
 }
 
-export async function updateBranding(branding: {
-  primaryColor?: string;
-  secondaryColor?: string;
-  accentColor?: string;
-  logo?: string;
-}) {
-  const session = await auth();
-  if (!session?.user) throw new Error('Unauthorized');
-
-  const selectedOrgId = (session as any).selectedOrgId;
-  if (!selectedOrgId) throw new Error('No organization selected');
-
-  const org = await prisma.organization.findUnique({
-    where: { id: selectedOrgId },
-    select: { settings: true }
-  });
-
-  await prisma.organization.update({
-    where: { id: selectedOrgId },
-    data: {
-      settings: {
-        ...(org?.settings || {}),
-        branding,
-      },
-    },
-  });
-
-  revalidatePath('/settings');
-  return { success: true };
-}
-
 export async function updateUserProfile(data: {
   name: string;
   email: string;

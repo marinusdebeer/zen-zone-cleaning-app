@@ -26,7 +26,7 @@ export default function NewOrganizationPage() {
     
     try {
       const result = await createOrganization(formData);
-      setSuccess({ tempPassword: result.tempPassword });
+      setSuccess({ tempPassword: result.temporaryPassword });
       
       // Redirect after showing success message
       setTimeout(() => {
@@ -48,28 +48,28 @@ export default function NewOrganizationPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
+    <div className="min-h-screen admin-bg-secondary p-6">
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-6">
           <Link
             href="/admin"
-            className="inline-flex items-center text-gray-400 hover:text-white mb-4"
+            className="admin-link inline-flex items-center mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Admin
           </Link>
-          <h1 className="text-3xl font-bold text-white">Create New Organization</h1>
-          <p className="text-gray-400 mt-1">Add a new cleaning business to the platform</p>
+          <h1 className="text-3xl font-bold">Create New Organization</h1>
+          <p className="mt-1">Add a new cleaning business to the platform</p>
         </div>
 
         {/* Success Message */}
         {success && (
-          <div className="bg-green-900/30 border-2 border-green-500 rounded-xl p-6">
+          <div className="admin-card-secondary border-2" style={{ borderColor: 'var(--admin-success)' }}>
             <div className="flex items-center space-x-3 mb-4">
-              <CheckCircle className="w-8 h-8 text-green-400" />
+              <CheckCircle className="w-8 h-8 admin-icon-success" />
               <div>
-                <h3 className="text-lg font-semibold text-white">Organization Created Successfully!</h3>
+                <h3 className="text-lg font-semibold">Organization Created Successfully!</h3>
                 <p className="text-sm text-gray-300 mt-1">Redirecting to admin dashboard...</p>
               </div>
             </div>
@@ -77,7 +77,7 @@ export default function NewOrganizationPage() {
               <p className="text-sm text-white mb-2"><strong>Owner Login Credentials:</strong></p>
               <p className="text-sm text-gray-300">Email: {formData.ownerEmail}</p>
               <p className="text-sm text-gray-300">Temporary Password: <span className="font-mono bg-gray-700 px-2 py-1 rounded">{success.tempPassword}</span></p>
-              <p className="text-xs text-yellow-300 mt-2">⚠️ Save these credentials - they won't be shown again!</p>
+              <p className="text-xs admin-icon-warning mt-2">⚠️ Save these credentials - they won't be shown again!</p>
             </div>
           </div>
         )}
@@ -90,17 +90,17 @@ export default function NewOrganizationPage() {
         )}
 
         {/* Form */}
-        <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <div className="admin-card">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Organization Info */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white flex items-center">
-                <Building className="w-5 h-5 mr-2 text-blue-400" />
+              <h3 className="text-lg font-semibold flex items-center">
+                <Building className="w-5 h-5 mr-2 admin-icon-primary" />
                 Organization Information
               </h3>
 
               <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">
+                <label className="text-sm font-medium mb-2 block">
                   Business Name *
                 </label>
                 <input
@@ -108,13 +108,13 @@ export default function NewOrganizationPage() {
                   required
                   value={formData.name}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="admin-input w-full px-4 py-3 rounded-lg"
                   placeholder="e.g., Sparkle Clean Services"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">
+                <label className="text-sm font-medium mb-2 block">
                   Slug * <span className="text-xs text-gray-500">(used in URLs, auto-generated)</span>
                 </label>
                 <input
@@ -122,7 +122,7 @@ export default function NewOrganizationPage() {
                   required
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="admin-input w-full px-4 py-3 rounded-lg"
                   placeholder="sparkle-clean"
                   pattern="[a-z0-9-]+"
                 />
@@ -132,13 +132,13 @@ export default function NewOrganizationPage() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">
+                <label className="text-sm font-medium mb-2 block">
                   Industry
                 </label>
                 <select
                   value={formData.industry}
                   onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="admin-input w-full px-4 py-3 rounded-lg"
                 >
                   <option value="cleaning">Cleaning Services</option>
                   <option value="residential">Residential Cleaning</option>
@@ -149,14 +149,14 @@ export default function NewOrganizationPage() {
             </div>
 
             {/* Owner Information */}
-            <div className="space-y-4 pt-6 border-t border-gray-700">
-              <h3 className="text-lg font-semibold text-white flex items-center">
-                <User className="w-5 h-5 mr-2 text-green-400" />
+            <div className="space-y-4 pt-6 border-t admin-border">
+              <h3 className="text-lg font-semibold flex items-center">
+                <User className="w-5 h-5 mr-2 admin-icon-success" />
                 Organization Owner
               </h3>
 
               <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">
+                <label className="text-sm font-medium mb-2 block">
                   Owner Name *
                 </label>
                 <input
@@ -164,13 +164,13 @@ export default function NewOrganizationPage() {
                   required
                   value={formData.ownerName}
                   onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="admin-input w-full px-4 py-3 rounded-lg"
                   placeholder="John Smith"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-400 mb-2 block">
+                <label className="text-sm font-medium mb-2 block">
                   Owner Email *
                 </label>
                 <input
@@ -178,7 +178,7 @@ export default function NewOrganizationPage() {
                   required
                   value={formData.ownerEmail}
                   onChange={(e) => setFormData({ ...formData, ownerEmail: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="admin-input w-full px-4 py-3 rounded-lg"
                   placeholder="owner@example.com"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -188,8 +188,8 @@ export default function NewOrganizationPage() {
             </div>
 
             {/* Info Box */}
-            <div className="p-4 bg-blue-900/30 border border-blue-700 rounded-lg">
-              <p className="text-sm text-blue-300">
+            <div className="admin-card-secondary">
+              <p className="text-sm">
                 <strong>What happens next:</strong>
                 <br />
                 1. Organization is created with isolated database
@@ -203,17 +203,17 @@ export default function NewOrganizationPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-700">
+            <div className="flex justify-end space-x-3 pt-6 border-t admin-border">
               <Link
                 href="/admin"
-                className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
+                className="admin-icon-button px-6 py-3 rounded-lg"
               >
                 Cancel
               </Link>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="admin-btn-primary px-6 py-3 rounded-lg disabled:opacity-50"
               >
                 {loading ? 'Creating...' : 'Create Organization'}
               </button>

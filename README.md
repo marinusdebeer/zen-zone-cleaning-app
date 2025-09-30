@@ -37,16 +37,16 @@ A production-ready Next.js application for managing service businesses, with bui
    ```
 
 2. **Environment setup:**
+   Create a `.env.local` file in the project root:
    ```bash
-   cp .env.example .env
-   ```
-   
-   Update your `.env` file with:
-   ```
+   # .env.local (git-ignored by default)
    DATABASE_URL="postgresql://username:password@localhost:5432/zenzone?schema=public"
    NEXTAUTH_URL="http://localhost:3000"
    NEXTAUTH_SECRET="your-secret-key-here"
    ```
+   
+   > **Note:** Use `.env.local` for local development (automatically git-ignored). 
+   > Never commit this file. For production, set environment variables in your hosting platform.
 
 3. **Database setup:**
    ```bash

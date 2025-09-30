@@ -74,23 +74,23 @@ const docs = [
 ];
 
 const colorClasses = {
-  blue: 'from-blue-900/30 to-blue-800/20 border-blue-700 group-hover:border-blue-500',
-  red: 'from-red-900/30 to-red-800/20 border-red-700 group-hover:border-red-500',
-  green: 'from-green-900/30 to-green-800/20 border-green-700 group-hover:border-green-500',
-  purple: 'from-purple-900/30 to-purple-800/20 border-purple-700 group-hover:border-purple-500',
-  indigo: 'from-indigo-900/30 to-indigo-800/20 border-indigo-700 group-hover:border-indigo-500',
-  yellow: 'from-yellow-900/30 to-yellow-800/20 border-yellow-700 group-hover:border-yellow-500',
-  pink: 'from-pink-900/30 to-pink-800/20 border-pink-700 group-hover:border-pink-500',
+  blue: 'admin-card-secondary',
+  red: 'admin-card-secondary',
+  green: 'admin-card-secondary',
+  purple: 'admin-card-secondary',
+  indigo: 'admin-card-secondary',
+  yellow: 'admin-card-secondary',
+  pink: 'admin-card-secondary',
 };
 
 const iconColorClasses = {
-  blue: 'text-blue-400',
-  red: 'text-red-400',
-  green: 'text-green-400',
-  purple: 'text-purple-400',
-  indigo: 'text-indigo-400',
-  yellow: 'text-yellow-400',
-  pink: 'text-pink-400',
+  blue: 'admin-icon-primary',
+  red: 'admin-icon-danger',
+  green: 'admin-icon-success',
+  purple: 'admin-icon-secondary',
+  indigo: 'admin-icon-primary',
+  yellow: 'admin-icon-warning',
+  pink: 'admin-icon-secondary',
 };
 
 export default async function AdminDocsPage() {
@@ -109,11 +109,11 @@ export default async function AdminDocsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white flex items-center">
-            <BookOpen className="w-8 h-8 mr-3 text-blue-400" />
+          <h1 className="text-3xl font-bold flex items-center">
+            <BookOpen className="w-8 h-8 mr-3 admin-icon-primary" />
             Documentation
           </h1>
-          <p className="text-gray-400 mt-1">Everything you need to know about managing CleanFlow</p>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Everything you need to know about managing CleanFlow</p>
         </div>
         <Link
           href="/admin/settings"
@@ -131,10 +131,10 @@ export default async function AdminDocsPage() {
         return (
           <div key={category} className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="h-8 w-1 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-white flex items-center">
+              <div className="admin-brand-gradient-accent h-8 w-1 rounded-full"></div>
+              <h2 className="text-2xl font-bold flex items-center">
                 {category}
-                <span className="ml-3 px-3 py-1 text-xs bg-gray-800 text-gray-400 rounded-full border border-gray-700">
+                <span className="ml-3 px-3 py-1 text-xs bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400 rounded-full border border-gray-200 dark:border-gray-700">
                   {categoryDocs.length} {categoryDocs.length === 1 ? 'guide' : 'guides'}
                 </span>
               </h2>
@@ -155,7 +155,7 @@ export default async function AdminDocsPage() {
                         </div>
                         <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-white group-hover:translate-x-1 transition-all" />
                       </div>
-                      <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-300 transition-colors">
+                      <h3 className="text-lg font-semibold mb-2 group-hover:admin-text-primary transition-colors">
                         {doc.title}
                       </h3>
                       <p className="text-sm text-gray-400 leading-relaxed">
@@ -171,18 +171,18 @@ export default async function AdminDocsPage() {
       })}
 
       {/* Quick Links */}
-      <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Quick Links</h2>
+      <div className="admin-card">
+        <h2 className="text-lg font-semibold mb-4">Quick Links</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          <Link href="/admin" className="text-blue-400 hover:text-blue-300 text-sm flex items-center">
+          <Link href="/admin" className="admin-link text-sm flex items-center">
             <ChevronRight className="w-4 h-4 mr-1" />
             Organizations Dashboard
           </Link>
-          <Link href="/admin/analytics" className="text-blue-400 hover:text-blue-300 text-sm flex items-center">
+          <Link href="/admin/analytics" className="admin-link text-sm flex items-center">
             <ChevronRight className="w-4 h-4 mr-1" />
             Platform Analytics
           </Link>
-          <Link href="/admin/settings" className="text-blue-400 hover:text-blue-300 text-sm flex items-center">
+          <Link href="/admin/settings" className="admin-link text-sm flex items-center">
             <ChevronRight className="w-4 h-4 mr-1" />
             System Settings
           </Link>
