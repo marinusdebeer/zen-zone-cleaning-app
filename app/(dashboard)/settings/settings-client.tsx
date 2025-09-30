@@ -264,7 +264,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="text"
                     value={orgInfo.name}
                     onChange={(e) => setOrgInfo({ ...orgInfo, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -273,7 +273,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="text"
                     value={orgInfo.industry}
                     onChange={(e) => setOrgInfo({ ...orgInfo, industry: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -282,7 +282,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="tel"
                     value={orgInfo.phone}
                     onChange={(e) => setOrgInfo({ ...orgInfo, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -291,7 +291,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="email"
                     value={orgInfo.email}
                     onChange={(e) => setOrgInfo({ ...orgInfo, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -301,7 +301,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     value={orgInfo.website}
                     onChange={(e) => setOrgInfo({ ...orgInfo, website: e.target.value })}
                     placeholder="https://example.com"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -311,7 +311,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     step="0.01"
                     value={orgInfo.taxRate}
                     onChange={(e) => setOrgInfo({ ...orgInfo, taxRate: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -320,7 +320,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="text"
                     value={orgInfo.address}
                     onChange={(e) => setOrgInfo({ ...orgInfo, address: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -348,7 +348,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="text"
                     value={userProfile.name}
                     onChange={(e) => setUserProfile({ ...userProfile, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -357,7 +357,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="email"
                     value={userProfile.email}
                     onChange={(e) => setUserProfile({ ...userProfile, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -385,7 +385,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="password"
                     value={passwordData.currentPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -394,7 +394,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                   <p className="text-sm text-gray-500 mt-1">Minimum 8 characters</p>
                 </div>
@@ -404,7 +404,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -455,7 +455,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                               [day]: { ...hours, open: e.target.value },
                             })
                           }
-                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900"
                         />
                         <span>to</span>
                         <input
@@ -467,7 +467,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                               [day]: { ...hours, close: e.target.value },
                             })
                           }
-                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900"
                         />
                       </>
                     )}
@@ -514,7 +514,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].name = e.target.value;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                       />
                     </div>
                     <div>
@@ -527,7 +527,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].defaultPrice = parseFloat(e.target.value) || 0;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                       />
                     </div>
                     <div>
@@ -540,7 +540,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].description = e.target.value;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
                       />
                     </div>
                   </div>
@@ -583,7 +583,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                       type="text"
                       value={branding.primaryColor}
                       onChange={(e) => setBranding({ ...branding, primaryColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
+                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono text-gray-900"
                     />
                   </div>
                 </div>
@@ -600,7 +600,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                       type="text"
                       value={branding.secondaryColor}
                       onChange={(e) => setBranding({ ...branding, secondaryColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
+                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono text-gray-900"
                     />
                   </div>
                 </div>
@@ -617,7 +617,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                       type="text"
                       value={branding.accentColor}
                       onChange={(e) => setBranding({ ...branding, accentColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono"
+                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono text-gray-900"
                     />
                   </div>
                 </div>

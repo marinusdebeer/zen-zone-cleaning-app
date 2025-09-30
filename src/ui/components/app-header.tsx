@@ -78,7 +78,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
               <input
                 type="search"
                 placeholder="Search clients, jobs, invoices..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
               />
             </div>
           </div>
