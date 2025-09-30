@@ -79,38 +79,54 @@ async function main() {
 
   console.log(`✅ Created organization: ${zenZoneOrg.name}`);
 
-  // Create owner user
+  // Create users
   const hashedPassword = await bcrypt.hash('password123', 10);
   
-  const ownerUser = await prisma.user.upsert({
-    where: { email: 'owner@zenzonecleaning.com' },
+  // Super Admin (manages all organizations - not tied to any tenant)
+  const superAdmin = await prisma.user.upsert({
+    where: { email: 'marinusdebeer@gmail.com' },
     update: {},
     create: {
-      email: 'owner@zenzonecleaning.com',
-      name: 'Zen Zone Owner',
+      email: 'marinusdebeer@gmail.com',
+      name: 'Marinus de Beer',
       passwordHash: hashedPassword,
+      isSuperAdmin: true,
     },
   });
 
-  console.log(`✅ Created user: ${ownerUser.email}`);
+  console.log(`✅ Created super admin: ${superAdmin.email}`);
+  
+  // Zen Zone Cleaning organization admin
+  const zenZoneAdmin = await prisma.user.upsert({
+    where: { email: 'admin@zenzonecleaning.com' },
+    update: {},
+    create: {
+      email: 'admin@zenzonecleaning.com',
+      name: 'Zen Zone Admin',
+      passwordHash: hashedPassword,
+      isSuperAdmin: false,
+    },
+  });
 
-  // Create membership
+  console.log(`✅ Created organization admin: ${zenZoneAdmin.email}`);
+
+  // Create membership for Zen Zone admin
   const membership = await prisma.membership.upsert({
     where: {
       userId_orgId: {
-        userId: ownerUser.id,
+        userId: zenZoneAdmin.id,
         orgId: zenZoneOrg.id,
       },
     },
     update: {},
     create: {
-      userId: ownerUser.id,
+      userId: zenZoneAdmin.id,
       orgId: zenZoneOrg.id,
       role: 'OWNER',
     },
   });
 
-  console.log(`✅ Created membership: ${membership.role} for ${ownerUser.email} in ${zenZoneOrg.name}`);
+  console.log(`✅ Created membership: ${membership.role} for ${zenZoneAdmin.email} in ${zenZoneOrg.name}`);
 
   // ==================================================================
   // SEED DATA: Complete Business Workflow
@@ -605,9 +621,16 @@ async function main() {
 
   console.log('\n🎉 Seeding completed successfully!');
   console.log('\n📝 Login credentials:');
-  console.log('Email: owner@zenzonecleaning.com');
-  console.log('Password: password123');
-  console.log('Organization: Zen Zone Cleaning');
+  console.log('\n🔧 SUPER ADMIN (Platform Administrator):');
+  console.log('   Email: marinusdebeer@gmail.com');
+  console.log('   Password: password123');
+  console.log('   Access: http://localhost:3000/admin');
+  console.log('   Note: Not tied to any organization - manages entire platform');
+  console.log('\n👤 ZEN ZONE CLEANING ADMIN:');
+  console.log('   Email: admin@zenzonecleaning.com');
+  console.log('   Password: password123');
+  console.log('   Organization: Zen Zone Cleaning');
+  console.log('   Role: OWNER');
   console.log('\n💡 To add more organizations, edit prisma/seed.ts');
 }
 

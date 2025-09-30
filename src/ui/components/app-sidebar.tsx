@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
+  UserPlus,
   FileText,
   Briefcase,
   Receipt,
@@ -34,6 +35,11 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
       label: 'Dashboard',
       href: '/dashboard',
       icon: LayoutDashboard,
+    },
+    {
+      label: 'Leads',
+      href: '/leads',
+      icon: UserPlus,
     },
     {
       label: 'Clients',

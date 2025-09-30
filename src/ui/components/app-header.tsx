@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { 
   Search, 
   Bell, 
@@ -9,7 +10,8 @@ import {
   LogOut,
   Settings,
   User,
-  Menu
+  Menu,
+  Shield
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
@@ -27,6 +29,8 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
   // Mock data for demonstration
   const unreadNotifications = 3;
   const unreadMessages = 2;
+  
+  const isSuperAdmin = (session?.user as any)?.isSuperAdmin || false;
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -81,6 +85,17 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
 
           {/* Right side - Notifications, Messages, User */}
           <div className="flex items-center space-x-4">
+            {/* Admin Link (Super Admin Only) */}
+            {isSuperAdmin && (
+              <Link
+                href="/admin"
+                className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-[#1e40af] to-[#3b82f6] text-white rounded-lg hover:from-[#1e3a8a] hover:to-[#2563eb] transition-all text-sm font-medium shadow-lg"
+              >
+                <Shield className="w-4 h-4" />
+                <span className="hidden md:inline">Admin</span>
+              </Link>
+            )}
+
             {/* Mobile Search */}
             <button className="p-2 rounded-md md:hidden hover:bg-gray-100">
               <Search className="h-5 w-5 text-gray-600" />

@@ -40,6 +40,7 @@ export const authConfig = {
           id: user.id,
           email: user.email,
           name: user.name,
+          isSuperAdmin: user.isSuperAdmin,
         };
       },
     }),
@@ -48,6 +49,16 @@ export const authConfig = {
     async jwt({ token, user }: { token: any; user?: any }) {
       if (user) {
         token.userId = user.id;
+        token.isSuperAdmin = user.isSuperAdmin || false;
+        
+        // Super admins don't need organization selection
+        if (user.isSuperAdmin) {
+          token.selectedOrgId = null;
+          token.selectedOrgSlug = null;
+          token.userRole = 'SUPER_ADMIN';
+          token.userOrgs = [];
+          return token;
+        }
         
         // Get all organizations this user belongs to
         // Supports multi-business: users can be members of multiple organizations
@@ -83,6 +94,7 @@ export const authConfig = {
         user: {
           ...session.user,
           id: token.userId as string,
+          isSuperAdmin: token.isSuperAdmin as boolean,
         },
         selectedOrgId: token.selectedOrgId as string | undefined,
         selectedOrgSlug: token.selectedOrgSlug as string | undefined,

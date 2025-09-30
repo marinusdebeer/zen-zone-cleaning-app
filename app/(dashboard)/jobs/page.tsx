@@ -123,9 +123,9 @@ export default async function JobsPage() {
                     <div className="ml-4 flex flex-col space-y-2">
                       <Link
                         href={`/jobs/${job.id}`}
-                        className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                        className="text-[#4a7c59] hover:text-[#4a8c37] text-sm font-medium"
                       >
-                        View Details
+                        View Details →
                       </Link>
                       
                       {job.status === 'Completed' && (

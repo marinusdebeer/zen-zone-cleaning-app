@@ -67,9 +67,9 @@ export default async function InvoicesPage() {
                     </div>
                     <Link
                       href={`/invoices/${invoice.id}`}
-                      className="text-blue-600 hover:text-blue-800 text-sm"
+                      className="text-[#4a7c59] hover:text-[#4a8c37] text-sm font-medium"
                     >
-                      View Details
+                      View Details →
                     </Link>
                   </div>
                 </div>

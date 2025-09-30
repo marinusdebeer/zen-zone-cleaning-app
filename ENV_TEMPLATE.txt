@@ -1,0 +1,66 @@
+# =============================================================================
+# CLEANFLOW - Environment Variables Template
+# =============================================================================
+# Copy this file to `.env.local` and fill in your values
+# NEVER commit .env.local to Git (it's in .gitignore)
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# DATABASE
+# -----------------------------------------------------------------------------
+DATABASE_URL="postgresql://..."
+
+# -----------------------------------------------------------------------------
+# AUTHENTICATION (NextAuth.js)
+# -----------------------------------------------------------------------------
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-here-generate-with-openssl-rand-base64-32"
+
+# -----------------------------------------------------------------------------
+# EMAIL CONFIGURATION (Required for password resets and welcome emails)
+# -----------------------------------------------------------------------------
+# Choose ONE of the options below and uncomment it:
+
+# --- OPTION 1: Gmail (For Development) ---
+# SMTP_HOST="smtp.gmail.com"
+# SMTP_PORT="587"
+# SMTP_USER="your-email@gmail.com"
+# SMTP_PASSWORD="abcd efgh ijkl mnop"  # Use App Password from Google
+# SMTP_FROM="CleanFlow <your-email@gmail.com>"
+
+# --- OPTION 2: SendGrid (Recommended for Production) ---
+# SMTP_HOST="smtp.sendgrid.net"
+# SMTP_PORT="587"
+# SMTP_USER="apikey"
+# SMTP_PASSWORD="SG.xxxxxxxxxxxxxxxxxxxxx"
+# SMTP_FROM="CleanFlow <noreply@yourdomain.com>"
+
+# --- OPTION 3: AWS SES (Cheapest for High Volume) ---
+# SMTP_HOST="email-smtp.us-east-1.amazonaws.com"
+# SMTP_PORT="587"
+# SMTP_USER="AKIA..."
+# SMTP_PASSWORD="..."
+# SMTP_FROM="CleanFlow <noreply@yourdomain.com>"
+
+# --- OPTION 4: Custom SMTP ---
+# SMTP_HOST="smtp.yourdomain.com"
+# SMTP_PORT="587"
+# SMTP_USER="your-username"
+# SMTP_PASSWORD="your-password"
+# SMTP_FROM="CleanFlow <noreply@yourdomain.com>"
+# SMTP_SECURE="false"  # Set to "true" for port 465
+
+# -----------------------------------------------------------------------------
+# APP URL (Used in email links)
+# -----------------------------------------------------------------------------
+APP_URL="http://localhost:3000"
+
+# =============================================================================
+# QUICK SETUP INSTRUCTIONS:
+# =============================================================================
+# 1. Copy this file: `cp ENV_TEMPLATE.txt .env.local`
+# 2. Fill in your DATABASE_URL
+# 3. Generate NEXTAUTH_SECRET: `openssl rand -base64 32`
+# 4. Configure email (see docs/EMAIL_SETUP.md for detailed instructions)
+# 5. Run: `npm run dev`
+# =============================================================================

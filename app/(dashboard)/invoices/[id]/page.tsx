@@ -1,0 +1,286 @@
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import Link from 'next/link';
+import { prisma } from '@/server/db';
+import { withOrgContext } from '@/server/tenancy';
+import { 
+  ArrowLeft, User, Receipt, Calendar, DollarSign, 
+  CreditCard, CheckCircle, Clock, FileText, ArrowRight 
+} from 'lucide-react';
+
+export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await auth();
+  if (!session?.user) redirect('/auth/signin');
+
+  const selectedOrgId = (session as any).selectedOrgId;
+  if (!selectedOrgId) return <div>No organization selected</div>;
+
+  const { id } = await params;
+
+  const invoice = await withOrgContext(selectedOrgId, async () => {
+    return await prisma.invoice.findUnique({
+      where: { id },
+      include: {
+        client: true,
+        job: {
+          include: {
+            lineItems: true,
+            convertedFromEstimate: true,
+          },
+        },
+        visits: true,
+        payments: { orderBy: { paidAt: 'desc' } },
+      },
+    });
+  });
+
+  if (!invoice) return <div>Invoice not found</div>;
+
+  const totalPaid = invoice.payments.reduce((sum, p) => sum + parseFloat(p.amount.toString()), 0);
+  const balance = parseFloat(invoice.total.toString()) - totalPaid;
+
+  return (
+    <div className="space-y-6">
+      {/* Breadcrumb */}
+      <div className="flex items-center space-x-2 text-sm text-gray-600">
+        <Link href="/invoices" className="hover:text-[#4a7c59]">Invoices</Link>
+        <span>/</span>
+        <span className="text-gray-900 font-medium">Invoice #{invoice.id.slice(0, 8)}</span>
+      </div>
+
+      {/* Header */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="flex items-center space-x-3">
+              <h1 className="text-3xl font-bold text-gray-900">Invoice #{invoice.id.slice(0, 8)}</h1>
+              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                invoice.status === 'Paid' ? 'bg-green-100 text-green-800' :
+                invoice.status === 'Sent' ? 'bg-blue-100 text-blue-800' :
+                invoice.status === 'Overdue' ? 'bg-red-100 text-red-800' :
+                'bg-gray-100 text-gray-800'
+              }`}>{invoice.status}</span>
+            </div>
+          </div>
+          <Link
+            href="/invoices"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Link>
+        </div>
+
+        {/* Invoice Details Grid */}
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Client */}
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-600 mb-1 flex items-center">
+              <User className="w-3 h-3 mr-1" />
+              Client
+            </p>
+            <Link href={`/clients/${invoice.client.id}`} className="font-semibold text-gray-900 hover:text-[#4a7c59] text-lg">
+              {invoice.client.name} →
+            </Link>
+          </div>
+
+          {/* Job */}
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-600 mb-1 flex items-center">
+              <FileText className="w-3 h-3 mr-1" />
+              Related Job
+            </p>
+            <Link href={`/jobs/${invoice.job.id}`} className="font-semibold text-gray-900 hover:text-[#4a7c59] text-lg">
+              {invoice.job.title} →
+            </Link>
+          </div>
+
+          {/* Dates */}
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-600 mb-1 flex items-center">
+              <Calendar className="w-3 h-3 mr-1" />
+              Issued
+            </p>
+            <p className="font-semibold text-gray-900">
+              {invoice.issuedAt ? new Date(invoice.issuedAt).toLocaleDateString() : 'Not issued'}
+            </p>
+          </div>
+
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-600 mb-1 flex items-center">
+              <Calendar className="w-3 h-3 mr-1" />
+              Due Date
+            </p>
+            <p className="font-semibold text-gray-900">
+              {invoice.dueAt ? new Date(invoice.dueAt).toLocaleDateString() : 'Not set'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Estimate Chain */}
+      {invoice.job.convertedFromEstimate && (
+        <div className="bg-blue-50 border-2 border-blue-500 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Conversion Trail</h3>
+          <div className="flex items-center space-x-3 text-sm">
+            <Link href={`/estimates/${invoice.job.convertedFromEstimate.id}`} className="px-3 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50">
+              📋 Estimate: {invoice.job.convertedFromEstimate.title}
+            </Link>
+            <ArrowRight className="w-4 h-4 text-gray-400" />
+            <Link href={`/jobs/${invoice.job.id}`} className="px-3 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50">
+              💼 Job: {invoice.job.title}
+            </Link>
+            <ArrowRight className="w-4 h-4 text-gray-400" />
+            <div className="px-3 py-2 bg-green-100 border border-green-300 rounded-lg">
+              🧾 Invoice (Current)
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Visits Included */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Visits Included ({invoice.visits.length})</h2>
+        {invoice.visits.length > 0 ? (
+          <div className="space-y-3">
+            {invoice.visits.map(visit => (
+              <div key={visit.id} className="p-4 border border-gray-200 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-gray-900">
+                      {new Date(visit.scheduledAt).toLocaleString()}
+                    </p>
+                    {visit.completedAt && (
+                      <p className="text-sm text-green-600 mt-1">
+                        ✓ Completed: {new Date(visit.completedAt).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    visit.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>{visit.status}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500">No visits linked to this invoice</p>
+        )}
+      </div>
+
+      {/* Line Items */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Line Items</h2>
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-700">Description</th>
+              <th className="px-4 py-2 text-right text-xs font-semibold text-gray-700">Qty</th>
+              <th className="px-4 py-2 text-right text-xs font-semibold text-gray-700">Unit Price</th>
+              <th className="px-4 py-2 text-right text-xs font-semibold text-gray-700">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {invoice.job.lineItems.map(item => (
+              <tr key={item.id} className="border-t border-gray-200">
+                <td className="px-4 py-3 text-sm text-gray-900">{item.name}</td>
+                <td className="px-4 py-3 text-sm text-gray-600 text-right">{item.qty}</td>
+                <td className="px-4 py-3 text-sm text-gray-600 text-right">${item.unitPrice.toString()}</td>
+                <td className="px-4 py-3 text-sm font-semibold text-gray-900 text-right">
+                  ${(parseFloat(item.unitPrice.toString()) * item.qty).toFixed(2)}
+                </td>
+              </tr>
+            ))}
+            <tr className="border-t-2 border-gray-300">
+              <td colSpan={3} className="px-4 py-3 text-sm font-semibold text-gray-900 text-right">Subtotal:</td>
+              <td className="px-4 py-3 text-sm font-semibold text-gray-900 text-right">${invoice.subtotal.toString()}</td>
+            </tr>
+            <tr>
+              <td colSpan={3} className="px-4 py-3 text-sm text-gray-700 text-right">Tax (13%):</td>
+              <td className="px-4 py-3 text-sm text-gray-900 text-right">${invoice.taxAmount.toString()}</td>
+            </tr>
+            <tr className="border-t-2 border-gray-300 bg-gray-50">
+              <td colSpan={3} className="px-4 py-3 text-lg font-bold text-gray-900 text-right">Total:</td>
+              <td className="px-4 py-3 text-lg font-bold text-[#4a7c59] text-right">${invoice.total.toString()}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Payments */}
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <CreditCard className="w-5 h-5 mr-2 text-[#4a7c59]" />
+          Payments ({invoice.payments.length})
+        </h2>
+        {invoice.payments.length > 0 ? (
+          <div className="space-y-3">
+            {invoice.payments.map(payment => (
+              <div key={payment.id} className="p-4 border border-gray-200 rounded-lg bg-green-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                      <p className="font-medium text-gray-900">${payment.amount.toString()}</p>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {payment.method.replace('_', ' ')} 
+                      {payment.reference && ` - ${payment.reference}`}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Paid: {new Date(payment.paidAt).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            {/* Payment Summary */}
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border-2 border-gray-300">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-700">Total Paid:</span>
+                <span className="text-lg font-bold text-green-600">${totalPaid.toFixed(2)}</span>
+              </div>
+              {balance > 0 && (
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-sm text-gray-700">Balance Due:</span>
+                  <span className="text-lg font-bold text-red-600">${balance.toFixed(2)}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-sm text-gray-500 mb-4">No payments recorded</p>
+            {invoice.status !== 'Paid' && (
+              <button className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59]">
+                Record Payment
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      {invoice.status !== 'Paid' && (
+        <div className="bg-white rounded-xl shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Actions</h2>
+          <div className="flex space-x-3">
+            {invoice.status === 'Draft' && (
+              <button className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59]">
+                Send to Client
+              </button>
+            )}
+            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              Download PDF
+            </button>
+            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+              Email Invoice
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
