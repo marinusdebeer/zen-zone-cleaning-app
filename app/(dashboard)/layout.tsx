@@ -2,6 +2,8 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { SessionProvider } from "@/ui/components/session-provider";
 import { DashboardWrapper } from "@/ui/components/dashboard-wrapper";
+import { ThemeProvider } from "@/ui/components/theme-provider";
+import { SidebarProvider } from "@/ui/components/sidebar-context";
 import { prisma } from '@/server/db';
 
 export default async function DashboardLayout({
@@ -48,10 +50,14 @@ export default async function DashboardLayout({
   }
 
   return (
-    <SessionProvider>
-      <DashboardWrapper>
-        {children}
-      </DashboardWrapper>
-    </SessionProvider>
+    <ThemeProvider>
+      <SidebarProvider>
+        <SessionProvider>
+          <DashboardWrapper>
+            {children}
+          </DashboardWrapper>
+        </SessionProvider>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { AppHeader } from './app-header';
 import { AppSidebar } from './app-sidebar';
+import { useSidebar } from './sidebar-context';
 
 interface DashboardWrapperProps {
   children: React.ReactNode;
@@ -10,9 +11,10 @@ interface DashboardWrapperProps {
 
 export function DashboardWrapper({ children }: DashboardWrapperProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isCollapsed } = useSidebar();
 
   return (
-    <div className="min-h-screen bg-[#f7faf7]">
+    <div className="min-h-screen bg-[#f7faf7] dark:bg-gray-900 transition-colors">
       {/* Sidebar */}
       <AppSidebar 
         isOpen={sidebarOpen} 
@@ -20,12 +22,12 @@ export function DashboardWrapper({ children }: DashboardWrapperProps) {
       />
 
       {/* Main content */}
-      <div className="lg:ml-64 flex flex-col min-h-screen">
+      <div className={`flex flex-col min-h-screen transition-all duration-300 ${isCollapsed ? 'lg:ml-16' : 'lg:ml-64'}`}>
         {/* Header */}
         <AppHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
         {/* Page content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 bg-[#f7faf7] dark:bg-gray-900">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>

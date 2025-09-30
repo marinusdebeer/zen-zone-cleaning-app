@@ -1,143 +1,109 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { Prisma } from '@/generated/prisma';
-import { prisma } from '../db';
-import { withOrgContext, getOrgBySlug } from '../tenancy';
-import { createInvoiceSchema, updateInvoiceSchema } from '../validators/invoice';
 import { auth } from '@/lib/auth';
+import { prisma } from '../db';
+import { revalidatePath } from 'next/cache';
 
-export async function getInvoices(orgId: string) {
-  return withOrgContext(orgId, async () => {
-    return await prisma.invoice.findMany({
-      include: {
-        client: true,
-        job: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  });
-}
-
-export async function getInvoice(orgId: string, invoiceId: string) {
-  return withOrgContext(orgId, async () => {
-    return await prisma.invoice.findUnique({
-      where: { id: invoiceId },
-      include: {
-        client: true,
-        job: {
-          include: {
-            lineItems: true,
-          },
-        },
-      },
-    });
-  });
-}
-
-export async function createInvoice(orgId: string, data: unknown) {
+export async function createInvoice(data: {
+  clientId: string;
+  jobId?: string;
+  visitIds?: string[];
+  subtotal: number;
+  taxRate: number;
+  dueDate?: Date;
+  notes?: string;
+}) {
   const session = await auth();
   if (!session?.user) {
     throw new Error('Unauthorized');
   }
 
-  const validatedData = createInvoiceSchema.parse(data);
-
-  return withOrgContext(orgId, async () => {
-    // Calculate total from line items
-    const total = validatedData.lineItems.reduce((sum, item) => {
-      const itemTotal = item.qty * item.unitPrice;
-      const tax = item.taxRate ? itemTotal * (item.taxRate / 100) : 0;
-      return sum + itemTotal + tax;
-    }, 0);
-
-    // Create invoice and line items in a transaction
-    const invoice = await prisma.$transaction(async (tx) => {
-      const createdInvoice = await tx.invoice.create({
-        data: {
-          orgId: org.id,
-          jobId: validatedData.jobId,
-          clientId: validatedData.clientId,
-          total: new Prisma.Decimal(total.toString()),
-          dueAt: validatedData.dueAt,
-        },
-        include: {
-          client: true,
-          job: true,
-        },
-      });
-
-      // Create line items
-      await tx.lineItem.createMany({
-        data: validatedData.lineItems.map(item => ({
-          orgId: org.id,
-          jobId: validatedData.jobId,
-          name: item.name,
-          qty: item.qty,
-          unitPrice: new Prisma.Decimal(item.unitPrice.toString()),
-          taxRate: item.taxRate ? new Prisma.Decimal(item.taxRate.toString()) : null,
-        })),
-      });
-
-      return createdInvoice;
-    });
-
-    revalidatePath('/invoices');
-    return invoice;
-  });
-}
-
-export async function updateInvoice(orgId: string, data: unknown) {
-  const session = await auth();
-  if (!session?.user) {
-    throw new Error('Unauthorized');
+  const orgId = (session as any).selectedOrgId;
+  if (!orgId) {
+    throw new Error('No organization selected');
   }
 
-  const validatedData = updateInvoiceSchema.parse(data);
-  const { id, lineItems, ...updateData } = validatedData;
+  // Verify client belongs to this org
+  const client = await prisma.client.findUnique({
+    where: { id: data.clientId }
+  });
 
-  return withOrgContext(orgId, async () => {
-    let total: number | undefined;
-    
-    // If line items are provided, recalculate total
-    if (lineItems) {
-      total = lineItems.reduce((sum, item) => {
-        const itemTotal = item.qty * item.unitPrice;
-        const tax = item.taxRate ? itemTotal * (item.taxRate / 100) : 0;
-        return sum + itemTotal + tax;
-      }, 0);
+  if (!client || client.orgId !== orgId) {
+    throw new Error('Client not found');
+  }
+
+  // If job is provided, verify it belongs to this org
+  if (data.jobId) {
+    const job = await prisma.job.findUnique({
+      where: { id: data.jobId }
+    });
+
+    if (!job || job.orgId !== orgId) {
+      throw new Error('Job not found');
     }
+  }
 
-    const invoice = await prisma.invoice.update({
-      where: { id },
-      data: {
-        ...updateData,
-        ...(total !== undefined && { total: new Prisma.Decimal(total.toString()) }),
-      },
-      include: {
-        client: true,
-        job: true,
-      },
-    });
+  const taxAmount = data.subtotal * (data.taxRate / 100);
+  const total = data.subtotal + taxAmount;
 
-    revalidatePath('/invoices');
-    return invoice;
+  const invoice = await prisma.invoice.create({
+    data: {
+      orgId,
+      jobId: data.jobId || null,
+      clientId: data.clientId,
+      visitIds: data.visitIds || [],
+      subtotal: data.subtotal,
+      taxAmount: taxAmount,
+      total: total,
+      status: 'DRAFT',
+      issuedAt: new Date(),
+      dueAt: data.dueDate || null,
+      custom: data.notes ? { notes: data.notes } : {},
+    },
+  });
+
+  revalidatePath('/invoices');
+  return invoice;
+}
+
+export async function getClientsForInvoicing(orgId: string) {
+  return await prisma.client.findMany({
+    where: { orgId },
+    select: {
+      id: true,
+      name: true,
+      emails: true,
+    },
+    orderBy: { name: 'asc' }
   });
 }
 
-export async function deleteInvoice(orgId: string, invoiceId: string) {
-  const session = await auth();
-  if (!session?.user) {
-    throw new Error('Unauthorized');
-  }
-
-  return withOrgContext(orgId, async () => {
-    await prisma.invoice.delete({
-      where: { id: invoiceId },
-    });
-
-    revalidatePath('/invoices');
+export async function getJobsForInvoicing(orgId: string) {
+  const jobs = await prisma.job.findMany({
+    where: {
+      orgId,
+      status: { in: ['Active', 'Completed'] },
+    },
+    include: {
+      client: { select: { id: true, name: true } },
+      property: { select: { address: true } },
+      visits: {
+        select: {
+          id: true,
+          scheduledAt: true,
+          completedAt: true,
+          status: true,
+        },
+        orderBy: { scheduledAt: 'desc' }
+      },
+      invoices: { select: { id: true } }
+    },
+    orderBy: { createdAt: 'desc' }
   });
+
+  // Convert Decimal to Number for client component
+  return jobs.map(job => ({
+    ...job,
+    estimatedCost: job.estimatedCost ? Number(job.estimatedCost) : null
+  }));
 }

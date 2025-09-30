@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Filter, Calendar as CalendarIcon, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { JobModal } from './job-modal';
+import { JobWizard } from '../../../app/(dashboard)/jobs/new/job-wizard';
 
 interface Job {
   id: string;
@@ -17,6 +17,29 @@ interface Job {
   color?: string;
 }
 
+interface Client {
+  id: string;
+  name: string;
+  properties: {
+    id: string;
+    address: string;
+  }[];
+}
+
+interface TeamMember {
+  id: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+}
+
+interface Service {
+  name: string;
+  defaultPrice?: number;
+}
+
 interface CalendarProps {
   jobs: Job[];
   view: 'month' | 'week' | 'day';
@@ -24,6 +47,10 @@ interface CalendarProps {
   onDateChange: (date: Date) => void;
   onViewChange: (view: 'month' | 'week' | 'day') => void;
   onJobCreate?: (job: any) => void;
+  clients: Client[];
+  teamMembers: TeamMember[];
+  services: Service[];
+  orgId: string;
 }
 
 interface DragSelection {
@@ -49,7 +76,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, onJobCreate }: CalendarProps) {
+export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, onJobCreate, clients, teamMembers, services, orgId }: CalendarProps) {
   const [selectedTeam, setSelectedTeam] = useState<string>('all');
   const [isDragging, setIsDragging] = useState(false);
   const [dragSelection, setDragSelection] = useState<DragSelection | null>(null);
@@ -170,11 +197,11 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
     const days = getMonthDays();
 
     return (
-      <div className="bg-white h-full w-full flex flex-col overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 h-full w-full flex flex-col overflow-hidden">
         {/* Days header */}
-        <div className="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
+        <div className="grid grid-cols-7 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
           {DAYS.map(day => (
-            <div key={day} className="py-3 text-center text-sm font-semibold text-gray-700">
+            <div key={day} className="py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300">
               {day}
             </div>
           ))}
@@ -192,14 +219,14 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
             return (
               <div
                 key={index}
-                className={`min-h-[100px] border-b border-r border-gray-200 p-1.5 hover:bg-gray-50 transition-colors ${
-                  !date ? 'bg-gray-50' : ''
+                className={`min-h-[100px] border-b border-r border-gray-200 dark:border-gray-700 p-1.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                  !date ? 'bg-gray-50 dark:bg-gray-900' : 'bg-white dark:bg-gray-800'
                 }`}
               >
                 {date && (
                   <>
                     <div className={`text-sm font-medium mb-1 ${
-                      isToday ? 'flex items-center justify-center w-7 h-7 bg-[#4a7c59] text-white rounded-full' : 'text-gray-700'
+                      isToday ? 'flex items-center justify-center w-7 h-7 bg-[#4a7c59] text-white rounded-full' : 'text-gray-700 dark:text-gray-300'
                     }`}>
                       {date.getDate()}
                     </div>
@@ -215,7 +242,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                         </Link>
                       ))}
                       {dayJobs.length > 3 && (
-                        <div className="text-xs text-gray-500 pl-1.5">
+                        <div className="text-xs text-gray-500 dark:text-gray-400 pl-1.5">
                           +{dayJobs.length - 3} more
                         </div>
                       )}
@@ -242,17 +269,17 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
     });
 
     return (
-      <div className="bg-white h-full w-full flex flex-col overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 h-full w-full flex flex-col overflow-hidden">
         {/* Time grid header */}
-        <div className="flex border-b-2 border-gray-300 bg-gray-50 sticky top-0 z-10">
-          <div className="w-12 flex-shrink-0 p-2 text-[10px] font-semibold text-gray-700 text-right pr-1.5 border-r border-gray-200">Time</div>
+        <div className="flex border-b-2 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
+          <div className="w-12 flex-shrink-0 p-2 text-[10px] font-semibold text-gray-700 dark:text-gray-300 text-right pr-1.5 border-r border-gray-200 dark:border-gray-700">Time</div>
           <div className="flex-1 grid grid-cols-7">
             {weekDays.map((day, index) => {
               const isToday = day.toDateString() === new Date().toDateString();
               return (
-                <div key={index} className={`p-2 text-center ${isToday ? 'bg-[#f7faf7]' : ''}`}>
-                  <div className="text-xs text-gray-600">{DAYS[day.getDay()]}</div>
-                  <div className={`text-base font-bold ${isToday ? 'text-[#4a7c59]' : 'text-gray-900'}`}>
+                <div key={index} className={`p-2 text-center ${isToday ? 'bg-[#f7faf7] dark:bg-gray-700/70' : ''}`}>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">{DAYS[day.getDay()]}</div>
+                  <div className={`text-base font-bold ${isToday ? 'text-[#4a7c59]' : 'text-gray-900 dark:text-white'}`}>
                     {day.getDate()}
                   </div>
                 </div>
@@ -268,12 +295,12 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
               {Array.from({ length: SLOTS_PER_HOUR }).map((_, slotIndex) => {
                 const minute = slotIndex * MINUTES_INCREMENT;
                 const isFirstSlot = slotIndex === 0;
-                const borderClass = isFirstSlot ? 'border-t-2 border-t-gray-300' : 'border-t border-t-gray-100';
+                const borderClass = isFirstSlot ? 'border-t-2 border-t-gray-300 dark:border-t-gray-600' : 'border-t border-t-gray-100 dark:border-t-gray-700';
                 
                 return (
                   <div key={`${hour}-${minute}`} className={`flex ${borderClass}`}>
                     {/* Time label column */}
-                    <div className={`w-12 flex-shrink-0 p-1 text-[10px] text-gray-500 text-right pr-1.5 border-r border-gray-200 ${isFirstSlot ? 'font-medium' : ''}`}>
+                    <div className={`w-12 flex-shrink-0 p-1 text-[10px] text-gray-500 dark:text-gray-400 text-right pr-1.5 border-r border-gray-200 dark:border-gray-700 ${isFirstSlot ? 'font-medium' : ''}`}>
                       {isFirstSlot ? (
                         <span>{hour === 0 ? '12 AM' : hour === 12 ? '12 PM' : hour > 12 ? `${hour - 12} PM` : `${hour} AM`}</span>
                       ) : (
@@ -294,8 +321,8 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                       return (
                         <div 
                           key={dayIndex} 
-                          className={`relative min-h-[15px] border-r border-gray-100 p-0.5 cursor-crosshair transition-colors ${
-                            isSelected ? 'bg-[#4a7c59]/30 border-l-2 border-[#4a7c59]' : 'hover:bg-gray-50'
+                          className={`relative min-h-[15px] border-r border-gray-100 dark:border-gray-700 p-0.5 cursor-crosshair transition-colors ${
+                            isSelected ? 'bg-[#4a7c59]/30 dark:bg-[#4a7c59]/20 border-l-2 border-[#4a7c59]' : 'hover:bg-gray-50 dark:hover:bg-gray-700 bg-transparent'
                           }`}
                           onMouseDown={() => handleMouseDown(hour, minute, dayIndex, day)}
                           onMouseEnter={() => handleMouseEnter(hour, minute, dayIndex, day)}
@@ -336,14 +363,14 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
     const isToday = currentDate.toDateString() === new Date().toDateString();
 
     return (
-      <div className="bg-white h-full w-full flex flex-col overflow-hidden">
-        <div className="p-3 border-b border-gray-200 bg-gray-50">
+      <div className="bg-white dark:bg-gray-800 h-full w-full flex flex-col overflow-hidden">
+        <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-gray-600 dark:text-gray-400">
                 {DAYS[currentDate.getDay()]} {isToday && '• Today'}
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {dayJobs.length} jobs scheduled
               </p>
             </div>
@@ -356,7 +383,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
               {Array.from({ length: SLOTS_PER_HOUR }).map((_, slotIndex) => {
                 const minute = slotIndex * MINUTES_INCREMENT;
                 const isFirstSlot = slotIndex === 0;
-                const borderClass = isFirstSlot ? 'border-t-2 border-t-gray-300' : 'border-t border-t-gray-100';
+                const borderClass = isFirstSlot ? 'border-t-2 border-t-gray-300 dark:border-t-gray-600' : 'border-t border-t-gray-100 dark:border-t-gray-700';
                 const slotJobs = dayJobs.filter(job => {
                   const jobHour = job.startTime.getHours();
                   const jobMinute = job.startTime.getMinutes();
@@ -366,18 +393,18 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
 
                 return (
                   <div key={`${hour}-${minute}`} className={`flex ${borderClass}`}>
-                    <div className={`w-12 flex-shrink-0 p-1 text-[10px] text-gray-500 text-right pr-1.5 border-r border-gray-200 ${isFirstSlot ? 'font-medium' : ''}`}>
+                    <div className={`w-12 flex-shrink-0 p-1 text-[10px] text-gray-500 dark:text-gray-400 text-right pr-1.5 border-r border-gray-200 dark:border-gray-700 ${isFirstSlot ? 'font-medium' : ''}`}>
                       {isFirstSlot ? (
-                        <span className="text-xs text-gray-600">
+                        <span className="text-xs text-gray-600 dark:text-gray-400">
                           {hour === 0 ? '12 AM' : hour === 12 ? '12 PM' : hour > 12 ? `${hour - 12} PM` : `${hour} AM`}
                         </span>
                       ) : (
-                        <span className="text-xs text-gray-400">:{minute.toString().padStart(2, '0')}</span>
+                        <span className="text-xs text-gray-400 dark:text-gray-500">:{minute.toString().padStart(2, '0')}</span>
                       )}
                     </div>
                     <div 
                       className={`flex-1 p-1 min-h-[15px] cursor-crosshair transition-colors ${
-                        isSelected ? 'bg-[#4a7c59]/30 border-l-2 border-[#4a7c59]' : 'hover:bg-gray-50'
+                        isSelected ? 'bg-[#4a7c59]/30 dark:bg-[#4a7c59]/20 border-l-2 border-[#4a7c59]' : 'hover:bg-gray-50 dark:hover:bg-gray-700 bg-transparent'
                       }`}
                       onMouseDown={() => handleMouseDown(hour, minute, 0, currentDate)}
                       onMouseEnter={() => handleMouseEnter(hour, minute, 0, currentDate)}
@@ -427,13 +454,13 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-white">
+    <div className="flex flex-col h-full w-full bg-white dark:bg-gray-800">
       {/* Ultra-Compact Calendar Controls */}
-      <div className="flex items-center justify-between bg-white border-b-2 border-gray-300 px-4 py-2 shadow-sm">
+      <div className="flex items-center justify-between bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-600 px-4 py-2 shadow-sm">
         <div className="flex items-center space-x-2">
           <button
             onClick={goToToday}
-            className="px-2 py-1 border border-gray-300 rounded text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors bg-white dark:bg-transparent"
           >
             Today
           </button>
@@ -441,19 +468,19 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
           <div className="flex items-center">
             <button
               onClick={() => navigateDate('prev')}
-              className="p-1 rounded hover:bg-gray-100 transition-colors"
+              className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
             >
-              <ChevronLeft className="w-4 h-4 text-gray-600" />
+              <ChevronLeft className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             </button>
             <button
               onClick={() => navigateDate('next')}
-              className="p-1 rounded hover:bg-gray-100 transition-colors"
+              className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
             >
-              <ChevronRight className="w-4 h-4 text-gray-600" />
+              <ChevronRight className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             </button>
           </div>
 
-          <h2 className="text-sm font-semibold text-gray-900">
+          <h2 className="text-sm font-semibold text-gray-900 dark:text-white">
             {view === 'month' && `${MONTHS[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
             {view === 'week' && `${MONTHS[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`}
             {view === 'day' && `${MONTHS[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`}
@@ -465,7 +492,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
           <select
             value={selectedTeam}
             onChange={(e) => setSelectedTeam(e.target.value)}
-            className="px-2 py-1 border border-gray-300 rounded text-xs focus:ring-1 focus:ring-[#4a7c59] focus:border-transparent"
+            className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-xs focus:ring-1 focus:ring-[#4a7c59] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           >
             <option value="all">All Teams</option>
             <option value="team-a">Team A</option>
@@ -473,15 +500,15 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
           </select>
 
           {/* View Switcher */}
-          <div className="flex bg-gray-100 rounded p-0.5">
+          <div className="flex bg-gray-100 dark:bg-gray-700 rounded p-0.5">
             {(['month', 'week', 'day'] as const).map((v) => (
               <button
                 key={v}
                 onClick={() => onViewChange(v)}
                 className={`px-2 py-0.5 text-xs font-medium rounded transition-colors capitalize ${
                   view === v
-                    ? 'bg-white text-[#4a7c59] shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-white dark:bg-gray-800 text-[#4a7c59] dark:text-[#78A265] shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {v}
@@ -507,17 +534,33 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
       </div>
 
       {/* Job Creation Modal */}
-      {modalTimes && (
-        <JobModal
-          isOpen={showModal}
-          onClose={() => {
-            setShowModal(false);
-            setModalTimes(null);
-          }}
-          startTime={modalTimes.start}
-          endTime={modalTimes.end}
-          onSave={handleJobSave}
-        />
+      {showModal && modalTimes && (
+        <div className="fixed inset-0 top-16 z-50 bg-black/50 backdrop-blur-sm overflow-y-auto">
+          <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[calc(100vh-8rem)] flex flex-col my-4">
+              <div className="overflow-y-auto flex-1 p-6">
+                <JobWizard
+                  clients={clients}
+                  teamMembers={teamMembers}
+                  services={services}
+                  orgId={orgId}
+                  initialStartTime={modalTimes.start}
+                  initialEndTime={modalTimes.end}
+                  onCancel={() => {
+                    setShowModal(false);
+                    setModalTimes(null);
+                  }}
+                  onSuccess={() => {
+                    setShowModal(false);
+                    setModalTimes(null);
+                    // Optionally refresh the page or update jobs list
+                    window.location.reload();
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -383,7 +383,7 @@ export default async function AdminSettingsPage() {
                 <p className="font-semibold text-white group-hover:text-blue-400 transition-colors">Email Setup Guide</p>
                 <p className="text-sm text-gray-400 mt-1">Configure SMTP for email features</p>
               </div>
-              <ExternalLink className="w-5 h-5 text-gray-600 group-hover:text-blue-400 transition-colors" />
+              <ExternalLink className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-400 transition-colors" />
             </div>
           </Link>
 
@@ -396,7 +396,7 @@ export default async function AdminSettingsPage() {
                 <p className="font-semibold text-white group-hover:text-blue-400 transition-colors">Admin Guide</p>
                 <p className="text-sm text-gray-400 mt-1">Super admin features and workflows</p>
               </div>
-              <ExternalLink className="w-5 h-5 text-gray-600 group-hover:text-blue-400 transition-colors" />
+              <ExternalLink className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-400 transition-colors" />
             </div>
           </Link>
 
@@ -409,7 +409,7 @@ export default async function AdminSettingsPage() {
                 <p className="font-semibold text-white group-hover:text-blue-400 transition-colors">User Accounts</p>
                 <p className="text-sm text-gray-400 mt-1">Login credentials and access info</p>
               </div>
-              <ExternalLink className="w-5 h-5 text-gray-600 group-hover:text-blue-400 transition-colors" />
+              <ExternalLink className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-400 transition-colors" />
             </div>
           </Link>
 
@@ -422,7 +422,7 @@ export default async function AdminSettingsPage() {
                 <p className="font-semibold text-white group-hover:text-blue-400 transition-colors">Business Workflow</p>
                 <p className="text-sm text-gray-400 mt-1">Understand the data models</p>
               </div>
-              <ExternalLink className="w-5 h-5 text-gray-600 group-hover:text-blue-400 transition-colors" />
+              <ExternalLink className="w-5 h-5 text-gray-600 dark:text-gray-400 group-hover:text-blue-400 transition-colors" />
             </div>
           </Link>
         </div>

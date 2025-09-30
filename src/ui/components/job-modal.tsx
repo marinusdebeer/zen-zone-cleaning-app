@@ -135,7 +135,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                    <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       <User className="w-4 h-4 mr-2 text-[#4a7c59]" />
                       Client Name *
                     </label>
@@ -144,13 +144,13 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                       required
                       value={formData.client}
                       onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
                       placeholder="Enter client name"
                     />
                   </div>
 
                   <div>
-                    <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                    <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       <Tag className="w-4 h-4 mr-2 text-[#4a7c59]" />
                       Service Type *
                     </label>
@@ -158,7 +158,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                       required
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
                     >
                       <option value="">Select service type</option>
                       <option value="Home Cleaning">🏠 Home Cleaning</option>
@@ -174,7 +174,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                 </div>
 
                 <div>
-                  <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                  <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     <MapPin className="w-4 h-4 mr-2 text-[#4a7c59]" />
                     Service Address *
                   </label>
@@ -183,21 +183,21 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                     required
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
+                    className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
                     placeholder="123 Main St, Barrie, ON"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                    <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       <AlertCircle className="w-4 h-4 mr-2 text-[#4a7c59]" />
                       Priority
                     </label>
                     <select
                       value={formData.priority}
                       onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
                     >
                       <option value="low">🟢 Low</option>
                       <option value="normal">🟡 Normal</option>
@@ -207,7 +207,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                   </div>
 
                   <div>
-                    <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                    <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       <DollarSign className="w-4 h-4 mr-2 text-[#4a7c59]" />
                       Estimated Cost
                     </label>
@@ -215,7 +215,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                       type="number"
                       value={formData.estimatedCost}
                       onChange={(e) => setFormData({ ...formData, estimatedCost: e.target.value })}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
+                      className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
                       placeholder="0.00"
                       step="0.01"
                     />
@@ -223,7 +223,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                 </div>
 
                 <div>
-                  <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                  <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                     <FileText className="w-4 h-4 mr-2 text-[#4a7c59]" />
                     Special Instructions
                   </label>
@@ -231,7 +231,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     rows={3}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all resize-none"
+                    className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all resize-none"
                     placeholder="Pet notes, access codes, special requests..."
                   />
                 </div>
@@ -247,7 +247,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                     <Users className="w-5 h-5 mr-2 text-[#4a7c59]" />
                     Assign Team Members
                   </h3>
@@ -261,7 +261,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                           key={member.id}
                           onClick={() => isAvailable && toggleTeamMember(member.id)}
                           className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                            isSelected ? 'border-[#4a7c59] bg-[#f7faf7] shadow-md' : isAvailable ? 'border-gray-200 hover:border-gray-300 hover:shadow-sm' : 'border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed'
+                            isSelected ? 'border-[#4a7c59] bg-[#f7faf7] shadow-md' : isAvailable ? 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:border-gray-600 hover:shadow-sm' : 'border-gray-100 bg-gray-50 opacity-60 cursor-not-allowed'
                           }`}
                         >
                           {isSelected && (
@@ -275,7 +275,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                               {member.name.split(' ').map(n => n[0]).join('')}
                             </div>
                             <div className="flex-1">
-                              <p className="font-semibold text-gray-900">{member.name}</p>
+                              <p className="font-semibold text-gray-900 dark:text-white">{member.name}</p>
                               <p className="text-sm text-gray-600">{member.role}</p>
                               <p className={`text-xs mt-1 ${isAvailable ? 'text-green-600' : 'text-red-600'}`}>
                                 {isAvailable ? '✓ Available' : '✗ Busy'}
@@ -288,8 +288,8 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                   </div>
                 </div>
 
-                <div className="border-t-2 border-gray-200 pt-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <div className="border-t-2 border-gray-200 dark:border-gray-700 pt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                     <Mail className="w-5 h-5 mr-2 text-[#4a7c59]" />
                     Invite Team Member
                   </h3>
@@ -298,7 +298,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                       type="email"
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
-                      className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
+                      className="flex-1 px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
                       placeholder="email@example.com"
                     />
                     <button
@@ -321,7 +321,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                     <div className="flex items-center space-x-3">
                       <Repeat className="w-6 h-6 text-[#4a7c59]" />
                       <div>
-                        <p className="font-semibold text-gray-900">Make this a recurring job</p>
+                        <p className="font-semibold text-gray-900 dark:text-white">Make this a recurring job</p>
                         <p className="text-sm text-gray-600">Schedule this job to repeat automatically</p>
                       </div>
                     </div>
@@ -341,7 +341,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                 {formData.isRecurring && (
                   <div className="space-y-6">
                     <div>
-                      <label className="flex items-center text-sm font-semibold text-gray-700 mb-3">
+                      <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
                         <Calendar className="w-4 h-4 mr-2 text-[#4a7c59]" />
                         Repeat Pattern
                       </label>
@@ -352,7 +352,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                             type="button"
                             onClick={() => setFormData({ ...formData, recurringPattern: pattern })}
                             className={`px-4 py-3 rounded-xl border-2 font-medium capitalize transition-all ${
-                              formData.recurringPattern === pattern ? 'border-[#4a7c59] bg-[#f7faf7] text-[#4a7c59]' : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                              formData.recurringPattern === pattern ? 'border-[#4a7c59] bg-[#f7faf7] text-[#4a7c59]' : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:border-gray-600'
                             }`}
                           >
                             {pattern}
@@ -363,7 +363,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
 
                     {(formData.recurringPattern === 'weekly' || formData.recurringPattern === 'biweekly') && (
                       <div>
-                        <label className="text-sm font-semibold text-gray-700 mb-3 block">Select Days</label>
+                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 block">Select Days</label>
                         <div className="grid grid-cols-7 gap-2">
                           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => {
                             const isSelected = formData.recurringDays.includes(index);
@@ -378,7 +378,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                                   });
                                 }}
                                 className={`h-12 rounded-xl border-2 font-medium text-sm transition-all ${
-                                  isSelected ? 'border-[#4a7c59] bg-[#4a7c59] text-white' : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                                  isSelected ? 'border-[#4a7c59] bg-[#4a7c59] text-white' : 'border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:border-gray-600'
                                 }`}
                               >
                                 {day}
@@ -390,7 +390,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                     )}
 
                     <div>
-                      <label className="flex items-center text-sm font-semibold text-gray-700 mb-2">
+                      <label className="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         <Calendar className="w-4 h-4 mr-2 text-[#4a7c59]" />
                         Repeat Until
                       </label>
@@ -398,13 +398,13 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                         type="date"
                         value={formData.recurringEndDate}
                         onChange={(e) => setFormData({ ...formData, recurringEndDate: e.target.value })}
-                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
+                        className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[#4a7c59] focus:border-[#4a7c59] transition-all"
                       />
                       <p className="text-xs text-gray-500 mt-2">Leave blank for indefinite recurring</p>
                     </div>
 
                     <div className="bg-[#f7faf7] p-4 rounded-xl border-2 border-[#4a7c59]/20">
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
                         📅 This job will repeat <span className="text-[#4a7c59] font-bold">{formData.recurringPattern}</span>
                         {formData.recurringDays.length > 0 && <span> on <span className="text-[#4a7c59] font-bold">{formData.recurringDays.map(d => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d]).join(', ')}</span></span>}
                         {formData.recurringEndDate && <span> until <span className="text-[#4a7c59] font-bold">{new Date(formData.recurringEndDate).toLocaleDateString()}</span></span>}
@@ -422,7 +422,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                       className="w-5 h-5 text-[#4a7c59] rounded focus:ring-2 focus:ring-[#4a7c59]"
                     />
                     <div>
-                      <p className="font-medium text-gray-900">Send confirmation to client</p>
+                      <p className="font-medium text-gray-900 dark:text-white">Send confirmation to client</p>
                       <p className="text-sm text-gray-600">Client will receive an email with job details</p>
                     </div>
                   </label>
@@ -436,7 +436,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                   <button
                     type="button"
                     onClick={() => setCurrentStep(currentStep - 1)}
-                    className="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+                    className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors font-medium"
                   >
                     ← Previous
                   </button>
@@ -447,7 +447,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-6 py-3 border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+                  className="px-6 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors font-medium"
                 >
                   Cancel
                 </button>
@@ -474,7 +474,7 @@ export function JobModal({ isOpen, onClose, startTime, endTime, onSave }: JobMod
 
             {selectedTeamMembers.length > 0 && (
               <div className="mt-4 p-4 bg-[#f7faf7] rounded-xl border-2 border-[#4a7c59]/20">
-                <p className="text-sm font-medium text-gray-900 mb-2">
+                <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">
                   {selectedTeamMembers.length} team member(s) assigned:
                 </p>
                 <div className="flex flex-wrap gap-2">

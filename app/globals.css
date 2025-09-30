@@ -1,33 +1,41 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@variant dark (&:is(.dark *));
+
+@theme {
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --color-background: #ffffff;
+  --color-foreground: #171717;
   
   /* Zen Zone Cleaning Brand Colors */
-  --color-primary: #2e3d2f;        /* Dark green */
-  --color-secondary: #4a7c59;      /* Medium green */
-  --color-accent: #4a8c37;         /* Action green */
-  --color-light-accent: #78A265;   /* Light green accents */
-  --color-surface: #f7faf7;        /* Light green-tinted white */
-  --color-dark-bg: #0c1110;        /* Very dark green */
-  
-  /* Legacy colors for compatibility */
+  --color-primary: #2e3d2f;
+  --color-secondary: #4a7c59;
+  --color-accent: #4a8c37;
+  --color-light-accent: #78A265;
+  --color-surface: #f7faf7;
+  --color-dark-bg: #0c1110;
   --color-cta: #4a8c37;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c1110;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.light {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.dark {
+  --background: #0c1110;
+  --foreground: #ededed;
 }
 
 body {
@@ -44,6 +52,10 @@ body {
 
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
 }
 
 ::-webkit-scrollbar-thumb {

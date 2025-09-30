@@ -18,8 +18,11 @@ import {
   MapPin,
   UserCheck,
   Package,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
+import { useSidebar } from './sidebar-context';
 
 interface AppSidebarProps {
   isOpen?: boolean;
@@ -29,6 +32,7 @@ interface AppSidebarProps {
 export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
   const pathname = usePathname();
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const { isCollapsed, toggleCollapse } = useSidebar();
 
   const menuItems = [
     {
@@ -121,10 +125,11 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full bg-[#2e3d2f] text-white w-64 z-30
-          transform transition-transform duration-300 ease-in-out
+          fixed top-0 left-0 h-full bg-[#2e3d2f] dark:bg-gray-950 text-white z-30
+          transform transition-all duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0 lg:fixed
+          ${isCollapsed ? 'w-16' : 'w-64'}
         `}
       >
         {/* Mobile close button */}
@@ -139,20 +144,37 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
 
         <div className="flex flex-col h-full">
           {/* Logo section (for mobile) */}
-          <div className="p-4 border-b border-[#4a7c59] lg:hidden">
+          <div className={`p-4 border-b border-white/10 lg:hidden ${isCollapsed ? 'hidden' : ''}`}>
             <div className="flex items-center">
               <div className="w-10 h-10 bg-gradient-to-br from-white to-[#78A265] rounded-lg flex items-center justify-center text-[#2e3d2f] font-bold text-lg">
                 ZZ
               </div>
-              <div className="ml-3">
-                <h1 className="text-lg font-semibold">Zen Zone</h1>
-                <p className="text-xs text-gray-400">Cleaning Services</p>
-              </div>
+              {!isCollapsed && (
+                <div className="ml-3">
+                  <h1 className="text-lg font-semibold">Zen Zone</h1>
+                  <p className="text-xs text-gray-400">Cleaning Services</p>
+                </div>
+              )}
             </div>
           </div>
 
+          {/* Collapse Toggle (Desktop only) */}
+          <div className="hidden lg:flex items-center justify-end h-16 px-4 border-b border-white/10">
+            <button
+              onClick={toggleCollapse}
+              className="p-2 rounded-md hover:bg-[#4a7c59] transition-colors"
+              title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="h-5 w-5" />
+              ) : (
+                <ChevronLeft className="h-5 w-5" />
+              )}
+            </button>
+          </div>
+
           {/* Main navigation */}
-          <nav className="flex-1 p-4 overflow-y-auto">
+          <nav className="flex-1 p-2 overflow-y-auto">
             <div className="space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
@@ -163,23 +185,25 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
                     key={item.href}
                     href={item.href}
                     className={`
-                      flex items-center space-x-3 px-3 py-2 rounded-lg
+                      flex items-center rounded-lg
                       transition-all duration-200
+                      ${isCollapsed ? 'justify-center px-3 py-3' : 'space-x-3 px-3 py-2'}
                       ${active 
                         ? 'bg-[#4a7c59] text-white shadow-lg' 
                         : 'text-gray-300 hover:bg-[#3a4d3b] hover:text-white'
                       }
                     `}
+                    title={isCollapsed ? item.label : undefined}
                   >
-                    <Icon className={`h-5 w-5 ${active ? 'text-white' : 'text-gray-400'}`} />
-                    <span className="font-medium">{item.label}</span>
+                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-white' : 'text-gray-400'}`} />
+                    {!isCollapsed && <span className="font-medium">{item.label}</span>}
                   </Link>
                 );
               })}
             </div>
 
             {/* Separator */}
-            <div className="my-6 border-t border-[#4a7c59]"></div>
+            <div className="my-4 border-t border-white/10"></div>
 
             {/* Secondary navigation */}
             <div className="space-y-1">
@@ -192,32 +216,24 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
                     key={item.href}
                     href={item.href}
                     className={`
-                      flex items-center space-x-3 px-3 py-2 rounded-lg
+                      flex items-center rounded-lg
                       transition-all duration-200
+                      ${isCollapsed ? 'justify-center px-3 py-3' : 'space-x-3 px-3 py-2'}
                       ${active 
                         ? 'bg-[#4a7c59] text-white shadow-lg' 
                         : 'text-gray-300 hover:bg-[#3a4d3b] hover:text-white'
                       }
                     `}
+                    title={isCollapsed ? item.label : undefined}
                   >
-                    <Icon className={`h-5 w-5 ${active ? 'text-white' : 'text-gray-400'}`} />
-                    <span className="font-medium">{item.label}</span>
+                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-white' : 'text-gray-400'}`} />
+                    {!isCollapsed && <span className="font-medium">{item.label}</span>}
                   </Link>
                 );
               })}
             </div>
           </nav>
 
-          {/* Footer info */}
-          <div className="p-4 border-t border-[#4a7c59]">
-            <div className="text-xs text-gray-400">
-              <p className="font-semibold text-gray-300 mb-2">Contact Support</p>
-              <p>(705) 242-1166</p>
-              <p>admin@zenzonecleaning.com</p>
-              <p className="mt-2">49 High St Suite 300</p>
-              <p>Barrie, ON L4N 5J4</p>
-            </div>
-          </div>
         </div>
       </aside>
     </>

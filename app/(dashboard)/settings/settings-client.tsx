@@ -208,8 +208,8 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600 mt-1">Manage your organization and account preferences</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your organization and account preferences</p>
       </div>
 
       {/* Success/Error Messages */}
@@ -228,7 +228,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-gray-200 dark:border-gray-700">
         <div className="flex space-x-1 overflow-x-auto">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -239,7 +239,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                 className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.id
                     ? 'border-b-2 border-[#4a7c59] text-[#4a7c59]'
-                    : 'text-gray-600 hover:text-gray-900'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white'
                 }`}
               >
                 <Icon className="w-4 h-4 inline mr-2" />
@@ -251,76 +251,76 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
         {/* Organization Tab */}
         {activeTab === 'organization' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Organization Information</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Organization Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Organization Name</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Organization Name</label>
                   <input
                     type="text"
                     value={orgInfo.name}
                     onChange={(e) => setOrgInfo({ ...orgInfo, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Industry</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Industry</label>
                   <input
                     type="text"
                     value={orgInfo.industry}
                     onChange={(e) => setOrgInfo({ ...orgInfo, industry: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone</label>
                   <input
                     type="tel"
                     value={orgInfo.phone}
                     onChange={(e) => setOrgInfo({ ...orgInfo, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                   <input
                     type="email"
                     value={orgInfo.email}
                     onChange={(e) => setOrgInfo({ ...orgInfo, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Website</label>
                   <input
                     type="url"
                     value={orgInfo.website}
                     onChange={(e) => setOrgInfo({ ...orgInfo, website: e.target.value })}
                     placeholder="https://example.com"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Tax Rate (%)</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tax Rate (%)</label>
                   <input
                     type="number"
                     step="0.01"
                     value={orgInfo.taxRate}
                     onChange={(e) => setOrgInfo({ ...orgInfo, taxRate: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address</label>
                   <input
                     type="text"
                     value={orgInfo.address}
                     onChange={(e) => setOrgInfo({ ...orgInfo, address: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -340,24 +340,24 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
         {activeTab === 'account' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Account Information</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Account Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                   <input
                     type="text"
                     value={userProfile.name}
                     onChange={(e) => setUserProfile({ ...userProfile, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                   <input
                     type="email"
                     value={userProfile.email}
                     onChange={(e) => setUserProfile({ ...userProfile, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -377,34 +377,34 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
         {activeTab === 'security' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Change Password</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Change Password</h2>
               <div className="max-w-md space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
                   <input
                     type="password"
                     value={passwordData.currentPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New Password</label>
                   <input
                     type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                   <p className="text-sm text-gray-500 mt-1">Minimum 8 characters</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm New Password</label>
                   <input
                     type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -424,7 +424,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
         {activeTab === 'hours' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Business Hours</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Business Hours</h2>
               <div className="space-y-3">
                 {Object.entries(businessHours).map(([day, hours]) => (
                   <div key={day} className="flex items-center space-x-4">
@@ -455,7 +455,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                               [day]: { ...hours, open: e.target.value },
                             })
                           }
-                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900"
+                          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white"
                         />
                         <span>to</span>
                         <input
@@ -467,7 +467,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                               [day]: { ...hours, close: e.target.value },
                             })
                           }
-                          className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900"
+                          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white"
                         />
                       </>
                     )}
@@ -491,7 +491,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
         {activeTab === 'services' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Services Offered</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Services Offered</h2>
               <button
                 onClick={() => setServices([...services, { name: '', defaultPrice: 0 }])}
                 className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors flex items-center text-sm"
@@ -502,10 +502,10 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
             </div>
             <div className="space-y-3">
               {services.map((service, index) => (
-                <div key={index} className="flex items-start space-x-3 border border-gray-200 rounded-lg p-4">
+                <div key={index} className="flex items-start space-x-3 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                   <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Service Name</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Service Name</label>
                       <input
                         type="text"
                         value={service.name}
@@ -514,11 +514,11 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].name = e.target.value;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Default Price ($)</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Default Price ($)</label>
                       <input
                         type="number"
                         value={service.defaultPrice || 0}
@@ -527,11 +527,11 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].defaultPrice = parseFloat(e.target.value) || 0;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
                       <input
                         type="text"
                         value={service.description || ''}
@@ -540,7 +540,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].description = e.target.value;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
                       />
                     </div>
                   </div>
@@ -568,56 +568,56 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
         {activeTab === 'branding' && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Brand Colors</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Brand Colors</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Primary Color</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Primary Color</label>
                   <div className="flex items-center space-x-3">
                     <input
                       type="color"
                       value={branding.primaryColor}
                       onChange={(e) => setBranding({ ...branding, primaryColor: e.target.value })}
-                      className="h-12 w-full rounded-lg border border-gray-300 cursor-pointer"
+                      className="h-12 w-full rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer"
                     />
                     <input
                       type="text"
                       value={branding.primaryColor}
                       onChange={(e) => setBranding({ ...branding, primaryColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono text-gray-900"
+                      className="w-28 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-mono text-gray-900 dark:text-white"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Secondary Color</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Secondary Color</label>
                   <div className="flex items-center space-x-3">
                     <input
                       type="color"
                       value={branding.secondaryColor}
                       onChange={(e) => setBranding({ ...branding, secondaryColor: e.target.value })}
-                      className="h-12 w-full rounded-lg border border-gray-300 cursor-pointer"
+                      className="h-12 w-full rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer"
                     />
                     <input
                       type="text"
                       value={branding.secondaryColor}
                       onChange={(e) => setBranding({ ...branding, secondaryColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono text-gray-900"
+                      className="w-28 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-mono text-gray-900 dark:text-white"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Accent Color</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Accent Color</label>
                   <div className="flex items-center space-x-3">
                     <input
                       type="color"
                       value={branding.accentColor}
                       onChange={(e) => setBranding({ ...branding, accentColor: e.target.value })}
-                      className="h-12 w-full rounded-lg border border-gray-300 cursor-pointer"
+                      className="h-12 w-full rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer"
                     />
                     <input
                       type="text"
                       value={branding.accentColor}
                       onChange={(e) => setBranding({ ...branding, accentColor: e.target.value })}
-                      className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono text-gray-900"
+                      className="w-28 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-mono text-gray-900 dark:text-white"
                     />
                   </div>
                 </div>

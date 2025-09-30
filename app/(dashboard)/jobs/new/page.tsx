@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { getClients } from '@/server/actions/clients';
+import { prisma } from "@/server/db";
 import { JobWizard } from './job-wizard';
 
 export default async function NewJobPage() {
@@ -16,25 +16,36 @@ export default async function NewJobPage() {
     return <div>No organization selected</div>;
   }
 
-  const clients = await getClients(selectedOrgId);
+  // Get clients with their properties
+  const clients = await prisma.client.findMany({
+    where: { orgId: selectedOrgId },
+    include: {
+      properties: true,
+    },
+    orderBy: { name: 'asc' }
+  });
 
-  return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Create New Job</h1>
-        <p className="text-gray-600 mt-1">
-          Fill in the details to create a new job
-        </p>
-      </div>
+  // Get team members
+  const teamMembers = await prisma.membership.findMany({
+    where: { orgId: selectedOrgId },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        }
+      }
+    }
+  });
 
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
-          <JobWizard 
-            orgId={selectedOrgId} 
-            clients={clients}
-          />
-        </div>
-      </div>
-    </div>
-  );
+  // Get services from org settings
+  const org = await prisma.organization.findUnique({
+    where: { id: selectedOrgId },
+    select: { settings: true }
+  });
+
+  const services = (org?.settings as any)?.services || [];
+
+  return <JobWizard clients={clients} teamMembers={teamMembers} services={services} orgId={selectedOrgId} />;
 }

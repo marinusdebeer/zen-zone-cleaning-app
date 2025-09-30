@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Plus,
   Users,
@@ -16,7 +16,8 @@ import {
   X,
 } from 'lucide-react';
 import { createLead, updateLeadStatus, convertLeadToClient, deleteLead } from '@/server/actions/leads';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { CustomSelect } from '@/ui/components/custom-select';
 
 interface Lead {
   id: string;
@@ -39,13 +40,13 @@ interface LeadsClientProps {
 }
 
 const statusColors = {
-  NEW: 'bg-blue-100 text-blue-800 border-blue-200',
-  CONTACTED: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  QUALIFIED: 'bg-purple-100 text-purple-800 border-purple-200',
-  PROPOSAL_SENT: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-  NEGOTIATION: 'bg-orange-100 text-orange-800 border-orange-200',
-  CONVERTED: 'bg-green-100 text-green-800 border-green-200',
-  LOST: 'bg-red-100 text-red-800 border-red-200',
+  NEW: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+  CONTACTED: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
+  QUALIFIED: 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+  PROPOSAL_SENT: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
+  NEGOTIATION: 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800',
+  CONVERTED: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800',
+  LOST: 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800',
 };
 
 const statusOptions = [
@@ -60,11 +61,23 @@ const statusOptions = [
 
 export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [leads, setLeads] = useState(initialLeads);
   const [showAddModal, setShowAddModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Auto-open modal from URL parameter
+  useEffect(() => {
+    if (searchParams.get('action') === 'create') {
+      setShowAddModal(true);
+      // Clean up URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete('action');
+      window.history.replaceState({}, '', url.pathname);
+    }
+  }, [searchParams]);
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
 
   const [newLead, setNewLead] = useState({
@@ -152,11 +165,11 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
             <Users className="w-7 h-7 mr-2 text-[#4a7c59]" />
             Leads Management
           </h1>
-          <p className="text-gray-600 mt-1">Track and convert potential clients</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">Track and convert potential clients</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
@@ -169,16 +182,16 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
 
       {/* Success/Error Messages */}
       {successMessage && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center">
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 flex items-center">
           <CheckCircle className="w-5 h-5 text-green-600 mr-2 flex-shrink-0" />
-          <span className="text-green-800">{successMessage}</span>
+          <span className="text-green-800 dark:text-green-200">{successMessage}</span>
         </div>
       )}
 
       {errorMessage && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center">
           <XCircle className="w-5 h-5 text-red-600 mr-2 flex-shrink-0" />
-          <span className="text-red-800">{errorMessage}</span>
+          <span className="text-red-800 dark:text-red-200">{errorMessage}</span>
         </div>
       )}
 
@@ -188,12 +201,12 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
           onClick={() => setStatusFilter('ALL')}
           className={`p-4 rounded-lg border-2 transition-colors ${
             statusFilter === 'ALL' 
-              ? 'bg-[#f7faf7] border-[#4a7c59]' 
-              : 'bg-white border-gray-200 hover:border-gray-300'
+              ? 'bg-[#f7faf7] dark:bg-gray-700 border-[#4a7c59]' 
+              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
           }`}
         >
-          <p className="text-2xl font-bold text-gray-900">{leads.length}</p>
-          <p className="text-sm text-gray-600">All Leads</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{leads.length}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">All Leads</p>
         </button>
         {statusOptions.filter(s => s.value !== 'CONVERTED' && s.value !== 'LOST').map((status) => (
           <button
@@ -201,47 +214,47 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
             onClick={() => setStatusFilter(status.value)}
             className={`p-4 rounded-lg border-2 transition-colors ${
               statusFilter === status.value 
-                ? 'bg-[#f7faf7] border-[#4a7c59]' 
-                : 'bg-white border-gray-200 hover:border-gray-300'
+                ? 'bg-[#f7faf7] dark:bg-gray-700 border-[#4a7c59]' 
+                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
             }`}
           >
-            <p className="text-2xl font-bold text-gray-900">{statusCounts[status.value] || 0}</p>
-            <p className="text-sm text-gray-600">{status.label}</p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">{statusCounts[status.value] || 0}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{status.label}</p>
           </button>
         ))}
       </div>
 
       {/* Leads List */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                   Lead
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                   Contact
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                   Source
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                   Created
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredLeads.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center">
-                    <Users className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                    <Users className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-3" />
                     <p className="text-gray-500">No leads found</p>
                     <button
                       onClick={() => setShowAddModal(true)}
@@ -253,12 +266,12 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                 </tr>
               ) : (
                 filteredLeads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={lead.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <td className="px-6 py-4">
                       <div>
-                        <p className="font-medium text-gray-900">{lead.name}</p>
+                        <p className="font-medium text-gray-900 dark:text-white">{lead.name}</p>
                         {lead.notes && (
-                          <p className="text-sm text-gray-500 mt-1 line-clamp-1">{lead.notes}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1 line-clamp-1">{lead.notes}</p>
                         )}
                       </div>
                     </td>
@@ -266,27 +279,27 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                       <div className="space-y-1">
                         {lead.emails[0] && (
                           <div className="flex items-center text-sm text-gray-600">
-                            <Mail className="w-4 h-4 mr-2 text-gray-400" />
+                            <Mail className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
                             {lead.emails[0]}
                           </div>
                         )}
                         {lead.phones[0] && (
                           <div className="flex items-center text-sm text-gray-600">
-                            <Phone className="w-4 h-4 mr-2 text-gray-400" />
+                            <Phone className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
                             {lead.phones[0]}
                           </div>
                         )}
                         {lead.addresses[0] && (
                           <div className="flex items-center text-sm text-gray-600">
-                            <MapPin className="w-4 h-4 mr-2 text-gray-400" />
+                            <MapPin className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
                             {lead.addresses[0].substring(0, 30)}...
                           </div>
                         )}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="inline-flex items-center text-sm text-gray-700">
-                        <Tag className="w-4 h-4 mr-1 text-gray-400" />
+                      <span className="inline-flex items-center text-sm text-gray-700 dark:text-gray-300">
+                        <Tag className="w-4 h-4 mr-1 text-gray-400 dark:text-gray-500" />
                         {lead.source || 'Unknown'}
                       </span>
                     </td>
@@ -296,22 +309,19 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                           Converted
                         </span>
                       ) : (
-                        <select
-                          value={lead.status}
-                          onChange={(e) => handleStatusChange(lead.id, e.target.value)}
-                          className={`px-3 py-1 rounded-full text-xs font-medium border ${statusColors[lead.status as keyof typeof statusColors]}`}
-                        >
-                          {statusOptions.map((status) => (
-                            <option key={status.value} value={status.value}>
-                              {status.label}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="inline-block min-w-[140px]">
+                          <CustomSelect
+                            value={lead.status}
+                            onChange={(value) => handleStatusChange(lead.id, value)}
+                            options={statusOptions}
+                            className="text-xs"
+                          />
+                        </div>
                       )}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center text-sm text-gray-600">
-                        <Calendar className="w-4 h-4 mr-2 text-gray-400" />
+                        <Calendar className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
                         {new Date(lead.createdAt).toLocaleDateString('en-US', { 
                           year: 'numeric', 
                           month: 'short', 
@@ -333,7 +343,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                         {lead.convertedClient && (
                           <a
                             href={`/clients/${lead.convertedClient.id}`}
-                            className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors flex items-center"
+                            className="px-3 py-1 text-xs bg-gray-100 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 transition-colors flex items-center"
                           >
                             View Client
                             <ArrowRight className="w-3 h-3 ml-1" />
@@ -341,7 +351,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                         )}
                         <button
                           onClick={() => handleDeleteLead(lead.id)}
-                          className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
+                          className="p-1 text-red-600 hover:bg-red-50 dark:bg-red-900/20 rounded transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -358,19 +368,19 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
       {/* Add Lead Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white z-10">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-white dark:bg-gray-800 z-10">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 flex items-center">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
                   <Plus className="w-6 h-6 mr-2 text-[#4a7c59]" />
                   Add New Lead
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">Capture a potential client</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Capture a potential client</p>
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -379,7 +389,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
             {/* Modal Body */}
             <form onSubmit={handleCreateLead} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-300 mb-1">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -387,80 +397,81 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                   value={newLead.name}
                   onChange={(e) => setNewLead({ ...newLead, name: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="John Doe"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-300 mb-1">Email</label>
                   <input
                     type="email"
                     value={newLead.email}
                     onChange={(e) => setNewLead({ ...newLead, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
                     placeholder="john@example.com"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-300 mb-1">Phone</label>
                   <input
                     type="tel"
                     value={newLead.phone}
                     onChange={(e) => setNewLead({ ...newLead, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
                     placeholder="(555) 123-4567"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-300 mb-1">Address</label>
                 <input
                   type="text"
                   value={newLead.address}
                   onChange={(e) => setNewLead({ ...newLead, address: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="123 Main St, City, State ZIP"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Source</label>
-                <select
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-300 mb-1">Source</label>
+                <CustomSelect
                   value={newLead.source}
-                  onChange={(e) => setNewLead({ ...newLead, source: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900"
-                >
-                  <option value="Website">Website</option>
-                  <option value="Referral">Referral</option>
-                  <option value="Social Media">Social Media</option>
-                  <option value="Phone Call">Phone Call</option>
-                  <option value="Email">Email</option>
-                  <option value="Walk-in">Walk-in</option>
-                  <option value="Other">Other</option>
-                </select>
+                  onChange={(value) => setNewLead({ ...newLead, source: value })}
+                  options={[
+                    { value: 'Website', label: 'Website' },
+                    { value: 'Referral', label: 'Referral' },
+                    { value: 'Social Media', label: 'Social Media' },
+                    { value: 'Phone Call', label: 'Phone Call' },
+                    { value: 'Email', label: 'Email' },
+                    { value: 'Walk-in', label: 'Walk-in' },
+                    { value: 'Other', label: 'Other' },
+                  ]}
+                  placeholder="Select source..."
+                />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-300 mb-1">Notes</label>
                 <textarea
                   value={newLead.notes}
                   onChange={(e) => setNewLead({ ...newLead, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="Any additional information..."
                 />
               </div>
 
               {/* Modal Footer */}
-              <div className="flex space-x-3 pt-4 border-t border-gray-200">
+              <div className="flex space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   Cancel
                 </button>

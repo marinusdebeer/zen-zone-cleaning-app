@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { inviteTeamMember, updateMemberRole, removeMember } from '@/server/actions/team';
 import { useRouter } from 'next/navigation';
+import { CustomSelect } from '@/ui/components/custom-select';
 
 interface TeamMember {
   id: string;
@@ -110,13 +111,13 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
   const getRoleBadge = (role: string) => {
     switch (role) {
       case 'OWNER':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800';
       case 'ADMIN':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800';
       case 'STAFF':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300 border-gray-200 dark:border-gray-600';
     }
   };
 
@@ -145,11 +146,11 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
             <Users className="w-7 h-7 mr-2 text-[#4a7c59]" />
             Team Members
           </h1>
-          <p className="text-gray-600 mt-1">Manage your team and their roles</p>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your team and their roles</p>
         </div>
         {canManageTeam && (
           <button
@@ -171,49 +172,49 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
       )}
 
       {errorMessage && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center">
-          <XCircle className="w-5 h-5 text-red-600 mr-2 flex-shrink-0" />
-          <span className="text-red-800">{errorMessage}</span>
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-center">
+          <XCircle className="w-5 h-5 text-red-600 dark:text-red-400 mr-2 flex-shrink-0" />
+          <span className="text-red-800 dark:text-red-200">{errorMessage}</span>
         </div>
       )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-l-[#4a7c59]">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-[#4a7c59]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Members</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{stats.total}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Members</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{stats.total}</p>
             </div>
             <Users className="h-6 w-6 text-[#4a7c59]" />
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-l-purple-500">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-purple-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Owners</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{stats.owners}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Owners</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{stats.owners}</p>
             </div>
             <Shield className="h-6 w-6 text-purple-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-l-blue-500">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-blue-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Admins</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{stats.admins}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Admins</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{stats.admins}</p>
             </div>
             <Users className="h-6 w-6 text-blue-600" />
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-l-green-500">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-green-500">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Staff</p>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{stats.staff}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Staff</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{stats.staff}</p>
             </div>
             <User className="h-6 w-6 text-green-600" />
           </div>
@@ -221,16 +222,16 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
       </div>
 
       {/* Team List */}
-      <div className="bg-white rounded-xl shadow-sm">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">All Team Members</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">All Team Members</h2>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {memberships.map((member) => (
               <div 
                 key={member.id} 
-                className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all hover:border-[#4a7c59]"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-lg transition-all hover:border-[#4a7c59] bg-white dark:bg-gray-800"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-[#4a7c59] to-[#4a8c37] rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg">
@@ -242,14 +243,14 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
                   </span>
                 </div>
                 
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">{member.user.name}</h3>
-                <div className="flex items-center text-sm text-gray-600 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{member.user.name}</h3>
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-4">
                   <Mail className="w-4 h-4 mr-2" />
                   <span className="truncate">{member.user.email}</span>
                 </div>
                 
-                <div className="mb-4 pb-4 border-b border-gray-200">
-                  <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                     <span>Joined</span>
                     <span>{new Date(member.user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
                   </div>
@@ -258,18 +259,19 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
                 {/* Actions */}
                 {canManageTeam && member.user.email !== currentUserEmail && (
                   <div className="space-y-2">
-                    <select
+                    <CustomSelect
                       value={member.role}
-                      onChange={(e) => handleRoleChange(member.id, e.target.value as any)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent"
-                    >
-                      <option value="OWNER">👑 Owner</option>
-                      <option value="ADMIN">🔷 Admin</option>
-                      <option value="STAFF">👤 Staff</option>
-                    </select>
+                      onChange={(value) => handleRoleChange(member.id, value as any)}
+                      options={[
+                        { value: 'OWNER', label: '👑 Owner' },
+                        { value: 'ADMIN', label: '🔷 Admin' },
+                        { value: 'STAFF', label: '👤 Staff' },
+                      ]}
+                      placeholder="Select role..."
+                    />
                     <button
                       onClick={() => handleRemove(member.id, member.user.name)}
-                      className="w-full px-3 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors flex items-center justify-center"
+                      className="w-full px-3 py-2 text-sm bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors flex items-center justify-center"
                     >
                       <Trash2 className="w-4 h-4 mr-1" />
                       Remove
@@ -279,7 +281,7 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
 
                 {member.user.email === currentUserEmail && (
                   <div className="text-center">
-                    <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
                       This is you
                     </span>
                   </div>
@@ -290,8 +292,8 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
 
           {memberships.length === 0 && (
             <div className="text-center py-12">
-              <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 mb-4">No team members yet</p>
+              <Users className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+              <p className="text-gray-500 dark:text-gray-400 mb-4">No team members yet</p>
               {canManageTeam && (
                 <button
                   onClick={() => setShowInviteModal(true)}
@@ -308,22 +310,22 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
       {/* Invite Modal */}
       {showInviteModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full">
             {/* Modal Header */}
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 flex items-center">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
                   <UserPlus className="w-6 h-6 mr-2 text-[#4a7c59]" />
                   Invite Team Member
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">Add a new member to {orgName}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Add a new member to {orgName}</p>
               </div>
               <button
                 onClick={() => {
                   setShowInviteModal(false);
                   setTempPassword(null);
                 }}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -333,22 +335,22 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
             <form onSubmit={handleInvite} className="p-6 space-y-4">
               {/* Success with Password */}
               {tempPassword && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
                   <div className="flex items-center mb-2">
                     <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                    <p className="text-sm font-semibold text-green-800">Team member invited!</p>
+                    <p className="text-sm font-semibold text-green-800 dark:text-green-200">Team member invited!</p>
                   </div>
-                  <div className="bg-white border border-green-300 rounded p-3 mt-3">
-                    <p className="text-xs text-gray-600 mb-1">Temporary Password:</p>
-                    <p className="text-lg font-mono font-bold text-gray-900">{tempPassword}</p>
-                    <p className="text-xs text-gray-500 mt-2">⚠️ Save this - it won't be shown again!</p>
+                  <div className="bg-white dark:bg-gray-700 border border-green-300 dark:border-green-700 rounded p-3 mt-3">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Temporary Password:</p>
+                    <p className="text-lg font-mono font-bold text-gray-900 dark:text-white">{tempPassword}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">⚠️ Save this - it won't be shown again!</p>
                   </div>
                 </div>
               )}
 
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -357,14 +359,14 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
                   onChange={(e) => setInviteForm({ ...inviteForm, name: e.target.value })}
                   required
                   disabled={loading || !!tempPassword}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="John Doe"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -373,30 +375,31 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
                   onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
                   required
                   disabled={loading || !!tempPassword}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 text-gray-900 placeholder:text-gray-400"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="john@example.com"
                 />
               </div>
 
               {/* Role */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                <select
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role</label>
+                <CustomSelect
                   value={inviteForm.role}
-                  onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value as any })}
+                  onChange={(value) => setInviteForm({ ...inviteForm, role: value as any })}
                   disabled={loading || !!tempPassword}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 text-gray-900 placeholder:text-gray-400"
-                >
-                  <option value="STAFF">👤 Staff - Basic access</option>
-                  <option value="ADMIN">🔷 Admin - Full management</option>
-                  <option value="OWNER">👑 Owner - Complete control</option>
-                </select>
+                  options={[
+                    { value: 'STAFF', label: '👤 Staff - Basic access' },
+                    { value: 'ADMIN', label: '🔷 Admin - Full management' },
+                    { value: 'OWNER', label: '👑 Owner - Complete control' },
+                  ]}
+                  placeholder="Select role..."
+                />
               </div>
 
               {/* Info */}
               {!tempPassword && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-xs text-blue-800">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                  <p className="text-xs text-blue-800 dark:text-blue-200">
                     ℹ️ A temporary password will be generated and sent via email
                   </p>
                 </div>
@@ -410,7 +413,7 @@ export function TeamClient({ memberships, orgName, currentUserEmail }: TeamClien
                       type="button"
                       onClick={() => setShowInviteModal(false)}
                       disabled={loading}
-                      className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+                      className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
                     >
                       Cancel
                     </button>

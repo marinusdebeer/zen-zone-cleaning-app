@@ -35,22 +35,22 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
   return (
     <div className="space-y-6">
       {/* Breadcrumb */}
-      <div className="flex items-center space-x-2 text-sm text-gray-600">
+      <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
         <Link href="/clients" className="hover:text-[#4a7c59]">Clients</Link>
         <span>/</span>
-        <span className="text-gray-900 font-medium">{client.name}</span>
+        <span className="text-gray-900 dark:text-white font-medium">{client.name}</span>
       </div>
 
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{client.name}</h1>
-            <p className="text-sm text-gray-500 mt-1">Client ID: {client.id.slice(0, 8)}</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{client.name}</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Client ID: {client.id.slice(0, 8)}</p>
           </div>
           <Link
             href="/clients"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Clients
@@ -60,7 +60,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
         {/* Contact Information */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
               <Mail className="w-4 h-4 mr-2 text-[#4a7c59]" />
               Email
             </h3>
@@ -73,12 +73,12 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">No email</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">No email</p>
             )}
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
               <Phone className="w-4 h-4 mr-2 text-[#4a7c59]" />
               Phone
             </h3>
@@ -91,55 +91,55 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">No phone</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">No phone</p>
             )}
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
               <MapPin className="w-4 h-4 mr-2 text-[#4a7c59]" />
               Address
             </h3>
             {addresses.length > 0 ? (
               <div className="space-y-1">
                 {addresses.map((address, i) => (
-                  <p key={i} className="text-sm text-gray-700">{address}</p>
+                  <p key={i} className="text-sm text-gray-700 dark:text-gray-300">{address}</p>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">No address</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">No address</p>
             )}
           </div>
         </div>
       </div>
 
       {/* Properties */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
           <Home className="w-5 h-5 mr-2 text-[#4a7c59]" />
           Properties ({client.properties.length})
         </h2>
         {client.properties.length > 0 ? (
           <div className="space-y-3">
             {client.properties.map(property => (
-              <div key={property.id} className="p-4 border border-gray-200 rounded-lg">
+              <div key={property.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">{property.address}</p>
-                    {property.notes && <p className="text-sm text-gray-600 mt-1">{property.notes}</p>}
+                    <p className="font-medium text-gray-900 dark:text-white">{property.address}</p>
+                    {property.notes && <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{property.notes}</p>}
                   </div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No properties on file</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">No properties on file</p>
         )}
       </div>
 
       {/* Estimates */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
           <FileText className="w-5 h-5 mr-2 text-[#4a7c59]" />
           Estimates ({client.estimates.length})
         </h2>
@@ -149,17 +149,17 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
               <Link 
                 key={estimate.id}
                 href={`/estimates/${estimate.id}`}
-                className="block p-4 border border-gray-200 rounded-lg hover:border-[#4a7c59] hover:shadow-md transition-all"
+                className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#4a7c59] hover:shadow-md transition-all"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <p className="font-medium text-gray-900">{estimate.title}</p>
-                    <p className="text-sm text-gray-600 mt-1">{estimate.description}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{estimate.title}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{estimate.description}</p>
                     <div className="flex items-center space-x-4 mt-2">
                       <span className="text-sm text-[#4a7c59] font-semibold">${estimate.amount.toString()}</span>
                       <span className={`text-xs px-2 py-1 rounded ${
-                        estimate.status === 'Approved' ? 'bg-green-100 text-green-800' :
-                        estimate.status === 'Sent' ? 'bg-blue-100 text-blue-800' :
+                        estimate.status === 'Approved' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                        estimate.status === 'Sent' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
                         'bg-gray-100 text-gray-800'
                       }`}>{estimate.status}</span>
                     </div>
@@ -170,13 +170,13 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No estimates yet</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">No estimates yet</p>
         )}
       </div>
 
       {/* Jobs */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
           <Briefcase className="w-5 h-5 mr-2 text-[#4a7c59]" />
           Jobs ({client.jobs.length})
         </h2>
@@ -186,25 +186,25 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
               <Link
                 key={job.id}
                 href={`/jobs/${job.id}`}
-                className="block p-4 border border-gray-200 rounded-lg hover:border-[#4a7c59] hover:shadow-md transition-all"
+                className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#4a7c59] hover:shadow-md transition-all"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <p className="font-medium text-gray-900">{job.title}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{job.title}</p>
                       {job.isRecurring && (
                         <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded">Recurring</span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">{job.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{job.description}</p>
                     <div className="flex items-center space-x-4 mt-2">
                       <span className={`text-xs px-2 py-1 rounded ${
-                        job.status === 'Active' ? 'bg-green-100 text-green-800' :
-                        job.status === 'Completed' ? 'bg-blue-100 text-blue-800' :
+                        job.status === 'Active' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                        job.status === 'Completed' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
                         'bg-gray-100 text-gray-800'
                       }`}>{job.status}</span>
                       {job.estimatedCost && (
-                        <span className="text-sm text-gray-600">${job.estimatedCost.toString()}</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">${job.estimatedCost.toString()}</span>
                       )}
                     </div>
                   </div>
@@ -214,13 +214,13 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No jobs yet</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">No jobs yet</p>
         )}
       </div>
 
       {/* Invoices */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
           <Receipt className="w-5 h-5 mr-2 text-[#4a7c59]" />
           Invoices ({client.invoices.length})
         </h2>
@@ -230,16 +230,16 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
               <Link
                 key={invoice.id}
                 href={`/invoices/${invoice.id}`}
-                className="block p-4 border border-gray-200 rounded-lg hover:border-[#4a7c59] hover:shadow-md transition-all"
+                className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#4a7c59] hover:shadow-md transition-all"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <p className="font-medium text-gray-900">Invoice #{invoice.id.slice(0, 8)}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">Invoice #{invoice.id.slice(0, 8)}</p>
                     <div className="flex items-center space-x-4 mt-2">
                       <span className="text-lg text-[#4a7c59] font-bold">${invoice.total.toString()}</span>
                       <span className={`text-xs px-2 py-1 rounded ${
-                        invoice.status === 'Paid' ? 'bg-green-100 text-green-800' :
-                        invoice.status === 'Sent' ? 'bg-blue-100 text-blue-800' :
+                        invoice.status === 'Paid' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
+                        invoice.status === 'Sent' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
                         'bg-gray-100 text-gray-800'
                       }`}>{invoice.status}</span>
                     </div>
@@ -250,7 +250,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             ))}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No invoices yet</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">No invoices yet</p>
         )}
       </div>
     </div>

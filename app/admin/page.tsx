@@ -190,7 +190,7 @@ export default async function AdminDashboard() {
 
           {organizations.length === 0 && (
             <div className="text-center py-12">
-              <Building className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+              <Building className="w-12 h-12 text-gray-600 dark:text-gray-400 mx-auto mb-4" />
               <p className="text-gray-400">No organizations yet</p>
               <Link
                 href="/admin/organizations/new"
