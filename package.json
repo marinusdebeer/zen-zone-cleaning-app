@@ -13,7 +13,7 @@
     "seed": "tsx prisma/seed.ts",
     "db:setup": "npm run prisma:generate && npm run prisma:push && npm run seed",
     "postinstall": "prisma generate",
-    "build:vercel": "prisma generate && prisma db push && npm run seed && next build"
+    "build:vercel": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
