@@ -285,3 +285,74 @@ export async function sendTestEmail(toEmail: string): Promise<void> {
     text: 'Email configuration test successful! Your SMTP settings are working correctly.',
   });
 }
+
+export async function sendPasswordResetLink(
+  email: string,
+  userName: string,
+  resetUrl: string
+): Promise<void> {
+  const transport = getTransporter();
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+    .button { display: inline-block; padding: 14px 35px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white !important; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+    .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px; }
+    .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 style="margin: 0;">🔐 Reset Your Password</h1>
+      <p style="margin: 10px 0 0 0; opacity: 0.9;">CleanFlow</p>
+    </div>
+    <div class="content">
+      <p>Hi <strong>${userName}</strong>,</p>
+      
+      <p>We received a request to reset your password for your CleanFlow account.</p>
+      
+      <p>Click the button below to create a new password:</p>
+      
+      <center>
+        <a href="${resetUrl}" class="button">Reset Password →</a>
+      </center>
+      
+      <p style="color: #666; font-size: 14px; margin-top: 20px;">
+        Or copy and paste this link into your browser:<br>
+        <a href="${resetUrl}" style="color: #667eea; word-break: break-all;">${resetUrl}</a>
+      </p>
+      
+      <div class="warning">
+        <p style="margin: 0;"><strong>⚠️ This link will expire in 1 hour.</strong></p>
+        <p style="margin: 5px 0 0 0; font-size: 14px;">If you didn't request this password reset, you can safely ignore this email.</p>
+      </div>
+      
+      <p style="margin-top: 30px; font-size: 14px; color: #666;">
+        For security reasons, never share this link with anyone.
+      </p>
+    </div>
+    <div class="footer">
+      <p>Questions? Contact us at support@cleanflow.com</p>
+      <p>© ${new Date().getFullYear()} CleanFlow. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  const mailOptions = {
+    from: FROM_EMAIL,
+    to: email,
+    subject: 'Reset Your CleanFlow Password',
+    html: htmlContent,
+  };
+
+  await transport.sendMail(mailOptions);
+}

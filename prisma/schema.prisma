@@ -48,6 +48,7 @@ model User {
   name         String
   passwordHash String?
   isSuperAdmin Boolean @default(false)
+  custom       Json    @default("{}")
 
   // Relations
   memberships Membership[]
