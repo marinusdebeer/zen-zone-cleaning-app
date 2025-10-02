@@ -138,7 +138,7 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
             onClick={onClose}
             className="p-2 rounded-md hover:bg-brand-accent transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5 text-gray-700 dark:text-gray-300" />
           </button>
         </div>
 
@@ -166,9 +166,9 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
               title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
               {isCollapsed ? (
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="h-5 w-5 text-gray-700 dark:text-gray-300" />
               ) : (
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="h-5 w-5 text-gray-700 dark:text-gray-300" />
               )}
             </button>
           </div>
@@ -189,13 +189,13 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
                       transition-all duration-200
                       ${isCollapsed ? 'justify-center px-3 py-3' : 'space-x-3 px-3 py-2'}
                       ${active 
-                        ? 'bg-brand text-white shadow-lg' 
-                        : 'text-gray-300 hover:bg-brand-dark hover:text-white'
+                        ? 'bg-gray-200 dark:bg-gray-700 text-brand font-semibold' 
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                       }
                     `}
                     title={isCollapsed ? item.label : undefined}
                   >
-                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-white' : 'text-white/50'}`} />
+                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-brand' : 'text-gray-600 dark:text-gray-400'}`} />
                     {!isCollapsed && <span className="font-medium">{item.label}</span>}
                   </Link>
                 );
@@ -220,13 +220,13 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
                       transition-all duration-200
                       ${isCollapsed ? 'justify-center px-3 py-3' : 'space-x-3 px-3 py-2'}
                       ${active 
-                        ? 'bg-brand text-white shadow-lg' 
-                        : 'text-gray-300 hover:bg-brand-dark hover:text-white'
+                        ? 'bg-gray-200 dark:bg-gray-700 text-brand font-semibold' 
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                       }
                     `}
                     title={isCollapsed ? item.label : undefined}
                   >
-                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-white' : 'text-white/50'}`} />
+                    <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-brand' : 'text-gray-600 dark:text-gray-400'}`} />
                     {!isCollapsed && <span className="font-medium">{item.label}</span>}
                   </Link>
                 );

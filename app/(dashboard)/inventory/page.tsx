@@ -94,7 +94,7 @@ export default async function InventoryPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Inventory & Supplies</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Manage cleaning supplies and equipment</p>
         </div>
-        <button className="inline-flex items-center px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors">
+        <button className="inline-flex items-center px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors">
           <Plus className="w-5 h-5 mr-2" />
           Add Item
         </button>
@@ -102,19 +102,19 @@ export default async function InventoryPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Items</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{inventory.length}</p>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <Package className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <Package className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Low Stock</p>
@@ -126,26 +126,26 @@ export default async function InventoryPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Categories</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">3</p>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <Package className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <Package className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Value</p>
-              <p className="text-2xl font-bold text-[#4a7c59] mt-2">$2,847</p>
+              <p className="text-2xl font-bold text-brand mt-2">$2,847</p>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <TrendingDown className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <TrendingDown className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
@@ -169,11 +169,11 @@ export default async function InventoryPage() {
       )}
 
       {/* Inventory List */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+      <div className="bg-brand-bg rounded-xl shadow-sm">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">All Inventory</h2>
-            <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+            <select className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-brand-bg text-gray-900 dark:text-white">
               <option>All Categories</option>
               <option>Cleaning Solutions</option>
               <option>Supplies</option>
@@ -183,7 +183,7 @@ export default async function InventoryPage() {
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-700">
+            <thead className="bg-brand-bg-secondary dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                   Item Name
@@ -208,9 +208,9 @@ export default async function InventoryPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-brand-bg divide-y divide-gray-200 dark:divide-gray-700">
               {inventory.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <tr key={item.id} className="hover:bg-[var(--tenant-bg-tertiary)]">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900 dark:text-white">{item.name}</div>
                   </td>
@@ -230,10 +230,10 @@ export default async function InventoryPage() {
                     {getStatusBadge(item)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <button className="text-[#4a7c59] hover:text-[#4a8c37] font-medium mr-3">
+                    <button className="text-brand hover:text-brand font-medium mr-3">
                       Edit
                     </button>
-                    <button className="text-blue-600 hover:text-blue-800 font-medium">
+                    <button className="text-brand hover:text-brand-dark font-medium">
                       Reorder
                     </button>
                   </td>

@@ -27,7 +27,7 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
     <FullPageWrapper>
       <div className="flex flex-col h-full bg-brand-bg-secondary">
         {/* Header & Stats Bar */}
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex-shrink-0">
+        <div className="bg-brand-bg border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex-shrink-0">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
@@ -82,7 +82,7 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
 
         {/* Messages Interface */}
         <div className="flex-1 overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-3 h-full bg-white dark:bg-gray-800">
+          <div className="grid grid-cols-1 md:grid-cols-3 h-full bg-brand-bg">
             {/* Conversations List */}
             <div className="border-r border-gray-200 dark:border-gray-700 overflow-y-auto">
               <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -92,8 +92,8 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
                 {conversations.map((conv) => (
                   <div
                     key={conv.id}
-                    className={`p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer ${
-                      conv.unread > 0 ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                    className={`p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-[var(--tenant-bg-tertiary)] cursor-pointer ${
+                      conv.unread > 0 ? 'bg-brand-bg-tertiary' : ''
                     }`}
                   >
                     <div className="flex items-start justify-between">
@@ -129,7 +129,7 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
               {/* Conversation Header */}
               <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-[#4a7c59] rounded-full flex items-center justify-center text-white font-semibold">
+                  <div className="w-10 h-10 bg-brand rounded-full flex items-center justify-center text-white font-semibold">
                     SJ
                   </div>
                   <div>
@@ -168,7 +168,7 @@ export function MessagesClient({ conversations }: MessagesClientProps) {
                   <input
                     type="text"
                     placeholder="Type your message..."
-                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand bg-brand-bg text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                   <button className="bg-brand text-white font-semibold px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all hover:bg-brand-dark">
                     <Send className="w-5 h-5" />

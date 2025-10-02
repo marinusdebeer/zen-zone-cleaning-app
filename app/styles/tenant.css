@@ -1,27 +1,36 @@
 :root {
-  --tenant-primary: #9333ea;
-  --tenant-primary-dark: #7e22ce;
-  --tenant-primary-light: #a855f7;
-  --tenant-primary-hover: #8b28d4;
-  --tenant-accent: #c026d3;
-  --tenant-accent-light: #d946ef;
-  --tenant-accent-hover: #b020c0;
+  --tenant-primary: #16a34a;
+  --tenant-primary-dark: #15803d;
+  --tenant-primary-light: #f5f5f4;
+  --tenant-primary-hover: #15803d;
+  --tenant-accent: #0d9488;
+  --tenant-accent-light: #14b8a6;
+  --tenant-accent-hover: #0f766e;
   
-  --tenant-bg: #f5e6ff;
-  --tenant-bg-secondary: #e9d5ff;
-  --tenant-bg-tertiary: #d8b4fe;
+  --tenant-bg: #ffffff;
+  --tenant-bg-secondary: #fafafa;
+  --tenant-bg-tertiary: #f3f4f6;
   
-  --tenant-border: #c084fc;
-  --tenant-border-hover: #a855f7;
+  --tenant-border: #e5e7eb;
+  --tenant-border-hover: #d1d5db;
   
-  --tenant-text-primary: #3b0764;
-  --tenant-text-secondary: #581c87;
-  --tenant-text-tertiary: #7e22ce;
+  --tenant-text-primary: #111827;
+  --tenant-text-secondary: #4b5563;
+  --tenant-text-tertiary: #9ca3af;
   
   --tenant-success: #10b981;
   --tenant-warning: #f59e0b;
   --tenant-danger: #ef4444;
   --tenant-info: #3b82f6;
+  
+  --tenant-job-scheduled: #3b82f6;
+  --tenant-job-scheduled-border: #2563eb;
+  --tenant-job-in-progress: #f59e0b;
+  --tenant-job-in-progress-border: #d97706;
+  --tenant-job-completed: #10b981;
+  --tenant-job-completed-border: #059669;
+  --tenant-job-pending: #9ca3af;
+  --tenant-job-pending-border: #6b7280;
   
   --tenant-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tenant-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
@@ -29,29 +38,38 @@
 }
 
 .dark {
-  --tenant-primary: #fb923c;
-  --tenant-primary-dark: #ea580c;
-  --tenant-primary-light: #fdba74;
-  --tenant-primary-hover: #f97316;
-  --tenant-accent: #fbbf24;
-  --tenant-accent-light: #fcd34d;
-  --tenant-accent-hover: #f59e0b;
+  --tenant-primary: #22c55e;
+  --tenant-primary-dark: #16a34a;
+  --tenant-primary-light: #1f2937;
+  --tenant-primary-hover: #16a34a;
+  --tenant-accent: #14b8a6;
+  --tenant-accent-light: #2dd4bf;
+  --tenant-accent-hover: #0d9488;
   
-  --tenant-bg: #431407;
-  --tenant-bg-secondary: #7c2d12;
-  --tenant-bg-tertiary: #9a3412;
+  --tenant-bg: #1f2937;
+  --tenant-bg-secondary: #111827;
+  --tenant-bg-tertiary: #374151;
   
-  --tenant-border: #c2410c;
-  --tenant-border-hover: #ea580c;
+  --tenant-border: #374151;
+  --tenant-border-hover: #4b5563;
   
-  --tenant-text-primary: #ffedd5;
-  --tenant-text-secondary: #fed7aa;
-  --tenant-text-tertiary: #fdba74;
+  --tenant-text-primary: #f9fafb;
+  --tenant-text-secondary: #d1d5db;
+  --tenant-text-tertiary: #9ca3af;
   
   --tenant-success: #10b981;
   --tenant-warning: #f59e0b;
   --tenant-danger: #ef4444;
   --tenant-info: #3b82f6;
+  
+  --tenant-job-scheduled: #60a5fa;
+  --tenant-job-scheduled-border: #3b82f6;
+  --tenant-job-in-progress: #fbbf24;
+  --tenant-job-in-progress-border: #f59e0b;
+  --tenant-job-completed: #34d399;
+  --tenant-job-completed-border: #10b981;
+  --tenant-job-pending: #9ca3af;
+  --tenant-job-pending-border: #6b7280;
   
   --tenant-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
   --tenant-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3);
@@ -91,14 +109,14 @@
 }
 
 .tenant-header {
-  background-color: var(--tenant-primary-dark);
-  border-bottom: 1px solid var(--tenant-primary);
-  color: white;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--tenant-border);
+  color: var(--tenant-text-primary);
 }
 
 .tenant-sidebar {
   background-color: var(--tenant-primary-light);
-  color: white;
+  color: var(--tenant-text-primary);
 }
 
 .tenant-btn {

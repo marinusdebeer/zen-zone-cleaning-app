@@ -25,7 +25,7 @@ export default async function AnalyticsPage() {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Monthly Revenue</p>
@@ -35,13 +35,13 @@ export default async function AnalyticsPage() {
                 <span className="text-sm text-green-600 dark:text-green-400">+12.5% from last month</span>
               </div>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <DollarSign className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <DollarSign className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Jobs Completed</p>
@@ -51,13 +51,13 @@ export default async function AnalyticsPage() {
                 <span className="text-sm text-green-600 dark:text-green-400">+8.3% from last month</span>
               </div>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <Briefcase className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <Briefcase className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">New Clients</p>
@@ -67,13 +67,13 @@ export default async function AnalyticsPage() {
                 <span className="text-sm text-green-600 dark:text-green-400">+25% from last month</span>
               </div>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <Users className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <Users className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Avg. Job Value</p>
@@ -83,21 +83,21 @@ export default async function AnalyticsPage() {
                 <span className="text-sm text-green-600 dark:text-green-400">+5.2% from last month</span>
               </div>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <BarChart3 className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <BarChart3 className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Revenue Chart Placeholder */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Revenue Trend (Last 6 Months)</h2>
         <div className="h-64 flex items-end justify-around space-x-2">
           {[8500, 9200, 10100, 11300, 10800, 12450].map((value, index) => (
             <div key={index} className="flex flex-col items-center flex-1">
               <div 
-                className="w-full bg-[#4a7c59] rounded-t-lg transition-all hover:bg-[#4a8c37]"
+                className="w-full bg-brand rounded-t-lg transition-all hover:bg-brand"
                 style={{ height: `${(value / 12450) * 100}%` }}
               ></div>
               <span className="text-xs text-gray-600 dark:text-gray-400 mt-2">
@@ -112,7 +112,7 @@ export default async function AnalyticsPage() {
       {/* More Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Services */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top Services</h2>
           <div className="space-y-3">
             <div>
@@ -121,7 +121,7 @@ export default async function AnalyticsPage() {
                 <span className="text-sm font-semibold text-gray-900 dark:text-white">42%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div className="bg-[#4a7c59] h-2 rounded-full" style={{ width: '42%' }}></div>
+                <div className="bg-brand h-2 rounded-full" style={{ width: '42%' }}></div>
               </div>
             </div>
             <div>
@@ -130,7 +130,7 @@ export default async function AnalyticsPage() {
                 <span className="text-sm font-semibold text-gray-900 dark:text-white">28%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div className="bg-[#4a7c59] h-2 rounded-full" style={{ width: '28%' }}></div>
+                <div className="bg-brand h-2 rounded-full" style={{ width: '28%' }}></div>
               </div>
             </div>
             <div>
@@ -139,7 +139,7 @@ export default async function AnalyticsPage() {
                 <span className="text-sm font-semibold text-gray-900 dark:text-white">20%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div className="bg-[#4a7c59] h-2 rounded-full" style={{ width: '20%' }}></div>
+                <div className="bg-brand h-2 rounded-full" style={{ width: '20%' }}></div>
               </div>
             </div>
             <div>
@@ -148,33 +148,33 @@ export default async function AnalyticsPage() {
                 <span className="text-sm font-semibold text-gray-900 dark:text-white">10%</span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div className="bg-[#4a7c59] h-2 rounded-full" style={{ width: '10%' }}></div>
+                <div className="bg-brand h-2 rounded-full" style={{ width: '10%' }}></div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Team Performance */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Team Performance</h2>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
               <div>
                 <p className="font-medium text-gray-900 dark:text-white">Team A</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">18 jobs completed</p>
               </div>
               <div className="text-right">
-                <p className="text-lg font-semibold text-[#4a7c59]">$6,750</p>
+                <p className="text-lg font-semibold text-brand">$6,750</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Revenue</p>
               </div>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
               <div>
                 <p className="font-medium text-gray-900 dark:text-white">Team B</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">16 jobs completed</p>
               </div>
               <div className="text-right">
-                <p className="text-lg font-semibold text-[#4a7c59]">$5,700</p>
+                <p className="text-lg font-semibold text-brand">$5,700</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Revenue</p>
               </div>
             </div>
@@ -183,19 +183,19 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* Client Retention */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Client Insights</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="text-center">
-            <p className="text-3xl font-bold text-[#4a7c59]">78%</p>
+            <p className="text-3xl font-bold text-brand">78%</p>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Client Retention Rate</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-[#4a7c59]">4.8</p>
+            <p className="text-3xl font-bold text-brand">4.8</p>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Average Rating</p>
           </div>
           <div className="text-center">
-            <p className="text-3xl font-bold text-[#4a7c59]">2.4</p>
+            <p className="text-3xl font-bold text-brand">2.4</p>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Jobs per Client</p>
           </div>
         </div>

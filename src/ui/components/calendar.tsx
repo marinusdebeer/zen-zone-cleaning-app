@@ -68,11 +68,11 @@ const SLOTS_PER_HOUR = 60 / MINUTES_INCREMENT; // 4 slots per hour
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'scheduled': return 'bg-blue-500 border-blue-600';
-    case 'in-progress': return 'bg-yellow-500 border-yellow-600';
-    case 'completed': return 'bg-green-500 border-green-600';
-    case 'pending': return 'bg-gray-400 border-gray-500';
-    default: return 'bg-blue-500 border-blue-600';
+    case 'scheduled': return 'bg-[var(--tenant-job-scheduled)] border-[var(--tenant-job-scheduled-border)]';
+    case 'in-progress': return 'bg-[var(--tenant-job-in-progress)] border-[var(--tenant-job-in-progress-border)]';
+    case 'completed': return 'bg-[var(--tenant-job-completed)] border-[var(--tenant-job-completed-border)]';
+    case 'pending': return 'bg-[var(--tenant-job-pending)] border-[var(--tenant-job-pending-border)]';
+    default: return 'bg-[var(--tenant-job-scheduled)] border-[var(--tenant-job-scheduled-border)]';
   }
 };
 
@@ -197,7 +197,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
     const days = getMonthDays();
 
     return (
-      <div className="bg-white dark:bg-gray-800 h-full w-full flex flex-col overflow-hidden">
+      <div className="bg-brand-bg h-full w-full flex flex-col overflow-hidden">
         {/* Days header */}
         <div className="grid grid-cols-7 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
           {DAYS.map(day => (
@@ -220,13 +220,13 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
               <div
                 key={index}
                 className={`min-h-[100px] border-b border-r border-gray-200 dark:border-gray-700 p-1.5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                  !date ? 'bg-gray-50 dark:bg-gray-900' : 'bg-white dark:bg-gray-800'
+                  !date ? 'bg-gray-50 dark:bg-gray-900' : 'bg-brand-bg'
                 }`}
               >
                 {date && (
                   <>
                     <div className={`text-sm font-medium mb-1 ${
-                      isToday ? 'flex items-center justify-center w-7 h-7 bg-[#4a7c59] text-white rounded-full' : 'text-gray-700 dark:text-gray-300'
+                      isToday ? 'flex items-center justify-center w-7 h-7 bg-brand text-white rounded-full' : 'text-gray-700 dark:text-gray-300'
                     }`}>
                       {date.getDate()}
                     </div>
@@ -269,7 +269,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
     });
 
     return (
-      <div className="bg-white dark:bg-gray-800 h-full w-full flex flex-col overflow-hidden">
+      <div className="bg-brand-bg h-full w-full flex flex-col overflow-hidden">
         {/* Time grid header */}
         <div className="flex border-b-2 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
           <div className="w-12 flex-shrink-0 p-2 text-[10px] font-semibold text-gray-700 dark:text-gray-300 text-right pr-1.5 border-r border-gray-200 dark:border-gray-700">Time</div>
@@ -277,9 +277,9 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
             {weekDays.map((day, index) => {
               const isToday = day.toDateString() === new Date().toDateString();
               return (
-                <div key={index} className={`p-2 text-center ${isToday ? 'bg-[#f7faf7] dark:bg-gray-700/70' : ''}`}>
+                <div key={index} className={`p-2 text-center ${isToday ? 'bg-brand dark:bg-gray-700/70' : ''}`}>
                   <div className="text-xs text-gray-600 dark:text-gray-400">{DAYS[day.getDay()]}</div>
-                  <div className={`text-base font-bold ${isToday ? 'text-[#4a7c59]' : 'text-gray-900 dark:text-white'}`}>
+                  <div className={`text-base font-bold ${isToday ? 'text-brand' : 'text-gray-900 dark:text-white'}`}>
                     {day.getDate()}
                   </div>
                 </div>
@@ -322,7 +322,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                         <div 
                           key={dayIndex} 
                           className={`relative min-h-[15px] border-r border-gray-100 dark:border-gray-700 p-0.5 cursor-crosshair transition-colors ${
-                            isSelected ? 'bg-[#4a7c59]/30 dark:bg-[#4a7c59]/20 border-l-2 border-[#4a7c59]' : 'hover:bg-gray-50 dark:hover:bg-gray-700 bg-transparent'
+                            isSelected ? 'bg-brand/30 dark:bg-brand/20 border-l-2 border-brand' : 'hover:bg-gray-50 dark:hover:bg-gray-700 bg-transparent'
                           }`}
                           onMouseDown={() => handleMouseDown(hour, minute, dayIndex, day)}
                           onMouseEnter={() => handleMouseEnter(hour, minute, dayIndex, day)}
@@ -363,7 +363,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
     const isToday = currentDate.toDateString() === new Date().toDateString();
 
     return (
-      <div className="bg-white dark:bg-gray-800 h-full w-full flex flex-col overflow-hidden">
+      <div className="bg-brand-bg h-full w-full flex flex-col overflow-hidden">
         <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
           <div className="flex items-center justify-between">
             <div>
@@ -404,7 +404,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                     </div>
                     <div 
                       className={`flex-1 p-1 min-h-[15px] cursor-crosshair transition-colors ${
-                        isSelected ? 'bg-[#4a7c59]/30 dark:bg-[#4a7c59]/20 border-l-2 border-[#4a7c59]' : 'hover:bg-gray-50 dark:hover:bg-gray-700 bg-transparent'
+                        isSelected ? 'bg-brand/30 dark:bg-brand/20 border-l-2 border-brand' : 'hover:bg-gray-50 dark:hover:bg-gray-700 bg-transparent'
                       }`}
                       onMouseDown={() => handleMouseDown(hour, minute, 0, currentDate)}
                       onMouseEnter={() => handleMouseEnter(hour, minute, 0, currentDate)}
@@ -454,9 +454,9 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-white dark:bg-gray-800">
+    <div className="flex flex-col h-full w-full bg-brand-bg">
       {/* Ultra-Compact Calendar Controls */}
-      <div className="flex items-center justify-between bg-white dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-600 px-4 py-2 shadow-sm">
+      <div className="flex items-center justify-between bg-brand-bg border-b-2 border-gray-300 dark:border-gray-600 px-4 py-2 shadow-sm">
         <div className="flex items-center space-x-2">
           <button
             onClick={goToToday}
@@ -492,7 +492,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
           <select
             value={selectedTeam}
             onChange={(e) => setSelectedTeam(e.target.value)}
-            className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-xs focus:ring-1 focus:ring-[#4a7c59] focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-xs focus:ring-1 focus:ring-brand focus:border-transparent bg-brand-bg text-gray-900 dark:text-white"
           >
             <option value="all">All Teams</option>
             <option value="team-a">Team A</option>
@@ -507,7 +507,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                 onClick={() => onViewChange(v)}
                 className={`px-2 py-0.5 text-xs font-medium rounded transition-colors capitalize ${
                   view === v
-                    ? 'bg-white dark:bg-gray-800 text-[#4a7c59] dark:text-[#78A265] shadow-sm'
+                    ? 'bg-brand-bg text-brand dark:text-brand shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
@@ -518,7 +518,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
 
           <Link
             href="/jobs/new"
-            className="inline-flex items-center px-2 py-1 bg-[#4a8c37] text-white rounded hover:bg-[#4a7c59] transition-colors text-xs"
+            className="inline-flex items-center px-2 py-1 bg-brand text-white rounded hover:bg-brand transition-colors text-xs"
           >
             <Plus className="w-3 h-3 mr-0.5" />
             New
@@ -537,7 +537,7 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
       {showModal && modalTimes && (
         <div className="fixed inset-0 top-16 z-50 bg-black/50 backdrop-blur-sm overflow-y-auto">
           <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[calc(100vh-8rem)] flex flex-col my-4">
+            <div className="bg-brand-bg rounded-xl shadow-2xl max-w-4xl w-full max-h-[calc(100vh-8rem)] flex flex-col my-4">
               <div className="overflow-y-auto flex-1 p-6">
                 <JobWizard
                   clients={clients}

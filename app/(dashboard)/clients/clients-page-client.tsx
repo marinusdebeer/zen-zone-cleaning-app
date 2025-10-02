@@ -163,19 +163,19 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-[#4a7c59]">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6 border-l-4 border-l-brand">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400 dark:text-gray-500">Total Clients</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{stats.total}</p>
             </div>
-            <div className="p-3 bg-gradient-to-br from-[#4a7c59] to-[#4a8c37] rounded-lg">
+            <div className="p-3 bg-gradient-to-br from-brand to-brand-dark rounded-lg">
               <Users className="h-6 w-6 text-white" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-green-500">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6 border-l-4 border-l-green-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400 dark:text-gray-500">New This Month</p>
@@ -187,21 +187,21 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-blue-500">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6 border-l-4 border-l-brand-info">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400 dark:text-gray-500">Active (3mo)</p>
               <p className="text-3xl font-bold text-gray-900 mt-2">{stats.active}</p>
             </div>
-            <div className="p-3 bg-blue-100 rounded-lg">
-              <Activity className="h-6 w-6 text-blue-600" />
+            <div className="p-3 bg-brand-bg-tertiary rounded-lg">
+              <Activity className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
           <input
@@ -209,7 +209,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
             placeholder="Search clients by name, email, phone, or address..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
           />
         </div>
         <div className="mt-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
@@ -219,7 +219,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
 
       {/* Clients Table */}
       {filteredClients.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-12 text-center">
           <Users className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
             {searchTerm ? 'No clients found' : 'No clients yet'}
@@ -240,9 +240,9 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
           )}
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-brand-bg rounded-xl shadow-sm overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+            <thead className="bg-brand-bg-secondary dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Client
@@ -262,9 +262,6 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Source
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Actions
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -273,10 +270,10 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                 const phones = Array.isArray(client.phones) ? client.phones : [];
 
                 return (
-                  <tr key={client.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <tr key={client.id} onClick={() => window.location.href = `/clients/${client.id}`} className="hover:bg-[var(--tenant-bg-tertiary)] transition-colors cursor-pointer">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        <div className="w-10 h-10 bg-gradient-to-br from-[#4a7c59] to-[#4a8c37] rounded-full flex items-center justify-center text-white font-bold">
+                        <div className="w-10 h-10 bg-gradient-to-br from-brand to-brand-dark rounded-full flex items-center justify-center text-white font-bold">
                           {client.name.substring(0, 2).toUpperCase()}
                         </div>
                         <div className="ml-3">
@@ -309,7 +306,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full font-semibold text-sm">
+                      <span className="inline-flex items-center justify-center w-8 h-8 bg-brand-bg-tertiary text-brand-text rounded-full font-semibold text-sm">
                         {client._count.jobs}
                       </span>
                     </td>
@@ -325,15 +322,6 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/clients/${client.id}`}
-                        className="text-brand hover:text-brand-dark font-medium text-sm inline-flex items-center"
-                      >
-                        View
-                        <ArrowRight className="w-4 h-4 ml-1" />
-                      </Link>
-                    </td>
                   </tr>
                 );
               })}
@@ -345,9 +333,9 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
       {/* Add Client Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-brand-bg rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-white dark:bg-gray-800 z-10">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-brand-bg z-10">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
                   <UserPlus className="w-6 h-6 mr-2 text-brand" />
@@ -375,7 +363,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                   onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
                   required
                   disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
                   placeholder="John Doe / ABC Corporation"
                 />
               </div>
@@ -388,7 +376,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                     value={newClient.email}
                     onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
                     disabled={loading}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
                     placeholder="client@example.com"
                   />
                 </div>
@@ -400,7 +388,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                     value={newClient.phone}
                     onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
                     disabled={loading}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
                     placeholder="(555) 123-4567"
                   />
                 </div>
@@ -413,7 +401,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                   value={newClient.address}
                   onChange={(e) => setNewClient({ ...newClient, address: e.target.value })}
                   disabled={loading}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
                   placeholder="123 Main St, City, State ZIP"
                 />
               </div>
@@ -424,7 +412,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                   type="button"
                   onClick={() => setShowAddModal(false)}
                   disabled={loading}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>

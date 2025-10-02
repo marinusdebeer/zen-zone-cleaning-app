@@ -100,16 +100,16 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
   }, [showUserMenu, showNotifications, showMessages, showSearchResults]);
 
   return (
-    <header className="bg-brand-dark border-b border-brand sticky top-0 z-40 transition-colors">
+    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 transition-colors">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left side - Logo and Company Name */}
           <div className="flex items-center">
             <button
               onClick={onMenuClick}
-              className="p-2 rounded-md lg:hidden hover:bg-brand/70"
+              className="p-2 rounded-md lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-              <Menu className="h-6 w-6 text-white" />
+              <Menu className="h-6 w-6 text-gray-700 dark:text-white" />
             </button>
             
             <div className="flex items-center ml-2 lg:ml-0">
@@ -118,8 +118,8 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                 ZZ
               </div>
               <div className="ml-3">
-                <h1 className="text-xl font-semibold text-white">Zen Zone Cleaning</h1>
-                <p className="text-xs text-white/70">Service Management System</p>
+                <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Zen Zone Cleaning</h1>
+                <p className="text-xs text-gray-600 dark:text-gray-400">Service Management System</p>
               </div>
             </div>
           </div>
@@ -128,9 +128,9 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <div className="flex-1 max-w-2xl mx-4 hidden md:block relative">
             <div className="relative">
               {searchLoading ? (
-                <Loader2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50 animate-spin" />
+                <Loader2 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 animate-spin" />
               ) : (
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               )}
               <input
                 type="search"
@@ -141,13 +141,13 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   e.stopPropagation();
                   if (searchResults) setShowSearchResults(true);
                 }}
-                className="w-full pl-10 pr-4 py-2 border border-white/20 rounded-lg focus:ring-2 focus:ring-white focus:border-transparent bg-white/10 text-white placeholder:text-white/50"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
               />
             </div>
 
             {/* Search Results Dropdown */}
             {showSearchResults && searchResults && (
-              <div className="absolute top-full mt-2 w-full bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 z-50 max-h-[80vh] overflow-y-auto">
+              <div className="absolute top-full mt-2 w-full bg-brand-bg rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 z-50 max-h-[80vh] overflow-y-auto">
                 {/* Clients */}
                 {searchResults.clients.length > 0 && (
                   <div className="border-b border-gray-200 dark:border-gray-700">
@@ -389,13 +389,13 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                 e.stopPropagation();
                 toggleTheme();
               }}
-              className="p-2 rounded-md hover:bg-brand/70 transition-colors"
+              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
               {theme === 'light' ? (
-                <Moon className="h-5 w-5 text-white/70" />
+                <Moon className="h-5 w-5 text-gray-600" />
               ) : (
-                <Sun className="h-5 w-5 text-white/70" />
+                <Sun className="h-5 w-5 text-gray-300" />
               )}
             </button>
 
@@ -403,7 +403,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
             {isSuperAdmin && (
               <Link
                 href="/admin"
-                className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-[#1e40af] to-[#3b82f6] text-white rounded-lg hover:from-[#1e3a8a] hover:to-[#2563eb] transition-all text-sm font-medium shadow-lg"
+                className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-brand to-brand-dark text-white rounded-lg hover:from-brand hover:to-brand-dark transition-all text-sm font-medium shadow-lg"
               >
                 <Shield className="w-4 h-4" />
                 <span className="hidden md:inline">Admin</span>
@@ -424,17 +424,17 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowMessages(false);
                   setShowUserMenu(false);
                 }}
-                className="p-2 rounded-md hover:bg-brand/70 relative"
+                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative"
               >
-                <Bell className="h-5 w-5 text-white/70" />
+                <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 {unreadNotifications > 0 && (
-                  <span className="absolute top-1 right-1 h-2 w-2 bg-brand-accent rounded-full"></span>
+                  <span className="absolute top-1 right-1 h-2 w-2 bg-brand rounded-full"></span>
                 )}
               </button>
 
               {/* Notifications Dropdown */}
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                <div className="absolute right-0 mt-2 w-80 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                   <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</h3>
                   </div>
@@ -470,17 +470,17 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowNotifications(false);
                   setShowUserMenu(false);
                 }}
-                className="p-2 rounded-md hover:bg-brand/70 relative"
+                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative"
               >
-                <MessageSquare className="h-5 w-5 text-white/70" />
+                <MessageSquare className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 {unreadMessages > 0 && (
-                  <span className="absolute top-1 right-1 h-2 w-2 bg-brand-accent rounded-full"></span>
+                  <span className="absolute top-1 right-1 h-2 w-2 bg-brand rounded-full"></span>
                 )}
               </button>
 
               {/* Messages Dropdown */}
               {showMessages && (
-                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                <div className="absolute right-0 mt-2 w-80 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                   <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Client Messages</h3>
                   </div>
@@ -524,17 +524,17 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowNotifications(false);
                   setShowMessages(false);
                 }}
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-brand/70"
+                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
               >
-                <div className="w-8 h-8 bg-brand-accent rounded-full flex items-center justify-center text-white text-sm font-medium">
+                <div className="w-8 h-8 bg-brand rounded-full flex items-center justify-center text-white text-sm font-medium">
                   {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
-                <ChevronDown className="h-4 w-4 text-white/70" />
+                <ChevronDown className="h-4 w-4 text-gray-600 dark:text-gray-300" />
               </button>
 
               {/* User Dropdown */}
               {showUserMenu && (
-                <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                <div className="absolute right-0 mt-2 w-56 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                   <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{session?.user?.name}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{session?.user?.email}</p>

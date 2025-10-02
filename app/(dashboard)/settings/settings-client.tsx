@@ -217,7 +217,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                   activeTab === tab.id
-                    ? 'border-b-2 border-[#4a7c59] text-[#4a7c59]'
+                    ? 'border-b-2 border-brand text-brand'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white'
                 }`}
               >
@@ -230,7 +230,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         {/* Organization Tab */}
         {activeTab === 'organization' && (
           <div className="space-y-6">
@@ -243,7 +243,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="text"
                     value={orgInfo.name}
                     onChange={(e) => setOrgInfo({ ...orgInfo, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -252,7 +252,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="text"
                     value={orgInfo.industry}
                     onChange={(e) => setOrgInfo({ ...orgInfo, industry: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -261,7 +261,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="tel"
                     value={orgInfo.phone}
                     onChange={(e) => setOrgInfo({ ...orgInfo, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -270,7 +270,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="email"
                     value={orgInfo.email}
                     onChange={(e) => setOrgInfo({ ...orgInfo, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -280,7 +280,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     value={orgInfo.website}
                     onChange={(e) => setOrgInfo({ ...orgInfo, website: e.target.value })}
                     placeholder="https://example.com"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -290,7 +290,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     step="0.01"
                     value={orgInfo.taxRate}
                     onChange={(e) => setOrgInfo({ ...orgInfo, taxRate: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -299,7 +299,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="text"
                     value={orgInfo.address}
                     onChange={(e) => setOrgInfo({ ...orgInfo, address: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -307,7 +307,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
             <button
               onClick={handleSaveOrganization}
               disabled={loading}
-              className="px-6 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 flex items-center"
+              className="px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors disabled:opacity-50 flex items-center"
             >
               <Save className="w-4 h-4 mr-2" />
               {loading ? 'Saving...' : 'Save Changes'}
@@ -327,7 +327,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="text"
                     value={userProfile.name}
                     onChange={(e) => setUserProfile({ ...userProfile, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -336,7 +336,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="email"
                     value={userProfile.email}
                     onChange={(e) => setUserProfile({ ...userProfile, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -344,7 +344,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
             <button
               onClick={handleSaveUserProfile}
               disabled={loading}
-              className="px-6 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 flex items-center"
+              className="px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors disabled:opacity-50 flex items-center"
             >
               <Save className="w-4 h-4 mr-2" />
               {loading ? 'Saving...' : 'Save Changes'}
@@ -364,7 +364,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="password"
                     value={passwordData.currentPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
                 <div>
@@ -373,7 +373,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                   <p className="text-sm text-gray-500 mt-1">Minimum 8 characters</p>
                 </div>
@@ -383,7 +383,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                     type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -391,7 +391,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
             <button
               onClick={handleChangePassword}
               disabled={loading}
-              className="px-6 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 flex items-center"
+              className="px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors disabled:opacity-50 flex items-center"
             >
               <Save className="w-4 h-4 mr-2" />
               {loading ? 'Changing...' : 'Change Password'}
@@ -418,7 +418,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                               [day]: { ...hours, isOpen: e.target.checked },
                             })
                           }
-                          className="rounded text-[#4a7c59] mr-2"
+                          className="rounded text-brand mr-2"
                         />
                         <span className="capitalize font-medium">{day}</span>
                       </label>
@@ -434,7 +434,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                               [day]: { ...hours, open: e.target.value },
                             })
                           }
-                          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white"
+                          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white"
                         />
                         <span>to</span>
                         <input
@@ -446,7 +446,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                               [day]: { ...hours, close: e.target.value },
                             })
                           }
-                          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white"
+                          className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white"
                         />
                       </>
                     )}
@@ -458,7 +458,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
             <button
               onClick={handleSaveBusinessHours}
               disabled={loading}
-              className="px-6 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 flex items-center"
+              className="px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors disabled:opacity-50 flex items-center"
             >
               <Save className="w-4 h-4 mr-2" />
               {loading ? 'Saving...' : 'Save Changes'}
@@ -473,7 +473,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Services Offered</h2>
               <button
                 onClick={() => setServices([...services, { name: '', defaultPrice: 0 }])}
-                className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors flex items-center text-sm"
+                className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors flex items-center text-sm"
               >
                 <Plus className="w-4 h-4 mr-1" />
                 Add Service
@@ -493,7 +493,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].name = e.target.value;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                       />
                     </div>
                     <div>
@@ -506,7 +506,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].defaultPrice = parseFloat(e.target.value) || 0;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                       />
                     </div>
                     <div>
@@ -519,7 +519,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
                           newServices[index].description = e.target.value;
                           setServices(newServices);
                         }}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white placeholder:text-gray-400"
                       />
                     </div>
                   </div>
@@ -535,7 +535,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
             <button
               onClick={handleSaveServices}
               disabled={loading}
-              className="px-6 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 flex items-center"
+              className="px-6 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors disabled:opacity-50 flex items-center"
             >
               <Save className="w-4 h-4 mr-2" />
               {loading ? 'Saving...' : 'Save Changes'}

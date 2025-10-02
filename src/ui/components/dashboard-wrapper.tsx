@@ -27,10 +27,8 @@ export function DashboardWrapper({ children }: DashboardWrapperProps) {
         <AppHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
         {/* Page content */}
-        <main className="flex-1 p-6 bg-brand-bg-secondary">
-          <div className="max-w-7xl mx-auto">
-            {children}
-          </div>
+        <main className="flex-1 px-6 py-6 bg-brand-bg-secondary">
+          {children}
         </main>
       </div>
     </div>

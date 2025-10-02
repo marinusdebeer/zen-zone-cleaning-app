@@ -362,15 +362,15 @@ export default async function DashboardPage() {
             {upcomingVisits.length > 0 ? (
               <div className="space-y-4">
                 {upcomingVisits.map((visit) => (
-                  <div key={visit.id} className="flex items-center justify-between p-4 bg-brand-bg-secondary rounded-lg hover:bg-brand-bg-tertiary transition-colors">
+                  <div key={visit.id} className="flex items-center justify-between p-4 bg-brand-bg-secondary rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors">
                     <div className="flex items-center space-x-4 flex-1 min-w-0">
                       <div className={`p-2 rounded-lg ${
-                        visit.status === 'SCHEDULED' ? 'bg-blue-100' :
+                        visit.status === 'SCHEDULED' ? 'bg-brand-bg-tertiary' :
                         visit.status === 'IN_PROGRESS' ? 'bg-yellow-100' :
                         'bg-gray-100'
                       }`}>
                         <Clock className={`h-5 w-5 ${
-                          visit.status === 'SCHEDULED' ? 'text-blue-600 dark:text-blue-400' :
+                          visit.status === 'SCHEDULED' ? 'text-brand' :
                           visit.status === 'IN_PROGRESS' ? 'text-yellow-600 dark:text-yellow-400' :
                           'text-brand-text-tertiary'
                         }`} />
@@ -470,12 +470,12 @@ export default async function DashboardPage() {
                 >
                   <div className={`p-1.5 rounded ${
                     invoice.status === 'PAID' ? 'bg-green-100 dark:bg-green-900/30' :
-                    invoice.status === 'SENT' ? 'bg-blue-100 dark:bg-blue-900/30' :
+                    invoice.status === 'SENT' ? 'bg-brand-bg-tertiary' :
                     'bg-brand-bg-secondary'
                   }`}>
                     <Receipt className={`h-4 w-4 ${
                       invoice.status === 'PAID' ? 'text-green-600 dark:text-green-400' :
-                      invoice.status === 'SENT' ? 'text-blue-600 dark:text-blue-400' :
+                      invoice.status === 'SENT' ? 'text-brand' :
                       'text-brand-text-tertiary'
                     }`} />
                   </div>
@@ -496,8 +496,8 @@ export default async function DashboardPage() {
                   href={`/clients/${client.id}`}
                   className="flex items-start space-x-3 hover:bg-brand-bg-secondary p-2 rounded-lg transition-colors -m-2"
                 >
-                  <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded">
-                    <UserPlus className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                  <div className="p-1.5 bg-brand-bg-tertiary rounded">
+                    <UserPlus className="h-4 w-4 text-brand" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">New client added</p>

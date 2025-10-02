@@ -111,14 +111,14 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <Receipt className="w-7 h-7 mr-2 text-[#4a7c59]" />
+            <Receipt className="w-7 h-7 mr-2 text-brand" />
             Create New Invoice
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Bill a client for completed services</p>
         </div>
         <Link
           href="/invoices"
-          className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center"
+          className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors inline-flex items-center"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Invoices
@@ -134,7 +134,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
       )}
 
       {/* Creation Mode Toggle */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-4">
         <div className="flex gap-2">
           <button
             type="button"
@@ -144,8 +144,8 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
             }}
             className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
               creationMode === 'job'
-                ? 'bg-gradient-to-r from-[#4a8c37] to-[#4a7c59] text-white shadow-lg'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? 'bg-gradient-to-r from-brand to-brand-dark text-white shadow-lg'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-[var(--tenant-bg-tertiary)]'
             }`}
           >
             <Briefcase className="w-5 h-5 inline mr-2" />
@@ -159,8 +159,8 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
             }}
             className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
               creationMode === 'scratch'
-                ? 'bg-gradient-to-r from-[#4a8c37] to-[#4a7c59] text-white shadow-lg'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? 'bg-gradient-to-r from-brand to-brand-dark text-white shadow-lg'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-[var(--tenant-bg-tertiary)]'
             }`}
           >
             <FileText className="w-5 h-5 inline mr-2" />
@@ -172,11 +172,11 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Job or Client Selection */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           {creationMode === 'job' ? (
             <>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Briefcase className="w-5 h-5 mr-2 text-[#4a7c59]" />
+                <Briefcase className="w-5 h-5 mr-2 text-brand" />
                 Select Job
               </h2>
 
@@ -200,7 +200,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
                 </div>
 
                 {selectedJob && (
-                  <div className="p-4 bg-[#f7faf7] dark:bg-gray-700 rounded-lg space-y-2">
+                  <div className="p-4 bg-brand dark:bg-gray-700 rounded-lg space-y-2">
                     <div className="flex items-start">
                       <Users className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400 mt-0.5" />
                       <div>
@@ -236,9 +236,9 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Include Visits (Optional)
                     </label>
-                    <div className="space-y-2 max-h-40 overflow-y-auto p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <div className="space-y-2 max-h-40 overflow-y-auto p-3 bg-brand-bg-secondary dark:bg-gray-700/50 rounded-lg">
                       {selectedJob.visits.map(visit => (
-                        <label key={visit.id} className="flex items-center space-x-3 p-2 hover:bg-white dark:hover:bg-gray-700 rounded cursor-pointer">
+                        <label key={visit.id} className="flex items-center space-x-3 p-2 hover:bg-white hover:bg-[var(--tenant-bg-tertiary)] rounded cursor-pointer">
                           <input
                             type="checkbox"
                             checked={formData.visitIds.includes(visit.id)}
@@ -249,7 +249,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
                                 setFormData({ ...formData, visitIds: formData.visitIds.filter(id => id !== visit.id) });
                               }
                             }}
-                            className="w-4 h-4 text-[#4a7c59] rounded focus:ring-2 focus:ring-[#4a7c59]"
+                            className="w-4 h-4 text-brand rounded focus:ring-2 focus:ring-brand"
                           />
                           <div className="flex-1">
                             <p className="text-sm font-medium text-gray-900 dark:text-white">
@@ -269,7 +269,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
           ) : (
             <>
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Users className="w-5 h-5 mr-2 text-[#4a7c59]" />
+                <Users className="w-5 h-5 mr-2 text-brand" />
                 Select Client
               </h2>
 
@@ -292,7 +292,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
               </div>
 
               {selectedClient && (
-                <div className="mt-4 p-4 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
+                <div className="mt-4 p-4 bg-brand dark:bg-gray-700 rounded-lg">
                   <div className="flex items-start">
                     <Users className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400 mt-0.5" />
                     <div>
@@ -310,9 +310,9 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
         </div>
 
         {/* Invoice Details */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <DollarSign className="w-5 h-5 mr-2 text-[#4a7c59]" />
+            <DollarSign className="w-5 h-5 mr-2 text-brand" />
             Invoice Details
           </h2>
 
@@ -334,7 +334,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
                   required
                   disabled={isSubmitting}
                   placeholder="0.00"
-                  className="w-full pl-7 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                  className="w-full pl-7 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                 />
               </div>
               {selectedJob?.estimatedCost && (
@@ -359,7 +359,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
                   value={formData.taxRate}
                   onChange={(e) => setFormData({ ...formData, taxRate: e.target.value })}
                   disabled={isSubmitting}
-                  className="w-full px-4 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                  className="w-full px-4 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                 />
               </div>
             </div>
@@ -374,14 +374,14 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
                 value={formData.dueDate}
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                 disabled={isSubmitting}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700"
               />
             </div>
           </div>
 
           {/* Calculation Summary */}
           {formData.subtotal && (
-            <div className="mt-6 p-4 bg-[#f7faf7] dark:bg-gray-700 rounded-lg space-y-2">
+            <div className="mt-6 p-4 bg-brand dark:bg-gray-700 rounded-lg space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
                 <span className="font-medium text-gray-900 dark:text-white">${parseFloat(formData.subtotal).toFixed(2)}</span>
@@ -392,7 +392,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
               </div>
               <div className="flex justify-between text-lg font-bold border-t border-gray-300 dark:border-gray-600 pt-2">
                 <span className="text-gray-900 dark:text-white">Total:</span>
-                <span className="text-[#4a7c59]">${total.toFixed(2)}</span>
+                <span className="text-brand">${total.toFixed(2)}</span>
               </div>
             </div>
           )}
@@ -408,7 +408,7 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
               disabled={isSubmitting}
               rows={3}
               placeholder="Add any additional notes, payment terms, or instructions..."
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -417,14 +417,14 @@ export function InvoiceWizard({ jobs, clients, orgId }: InvoiceWizardProps) {
         <div className="flex space-x-4">
           <Link
             href="/invoices"
-            className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center font-medium"
+            className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors text-center font-medium"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isSubmitting || (creationMode === 'job' ? !formData.jobId : !formData.clientId) || !formData.subtotal}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#4a8c37] to-[#4a7c59] text-white rounded-lg hover:from-[#4a7c59] hover:to-[#4a8c37] transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg flex items-center justify-center"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-brand to-brand-dark text-white rounded-lg hover:from-brand hover:to-brand-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed font-semibold shadow-lg flex items-center justify-center"
           >
             {isSubmitting ? (
               <>Creating Invoice...</>

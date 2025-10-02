@@ -40,9 +40,9 @@ interface LeadsClientProps {
 }
 
 const statusColors = {
-  NEW: 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+  NEW: 'bg-brand-bg-tertiary text-blue-800 dark:text-blue-300 border-brand',
   CONTACTED: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800',
-  QUALIFIED: 'bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+  QUALIFIED: 'bg-brand-bg-tertiary text-brand-text border-purple-200 dark:border-purple-800',
   PROPOSAL_SENT: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
   NEGOTIATION: 'bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 border-orange-200 dark:border-orange-800',
   CONVERTED: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800',
@@ -166,14 +166,14 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <Users className="w-7 h-7 mr-2 text-[#4a7c59]" />
+            <Users className="w-7 h-7 mr-2 text-brand" />
             Leads Management
           </h1>
           <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mt-1">Track and convert potential clients</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors flex items-center shadow-sm"
+          className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors flex items-center shadow-sm"
         >
           <Plus className="w-5 h-5 mr-2" />
           Add Lead
@@ -201,8 +201,8 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
           onClick={() => setStatusFilter('ALL')}
           className={`p-4 rounded-lg border-2 transition-colors ${
             statusFilter === 'ALL' 
-              ? 'bg-[#f7faf7] dark:bg-gray-700 border-[#4a7c59]' 
-              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+              ? 'bg-brand dark:bg-gray-700 border-brand' 
+              : 'bg-brand-bg border-gray-200 dark:border-gray-700 hover:border-brand-border-hover'
           }`}
         >
           <p className="text-2xl font-bold text-gray-900 dark:text-white">{leads.length}</p>
@@ -214,8 +214,8 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
             onClick={() => setStatusFilter(status.value)}
             className={`p-4 rounded-lg border-2 transition-colors ${
               statusFilter === status.value 
-                ? 'bg-[#f7faf7] dark:bg-gray-700 border-[#4a7c59]' 
-                : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                ? 'bg-brand dark:bg-gray-700 border-brand' 
+                : 'bg-brand-bg border-gray-200 dark:border-gray-700 hover:border-brand-border-hover'
             }`}
           >
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{statusCounts[status.value] || 0}</p>
@@ -225,10 +225,10 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
       </div>
 
       {/* Leads List */}
-      <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+            <thead className="bg-brand-bg-secondary dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 dark:text-gray-300 uppercase tracking-wider">
                   Lead
@@ -258,7 +258,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                     <p className="text-gray-500">No leads found</p>
                     <button
                       onClick={() => setShowAddModal(true)}
-                      className="mt-4 text-[#4a7c59] hover:text-[#4a8c37] font-medium"
+                      className="mt-4 text-brand hover:text-brand font-medium"
                     >
                       Add your first lead
                     </button>
@@ -266,7 +266,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                 </tr>
               ) : (
                 filteredLeads.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <tr key={lead.id} className="hover:bg-[var(--tenant-bg-tertiary)] transition-colors">
                     <td className="px-6 py-4">
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">{lead.name}</p>
@@ -334,7 +334,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                         {lead.status !== 'CONVERTED' && !lead.convertedClient && (
                           <button
                             onClick={() => handleConvertToClient(lead.id)}
-                            className="px-3 py-1 text-xs bg-[#4a8c37] text-white rounded hover:bg-[#4a7c59] transition-colors flex items-center"
+                            className="px-3 py-1 text-xs bg-brand text-white rounded hover:bg-brand transition-colors flex items-center"
                           >
                             Convert
                             <ArrowRight className="w-3 h-3 ml-1" />
@@ -343,7 +343,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                         {lead.convertedClient && (
                           <a
                             href={`/clients/${lead.convertedClient.id}`}
-                            className="px-3 py-1 text-xs bg-gray-100 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 transition-colors flex items-center"
+                            className="px-3 py-1 text-xs bg-gray-100 text-gray-700 dark:text-gray-300 rounded hover:bg-[var(--tenant-bg-tertiary)] transition-colors flex items-center"
                           >
                             View Client
                             <ArrowRight className="w-3 h-3 ml-1" />
@@ -368,12 +368,12 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
       {/* Add Lead Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-brand-bg rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-white dark:bg-gray-800 z-10">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-brand-bg z-10">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-                  <Plus className="w-6 h-6 mr-2 text-[#4a7c59]" />
+                  <Plus className="w-6 h-6 mr-2 text-brand" />
                   Add New Lead
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Capture a potential client</p>
@@ -397,7 +397,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                   value={newLead.name}
                   onChange={(e) => setNewLead({ ...newLead, name: e.target.value })}
                   required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="John Doe"
                 />
               </div>
@@ -409,7 +409,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                     type="email"
                     value={newLead.email}
                     onChange={(e) => setNewLead({ ...newLead, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                     placeholder="john@example.com"
                   />
                 </div>
@@ -420,7 +420,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                     type="tel"
                     value={newLead.phone}
                     onChange={(e) => setNewLead({ ...newLead, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                     placeholder="(555) 123-4567"
                   />
                 </div>
@@ -432,7 +432,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                   type="text"
                   value={newLead.address}
                   onChange={(e) => setNewLead({ ...newLead, address: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="123 Main St, City, State ZIP"
                 />
               </div>
@@ -461,7 +461,7 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                   value={newLead.notes}
                   onChange={(e) => setNewLead({ ...newLead, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="Any additional information..."
                 />
               </div>
@@ -471,14 +471,14 @@ export function LeadsClient({ leads: initialLeads }: LeadsClientProps) {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 font-medium"
+                  className="flex-1 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors disabled:opacity-50 font-medium"
                 >
                   {loading ? 'Adding...' : 'Add Lead'}
                 </button>

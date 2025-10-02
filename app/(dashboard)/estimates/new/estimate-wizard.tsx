@@ -95,7 +95,7 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
         </div>
         <Link
           href="/estimates"
-          className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center"
+          className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors inline-flex items-center"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Estimates
@@ -111,7 +111,7 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Recipient Selection */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold mb-4 flex items-center">
             <Users className="w-5 h-5 mr-2 text-brand" />
             Recipient
@@ -138,11 +138,11 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
                 onClick={() => setFormData({ ...formData, forType: 'lead', clientId: '', propertyId: '' })}
                 className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
                   formData.forType === 'lead'
-                    ? 'bg-[#f7faf7] dark:bg-gray-700 border-[#4a7c59]'
-                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                    ? 'bg-brand dark:bg-gray-700 border-brand'
+                    : 'bg-brand-bg border-gray-200 dark:border-gray-700 hover:border-brand-border-hover'
                 }`}
               >
-                <UserPlus className="w-5 h-5 mx-auto mb-2 text-[#4a7c59]" />
+                <UserPlus className="w-5 h-5 mx-auto mb-2 text-brand" />
                 <p className="font-medium text-gray-900 dark:text-white">Lead</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">For potential clients</p>
               </button>
@@ -204,9 +204,9 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
         </div>
 
         {/* Estimate Details */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-            <FileText className="w-5 h-5 mr-2 text-[#4a7c59]" />
+            <FileText className="w-5 h-5 mr-2 text-brand" />
             Estimate Details
           </h2>
           <div className="grid grid-cols-1 gap-4">
@@ -220,7 +220,7 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 required
                 disabled={isSubmitting}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
                 placeholder="e.g., Deep Cleaning Service"
               />
             </div>
@@ -232,7 +232,7 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 disabled={isSubmitting}
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
                 placeholder="Detailed description of services to be provided..."
               />
             </div>
@@ -252,7 +252,7 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
                     onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     required
                     disabled={isSubmitting}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
                     placeholder="0.00"
                   />
                 </div>
@@ -267,7 +267,7 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
                     value={formData.validUntil}
                     onChange={(e) => setFormData({ ...formData, validUntil: e.target.value })}
                     disabled={isSubmitting}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -295,14 +295,14 @@ export function EstimateWizard({ clients, leads, orgId }: EstimateWizardProps) {
         <div className="flex space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700">
           <Link
             href="/estimates"
-            className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center font-medium"
+            className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors text-center font-medium"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#4a8c37] to-[#4a7c59] text-white rounded-lg hover:from-[#4a7c59] hover:to-[#4a8c37] transition-all disabled:opacity-50 font-semibold shadow-lg"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-brand to-brand-dark text-white rounded-lg hover:from-brand hover:to-brand-dark transition-all disabled:opacity-50 font-semibold shadow-lg"
           >
             {isSubmitting ? 'Creating Estimate...' : 'Create Estimate'}
           </button>

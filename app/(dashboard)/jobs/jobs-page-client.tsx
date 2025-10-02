@@ -45,7 +45,7 @@ interface JobsPageClientProps {
 
 const statusConfig = {
   'Draft': { color: 'bg-gray-100 text-gray-800 border-gray-200', icon: AlertCircle },
-  'Scheduled': { color: 'bg-blue-100 text-blue-800 border-blue-200', icon: Calendar },
+  'Scheduled': { color: 'bg-brand-bg-tertiary text-blue-800 border-blue-200', icon: Calendar },
   'Active': { color: 'bg-yellow-100 text-yellow-800 border-yellow-200', icon: Clock },
   'Completed': { color: 'bg-green-100 text-green-800 border-green-200', icon: CheckCircle },
   'Cancelled': { color: 'bg-red-100 text-red-800 border-red-200', icon: XCircle },
@@ -53,7 +53,7 @@ const statusConfig = {
 
 const priorityConfig = {
   'low': { color: 'text-gray-500', label: 'Low' },
-  'normal': { color: 'text-blue-600', label: 'Normal' },
+  'normal': { color: 'text-brand', label: 'Normal' },
   'high': { color: 'text-orange-600', label: 'High' },
   'urgent': { color: 'text-red-600', label: 'Urgent' },
 };
@@ -92,7 +92,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
         </div>
         <Link
           href="/jobs/new"
-          className="px-4 py-2 bg-gradient-to-r from-[#4a8c37] to-[#4a7c59] text-white rounded-lg hover:from-[#4a7c59] hover:to-[#4a8c37] transition-all flex items-center shadow-lg"
+          className="px-4 py-2 bg-gradient-to-r from-brand to-brand-dark text-white rounded-lg hover:from-brand hover:to-brand-dark transition-all flex items-center shadow-lg"
         >
           <Plus className="w-5 h-5 mr-2" />
           Create Job
@@ -101,7 +101,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-[#4a7c59]">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6 border-l-4 border-l-brand">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Jobs</p>
@@ -111,7 +111,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-yellow-500">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6 border-l-4 border-l-yellow-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active</p>
@@ -121,7 +121,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-green-500">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6 border-l-4 border-l-green-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Completed</p>
@@ -131,19 +131,19 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-purple-500">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6 border-l-4 border-l-brand">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Recurring</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{recurringJobs}</p>
             </div>
-            <Repeat className="h-8 w-8 text-purple-600" />
+            <Repeat className="h-8 w-8 text-brand" />
           </div>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 space-y-4">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-4 space-y-4">
         {/* Search Bar */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
@@ -152,7 +152,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
             placeholder="Search jobs by title, client, description, or property..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
           />
         </div>
 
@@ -163,7 +163,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               statusFilter === 'ALL'
                 ? 'bg-brand text-white'
-                : 'bg-brand-bg-secondary hover:bg-brand-bg-tertiary'
+                : 'bg-brand-bg-secondary hover:bg-[var(--tenant-bg-tertiary)]'
             }`}
           >
             All ({totalJobs})
@@ -175,7 +175,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                 statusFilter === status
                   ? 'bg-brand text-white'
-                  : 'bg-brand-bg-secondary hover:bg-brand-bg-tertiary'
+                  : 'bg-brand-bg-secondary hover:bg-[var(--tenant-bg-tertiary)]'
               }`}
             >
               {status} ({statusCounts[status] || 0})
@@ -191,7 +191,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
 
       {/* Jobs Table */}
       {filteredJobs.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-12 text-center">
           <Briefcase className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
             {searchTerm ? 'No jobs found' : statusFilter === 'ALL' ? 'No jobs yet' : `No ${statusFilter.toLowerCase()} jobs`}
@@ -210,9 +210,9 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
           )}
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-brand-bg rounded-xl shadow-sm overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+            <thead className="bg-brand-bg-secondary dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Job
@@ -238,9 +238,6 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                 <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Est. Cost
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Actions
-                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -249,14 +246,14 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                 const nextVisit = job.visits.find(v => v.status === 'SCHEDULED');
 
                 return (
-                  <tr key={job.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <tr key={job.id} onClick={() => window.location.href = `/jobs/${job.id}`} className="hover:bg-[var(--tenant-bg-tertiary)] transition-colors cursor-pointer">
                     <td className="px-6 py-4">
                       <div>
                         <div className="flex items-center">
                           <p className="font-medium text-gray-900 dark:text-white">{job.title}</p>
                           {job.isRecurring && (
                             <span title="Recurring job">
-                              <Repeat className="w-4 h-4 ml-2 text-purple-600 dark:text-purple-400" />
+                              <Repeat className="w-4 h-4 ml-2 text-brand" />
                             </span>
                           )}
                         </div>
@@ -293,7 +290,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                       </span>
                     </td>
                     <td className="px-6 py-4 text-center">
-                      <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full font-semibold text-sm">
+                      <span className="inline-flex items-center justify-center w-8 h-8 bg-brand-bg-tertiary text-brand-text rounded-full font-semibold text-sm">
                         {job._count.visits}
                       </span>
                     </td>
@@ -320,15 +317,6 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                       ) : (
                         <p className="text-sm text-gray-400 dark:text-gray-500">-</p>
                       )}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/jobs/${job.id}`}
-                        className="text-brand hover:text-brand-dark font-medium text-sm inline-flex items-center"
-                      >
-                        View
-                        <ArrowRight className="w-4 h-4 ml-1" />
-                      </Link>
                     </td>
                   </tr>
                 );

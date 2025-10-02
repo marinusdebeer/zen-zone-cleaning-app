@@ -40,26 +40,26 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-        <Link href="/jobs" className="hover:text-[#4a7c59]">Jobs</Link>
+        <Link href="/jobs" className="hover:text-brand">Jobs</Link>
         <span>/</span>
         <span className="text-gray-900 dark:text-white font-medium">{job.title}</span>
       </div>
 
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center space-x-3">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{job.title}</h1>
               {job.isRecurring && (
-                <span className="flex items-center px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 rounded-full text-sm font-medium">
+                <span className="flex items-center px-3 py-1 bg-brand-bg-tertiary text-brand-text rounded-full text-sm font-medium">
                   <Repeat className="w-4 h-4 mr-1" />
                   Recurring
                 </span>
               )}
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                 job.status === 'Active' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
-                job.status === 'Completed' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
+                job.status === 'Completed' ? 'bg-brand-bg-tertiary text-blue-800 dark:text-blue-300' :
                 job.status === 'Draft' ? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300' :
                 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'
               }`}>{job.status}</span>
@@ -70,7 +70,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
           </div>
           <Link
             href="/jobs"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)]"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
@@ -79,25 +79,25 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
 
         {/* Key Info Grid */}
         <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <div className="p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Client</p>
-            <Link href={`/clients/${job.client.id}`} className="font-semibold text-gray-900 dark:text-white hover:text-[#4a7c59]">
+            <Link href={`/clients/${job.client.id}`} className="font-semibold text-gray-900 dark:text-white hover:text-brand">
               {job.client.name} →
             </Link>
           </div>
           {job.property && (
-            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
               <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Property</p>
               <p className="font-semibold text-gray-900 dark:text-white">{job.property.address}</p>
             </div>
           )}
           {job.estimatedCost && (
-            <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+            <div className="p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
               <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Estimated Cost</p>
-              <p className="font-semibold text-[#4a7c59]">${job.estimatedCost.toString()}</p>
+              <p className="font-semibold text-brand">${job.estimatedCost.toString()}</p>
             </div>
           )}
-          <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+          <div className="p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
             <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Priority</p>
             <p className="font-semibold text-gray-900 dark:text-white capitalize">{job.priority}</p>
           </div>
@@ -105,10 +105,10 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
 
         {/* Converted from Estimate */}
         {job.convertedFromEstimate && (
-          <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 dark:border-blue-600 rounded-lg">
-            <p className="text-sm text-blue-800 dark:text-blue-200">
+          <div className="mt-4 p-4 bg-brand-bg-tertiary border-l-4 border-brand rounded-lg">
+            <p className="text-sm text-brand-text">
               <strong>Converted from Estimate:</strong> {job.convertedFromEstimate.title} (${job.convertedFromEstimate.amount.toString()})
-              <Link href={`/estimates/${job.convertedFromEstimate.id}`} className="ml-2 underline hover:text-blue-900 dark:hover:text-blue-100">
+              <Link href={`/estimates/${job.convertedFromEstimate.id}`} className="ml-2 underline hover:text-brand-dark">
                 View Estimate →
               </Link>
             </p>
@@ -117,8 +117,8 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
 
         {/* Recurring Info */}
         {job.isRecurring && (
-          <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-900/20 border-l-4 border-purple-500 dark:border-purple-600 rounded-lg">
-            <p className="text-sm text-purple-800 dark:text-purple-200">
+          <div className="mt-4 p-4 bg-brand-bg-tertiary border-l-4 border-brand rounded-lg">
+            <p className="text-sm text-brand-text">
               <strong>Recurring Pattern:</strong> {job.recurringPattern}
               {job.recurringDays && Array.isArray(job.recurringDays) && (
                 <span> on {(job.recurringDays as number[]).map(d => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d]).join(', ')}</span>
@@ -130,14 +130,14 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
       </div>
 
       {/* Line Items */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <FileText className="w-5 h-5 mr-2 text-[#4a7c59]" />
+          <FileText className="w-5 h-5 mr-2 text-brand" />
           Line Items ({job.lineItems.length})
         </h2>
         {job.lineItems.length > 0 ? (
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700">
+            <thead className="bg-brand-bg-secondary dark:bg-gray-700">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">Item</th>
                 <th className="px-4 py-2 text-right text-xs font-semibold text-gray-700 dark:text-gray-300">Qty</th>
@@ -164,9 +164,9 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
       </div>
 
       {/* Visits */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <Calendar className="w-5 h-5 mr-2 text-[#4a7c59]" />
+          <Calendar className="w-5 h-5 mr-2 text-brand" />
           Visits ({job.visits.length})
         </h2>
         
@@ -175,11 +175,11 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Upcoming Visits</h3>
             <div className="space-y-3">
               {upcomingVisits.map(visit => (
-                <div key={visit.id} className="p-4 border-2 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div key={visit.id} className="p-4 border-2 border-brand bg-brand-bg-tertiary rounded-lg">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                        <Clock className="w-4 h-4 text-brand" />
                         <p className="font-medium text-gray-900 dark:text-white">
                           {new Date(visit.scheduledAt).toLocaleString()}
                         </p>
@@ -196,7 +196,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
                     </div>
                     <span className={`px-2 py-1 rounded text-xs font-medium ${
                       visit.status === 'InProgress' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300' :
-                      'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300'
+                      'bg-brand-bg-tertiary text-blue-800 dark:text-blue-300'
                     }`}>{visit.status}</span>
                   </div>
                 </div>
@@ -240,9 +240,9 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
       </div>
 
       {/* Invoices for this Job */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-          <Receipt className="w-5 h-5 mr-2 text-[#4a7c59]" />
+          <Receipt className="w-5 h-5 mr-2 text-brand" />
           Invoices ({job.invoices.length})
         </h2>
         {job.invoices.length > 0 ? (
@@ -251,16 +251,16 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
               <Link
                 key={invoice.id}
                 href={`/invoices/${invoice.id}`}
-                className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#4a7c59] hover:shadow-md transition-all"
+                className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-brand hover:shadow-md transition-all"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <p className="font-medium text-gray-900 dark:text-white">Invoice #{invoice.id.slice(0, 8)}</p>
                     <div className="flex items-center space-x-4 mt-2">
-                      <span className="text-lg text-[#4a7c59] font-bold">${invoice.total.toString()}</span>
+                      <span className="text-lg text-brand font-bold">${invoice.total.toString()}</span>
                       <span className={`text-xs px-2 py-1 rounded ${
                         invoice.status === 'Paid' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
-                        invoice.status === 'Sent' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300' :
+                        invoice.status === 'Sent' ? 'bg-brand-bg-tertiary text-blue-800 dark:text-blue-300' :
                         'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
                       }`}>{invoice.status}</span>
                       {invoice.payments.length > 0 && (
@@ -270,7 +270,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
                       )}
                     </div>
                   </div>
-                  <span className="text-[#4a7c59] text-sm font-medium">View →</span>
+                  <span className="text-brand text-sm font-medium">View →</span>
                 </div>
               </Link>
             ))}
@@ -281,7 +281,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             {completedVisits.length > 0 && (
               <Link
                 href={`/invoices/new?jobId=${job.id}`}
-                className="inline-flex items-center px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59]"
+                className="inline-flex items-center px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand"
               >
                 Generate Invoice
               </Link>

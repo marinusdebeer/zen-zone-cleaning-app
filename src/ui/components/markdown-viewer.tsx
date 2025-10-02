@@ -80,7 +80,7 @@ export function MarkdownViewer({ content }: MarkdownViewerProps) {
         a: ({ children, href }) => (
           <a
             href={href}
-            className="text-blue-400 hover:text-blue-300 underline transition-colors"
+            className="text-brand hover:text-brand-dark underline transition-colors"
             target="_blank"
             rel="noopener noreferrer"
           >

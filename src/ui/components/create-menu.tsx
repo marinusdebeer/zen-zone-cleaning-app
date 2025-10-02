@@ -82,10 +82,10 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
           e.stopPropagation();
           setShowMenu(!showMenu);
         }}
-        className={`p-3 rounded-full transition-all shadow-lg ${
+        className={`p-3 rounded-full transition-all shadow-md ${
           showMenu 
-            ? 'bg-brand-dark text-white rotate-45' 
-            : 'bg-gradient-to-r from-brand to-brand-dark text-white hover:from-brand-dark hover:to-brand'
+            ? 'bg-gray-700 text-white rotate-45' 
+            : 'bg-brand text-white hover:bg-brand-dark'
         }`}
         title="Create new..."
       >
@@ -93,7 +93,7 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
       </button>
 
       {showMenu && (
-        <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50">
+        <div className="absolute top-full right-0 mt-2 w-80 bg-brand-bg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50">
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Create New</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">What would you like to create?</p>

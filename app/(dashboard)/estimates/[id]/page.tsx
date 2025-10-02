@@ -40,21 +40,21 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
     <div className="space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-        <Link href="/estimates" className="hover:text-[#4a7c59]">Estimates</Link>
+        <Link href="/estimates" className="hover:text-brand">Estimates</Link>
         <span>/</span>
         <span className="text-gray-900 dark:text-white font-medium">{estimate.title}</span>
       </div>
 
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center space-x-3">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{estimate.title}</h1>
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                 estimate.status === 'Approved' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
-                estimate.status === 'Sent' ? 'bg-blue-100 text-blue-800' :
-                estimate.status === 'Converted' ? 'bg-purple-100 text-purple-800' :
+                estimate.status === 'Sent' ? 'bg-brand-bg-tertiary text-blue-800' :
+                estimate.status === 'Converted' ? 'bg-brand-bg-tertiary text-brand-text' :
                 estimate.status === 'Rejected' ? 'bg-red-100 text-red-800' :
                 'bg-gray-100 text-gray-800'
               }`}>{estimate.status}</span>
@@ -65,7 +65,7 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
           </div>
           <Link
             href="/estimates"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)]"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
@@ -73,20 +73,20 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
         </div>
 
         {/* Customer Info */}
-        <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+        <div className="mt-6 p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{customerType}</p>
               <Link 
                 href={estimate.client ? `/clients/${estimate.client.id}` : '/leads'}
-                className="text-lg font-semibold text-gray-900 dark:text-white hover:text-[#4a7c59] flex items-center"
+                className="text-lg font-semibold text-gray-900 dark:text-white hover:text-brand flex items-center"
               >
                 {customerName} →
               </Link>
             </div>
             <div className="text-right">
               <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Estimate Amount</p>
-              <p className="text-3xl font-bold text-[#4a7c59]">${estimate.amount.toString()}</p>
+              <p className="text-3xl font-bold text-brand">${estimate.amount.toString()}</p>
             </div>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
               </div>
               <Link
                 href={`/jobs/${estimate.convertedJob.id}`}
-                className="inline-flex items-center px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59]"
+                className="inline-flex items-center px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand"
               >
                 View Job
                 <ArrowRight className="w-4 h-4 ml-2" />
@@ -144,7 +144,7 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
                   This estimate has been approved and can be converted to a job
                 </p>
               </div>
-              <button className="px-6 py-3 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] font-semibold">
+              <button className="px-6 py-3 bg-brand text-white rounded-lg hover:bg-brand font-semibold">
                 Convert to Job →
               </button>
             </div>
@@ -154,13 +154,13 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
 
       {/* Actions */}
       {estimate.status === 'Draft' && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Actions</h2>
           <div className="flex space-x-3">
-            <button className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59]">
+            <button className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand">
               Send to {customerType}
             </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700">
+            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)]">
               Edit Estimate
             </button>
           </div>

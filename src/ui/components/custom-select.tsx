@@ -50,10 +50,10 @@ export function CustomSelect({
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
         className={`
-          w-full px-4 py-2 text-left bg-white dark:bg-gray-700 
+          w-full px-4 py-2 text-left bg-brand-bg 
           border border-gray-300 dark:border-gray-600 
           rounded-lg shadow-sm
-          focus:outline-none focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent
+          focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand
           disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed
           transition-colors
           flex items-center justify-between
@@ -66,7 +66,7 @@ export function CustomSelect({
       </button>
 
       {isOpen && !disabled && (
-        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-1 bg-brand-bg border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
           {options.map((option) => (
             <button
               key={option.value}
@@ -81,11 +81,11 @@ export function CustomSelect({
                   : 'w-full px-4 py-2.5 text-left flex items-center justify-between transition-colors hover:bg-gray-50 dark:hover:bg-gray-700'
               }
             >
-              <span className={`text-sm ${option.value === value ? 'font-semibold text-[#4a7c59] dark:text-[#78A265]' : 'text-gray-700 dark:text-gray-300'}`}>
+              <span className={`text-sm ${option.value === value ? 'font-semibold text-brand dark:text-brand' : 'text-gray-700 dark:text-gray-300'}`}>
                 {option.label}
               </span>
               {option.value === value && (
-                <Check className="w-4 h-4 text-[#4a7c59] dark:text-[#78A265]" />
+                <Check className="w-4 h-4 text-brand dark:text-brand" />
               )}
             </button>
           ))}

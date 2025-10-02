@@ -168,7 +168,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors inline-flex items-center"
           >
             <X className="w-4 h-4 mr-2" />
             Cancel
@@ -176,7 +176,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
         ) : (
           <Link
             href="/jobs"
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors inline-flex items-center"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors inline-flex items-center"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Jobs
@@ -193,7 +193,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold mb-4 flex items-center">
             <Briefcase className="w-5 h-5 mr-2 text-brand" />
             Basic Information
@@ -209,7 +209,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           required
                 disabled={isSubmitting}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
                 placeholder="e.g., Weekly Office Cleaning"
               />
             </div>
@@ -221,7 +221,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 disabled={isSubmitting}
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
                 placeholder="Add any additional details or special instructions..."
         />
       </div>
@@ -262,7 +262,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
         </div>
 
         {/* Scheduling */}
-        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold mb-4 flex items-center">
             <Calendar className="w-5 h-5 mr-2 text-brand" />
             Scheduling
@@ -275,7 +275,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
                 value={formData.scheduledDate}
                 onChange={(e) => setFormData({ ...formData, scheduledDate: e.target.value })}
                 disabled={isSubmitting}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
               />
             </div>
 
@@ -286,7 +286,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
                 value={formData.scheduledTime}
                 onChange={(e) => setFormData({ ...formData, scheduledTime: e.target.value })}
                 disabled={isSubmitting}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
         />
       </div>
 
@@ -331,7 +331,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
                   value={formData.estimatedCost}
                   onChange={(e) => setFormData({ ...formData, estimatedCost: e.target.value })}
                   disabled={isSubmitting}
-                  className="w-full pl-7 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
+                  className="w-full pl-7 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
                   placeholder="0.00"
                 />
               </div>
@@ -340,7 +340,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
         </div>
 
         {/* Recurring Options */}
-        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold flex items-center">
               <Repeat className="w-5 h-5 mr-2 text-brand" />
@@ -358,7 +358,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
           </div>
 
           {formData.isRecurring && (
-            <div className="space-y-4 pl-7 border-l-2 border-[#4a7c59]">
+            <div className="space-y-4 pl-7 border-l-2 border-brand">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 dark:text-gray-300 mb-1">Pattern</label>
@@ -382,7 +382,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
                     value={formData.recurringEndDate}
                     onChange={(e) => setFormData({ ...formData, recurringEndDate: e.target.value })}
                     disabled={isSubmitting}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -399,7 +399,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
                         className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                           formData.recurringDays.includes(index)
                             ? 'bg-brand text-white'
-                            : 'bg-brand-bg-secondary hover:bg-brand-bg-tertiary'
+                            : 'bg-brand-bg-secondary hover:bg-[var(--tenant-bg-tertiary)]'
                         }`}
                       >
                         {day}
@@ -413,7 +413,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
         </div>
 
         {/* Team Assignment */}
-        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold mb-4 flex items-center">
             <Users className="w-5 h-5 mr-2 text-brand" />
             Team Assignment
@@ -455,7 +455,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
 
         {/* Quick Service Templates */}
         {services.length > 0 && (
-          <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm p-6">
+          <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Service Templates</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {services.map((service: any) => (
@@ -469,7 +469,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
                       estimatedCost: service.defaultPrice?.toString() || '',
                     });
                   }}
-                  className="p-4 border-2 border-brand-border rounded-lg hover:border-brand hover:bg-brand-bg-tertiary transition-all text-left"
+                  className="p-4 border-2 border-brand-border rounded-lg hover:border-brand hover:bg-[var(--tenant-bg-tertiary)] transition-all text-left"
                 >
                   <p className="font-medium text-gray-900 dark:text-white">{service.name}</p>
                   {service.defaultPrice && (
@@ -492,14 +492,14 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center font-medium"
+              className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors text-center font-medium"
             >
               Cancel
             </button>
           ) : (
             <Link
               href="/jobs"
-              className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-center font-medium"
+              className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors text-center font-medium"
             >
               Cancel
             </Link>
@@ -507,7 +507,7 @@ export function JobWizard({ clients, teamMembers, services, orgId, initialStartT
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#4a8c37] to-[#4a7c59] text-white rounded-lg hover:from-[#4a7c59] hover:to-[#4a8c37] transition-all disabled:opacity-50 font-semibold shadow-lg"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-brand to-brand-dark text-white rounded-lg hover:from-brand hover:to-brand-dark transition-all disabled:opacity-50 font-semibold shadow-lg"
           >
             {isSubmitting ? 'Creating Job...' : 'Create Job'}
           </button>

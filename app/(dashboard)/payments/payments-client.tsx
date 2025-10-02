@@ -156,14 +156,14 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-            <DollarSign className="w-7 h-7 mr-2 text-[#4a7c59]" />
+            <DollarSign className="w-7 h-7 mr-2 text-brand" />
             Payments
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Track and record all payments received</p>
         </div>
         <button
           onClick={() => setShowRecordModal(true)}
-          className="px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors flex items-center shadow-sm"
+          className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors flex items-center shadow-sm"
         >
           <Plus className="w-5 h-5 mr-2" />
           Record Payment
@@ -187,7 +187,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-green-500">
+        <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-green-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Received</p>
@@ -201,7 +201,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-red-500">
+        <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-red-500">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Outstanding</p>
@@ -215,27 +215,27 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-blue-500">
+        <div className="bg-brand-bg dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-l-brand-info">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Payment Count</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{initialPayments.length}</p>
             </div>
-            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-              <Receipt className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-3 bg-brand-bg-tertiary rounded-lg">
+              <Receipt className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Payments History */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+      <div className="bg-brand-bg rounded-xl shadow-sm">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">Payment History</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+            <thead className="bg-brand-bg-secondary dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Date
@@ -270,7 +270,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                 </tr>
               ) : (
                 initialPayments.map((payment) => (
-                  <tr key={payment.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                  <tr key={payment.id} className="hover:bg-[var(--tenant-bg-tertiary)] transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center text-sm text-gray-900 dark:text-white">
                         <Calendar className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
@@ -287,7 +287,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                     <td className="px-6 py-4">
                       <Link 
                         href={`/invoices/${payment.invoice.id}`}
-                        className="text-sm text-[#4a7c59] hover:text-[#4a8c37] flex items-center"
+                        className="text-sm text-brand hover:text-brand flex items-center"
                       >
                         {payment.invoice.job?.title || 'Invoice'}
                         <ArrowRight className="w-3 h-3 ml-1" />
@@ -326,12 +326,12 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
       {/* Record Payment Modal */}
       {showRecordModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-brand-bg rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-white dark:bg-gray-800 z-10">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between sticky top-0 bg-brand-bg z-10">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
-                  <DollarSign className="w-6 h-6 mr-2 text-[#4a7c59]" />
+                  <DollarSign className="w-6 h-6 mr-2 text-brand" />
                   Record Payment
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Add a payment to an invoice</p>
@@ -375,22 +375,22 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
 
               {/* Invoice Info */}
               {selectedInvoice && (
-                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="bg-brand-bg-tertiary border border-brand rounded-lg p-4">
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <p className="text-blue-700 dark:text-blue-300 font-medium">Invoice Total</p>
-                      <p className="text-blue-900 dark:text-blue-200 font-bold">${Number(selectedInvoice.total).toFixed(2)}</p>
+                      <p className="text-brand-text font-medium">Invoice Total</p>
+                      <p className="text-brand-text font-bold">${Number(selectedInvoice.total).toFixed(2)}</p>
                     </div>
                     {invoicePaid > 0 && (
                       <div>
-                        <p className="text-blue-700 dark:text-blue-300 font-medium">Already Paid</p>
-                        <p className="text-blue-900 dark:text-blue-200 font-bold">${invoicePaid.toFixed(2)}</p>
+                        <p className="text-brand-text font-medium">Already Paid</p>
+                        <p className="text-brand-text font-bold">${invoicePaid.toFixed(2)}</p>
                       </div>
                     )}
                     {invoiceRemaining > 0 && (
                       <div className="col-span-2">
-                        <p className="text-blue-700 dark:text-blue-300 font-medium">Remaining Balance</p>
-                        <p className="text-blue-900 font-bold text-lg">${invoiceRemaining.toFixed(2)}</p>
+                        <p className="text-brand-text font-medium">Remaining Balance</p>
+                        <p className="text-brand-text-secondary font-bold text-lg">${invoiceRemaining.toFixed(2)}</p>
                       </div>
                     )}
                   </div>
@@ -413,7 +413,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                     onChange={(e) => setPaymentForm({ ...paymentForm, amount: e.target.value })}
                     required
                     disabled={loading}
-                    className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                    className="w-full pl-7 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                     placeholder="0.00"
                   />
                 </div>
@@ -452,7 +452,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                   value={paymentForm.reference}
                   onChange={(e) => setPaymentForm({ ...paymentForm, reference: e.target.value })}
                   disabled={loading}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="Check #, transaction ID, etc."
                 />
               </div>
@@ -465,7 +465,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                   value={paymentForm.paidAt}
                   onChange={(e) => setPaymentForm({ ...paymentForm, paidAt: e.target.value })}
                   disabled={loading}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                 />
               </div>
 
@@ -477,7 +477,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                   onChange={(e) => setPaymentForm({ ...paymentForm, notes: e.target.value })}
                   disabled={loading}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-[#4a7c59] focus:border-transparent disabled:bg-gray-100 text-gray-900 dark:text-white dark:bg-gray-700 placeholder:text-gray-400"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400"
                   placeholder="Any additional notes..."
                 />
               </div>
@@ -487,14 +487,14 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                 <button
                   type="button"
                   onClick={() => setShowRecordModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading || !paymentForm.invoiceId || !paymentForm.amount}
-                  className="flex-1 px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors disabled:opacity-50 font-medium"
+                  className="flex-1 px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors disabled:opacity-50 font-medium"
                 >
                   {loading ? 'Recording...' : 'Record Payment'}
                 </button>

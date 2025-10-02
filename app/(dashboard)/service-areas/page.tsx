@@ -70,7 +70,7 @@ export default async function ServiceAreasPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Service Areas</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Manage locations where you provide services</p>
         </div>
-        <button className="inline-flex items-center px-4 py-2 bg-[#4a8c37] text-white rounded-lg hover:bg-[#4a7c59] transition-colors">
+        <button className="inline-flex items-center px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand transition-colors">
           <Plus className="w-5 h-5 mr-2" />
           Add Service Area
         </button>
@@ -78,49 +78,49 @@ export default async function ServiceAreasPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Areas</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{activeAreas.length}</p>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <MapPin className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <MapPin className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Jobs</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">{totalJobs}</p>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <MapPin className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <MapPin className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Coverage</p>
-              <p className="text-2xl font-bold text-[#4a7c59] mt-2">Simcoe County</p>
+              <p className="text-2xl font-bold text-brand mt-2">Simcoe County</p>
             </div>
-            <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-              <MapPin className="h-6 w-6 text-[#4a7c59]" />
+            <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+              <MapPin className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Company Address */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+      <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Primary Location</h2>
         <div className="flex items-start space-x-4">
-          <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-            <MapPin className="h-6 w-6 text-[#4a7c59]" />
+          <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+            <MapPin className="h-6 w-6 text-brand" />
           </div>
           <div>
             <p className="font-medium text-gray-900 dark:text-white">Zen Zone Cleaning Services</p>
@@ -133,17 +133,17 @@ export default async function ServiceAreasPage() {
       </div>
 
       {/* Service Areas List */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+      <div className="bg-brand-bg rounded-xl shadow-sm">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">All Service Areas</h2>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {serviceAreas.map((area) => (
-              <div key={area.id} className={`border rounded-lg p-6 transition-shadow ${area.active ? 'border-[#4a7c59] hover:shadow-lg' : 'border-gray-200 dark:border-gray-700 opacity-60'}`}>
+              <div key={area.id} className={`border rounded-lg p-6 transition-shadow ${area.active ? 'border-brand hover:shadow-lg' : 'border-gray-200 dark:border-gray-700 opacity-60'}`}>
                 <div className="flex items-start justify-between mb-4">
-                  <div className="p-3 bg-[#f7faf7] dark:bg-gray-700 rounded-lg">
-                    <MapPin className="h-6 w-6 text-[#4a7c59]" />
+                  <div className="p-3 bg-brand dark:bg-gray-700 rounded-lg">
+                    <MapPin className="h-6 w-6 text-brand" />
                   </div>
                   {area.active ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
@@ -174,13 +174,13 @@ export default async function ServiceAreasPage() {
                 </div>
                 
                 <div className="mt-6 flex space-x-2">
-                  <button className="flex-1 px-3 py-2 text-sm border border-[#4a7c59] text-[#4a7c59] rounded-lg hover:bg-[#f7faf7] dark:hover:bg-gray-700 transition-colors">
+                  <button className="flex-1 px-3 py-2 text-sm border border-brand text-brand rounded-lg hover:bg-brand hover:bg-[var(--tenant-bg-tertiary)] transition-colors">
                     Edit
                   </button>
                   <button className={`flex-1 px-3 py-2 text-sm rounded-lg transition-colors ${
                     area.active 
                       ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50' 
-                      : 'bg-[#4a7c59] text-white hover:bg-[#4a8c37]'
+                      : 'bg-brand text-white hover:bg-brand'
                   }`}>
                     {area.active ? 'Deactivate' : 'Activate'}
                   </button>
