@@ -1,9 +1,34 @@
+/**
+ * NEW ESTIMATE PAGE
+ * Route: /estimates/new
+ * 
+ * Purpose:
+ * Create a new estimate (quote) for a client or lead
+ * 
+ * Data Fetching:
+ * - Fetches all clients with properties
+ * - Fetches all leads with emails
+ * 
+ * Component:
+ * - Renders EstimateForm (unified create/edit component)
+ * 
+ * Notes:
+ * - Uses modular component architecture
+ * - Same form handles both create and edit modes
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
-import { EstimateWizard } from './estimate-wizard';
+import { withOrgContext } from "@/server/tenancy";
+import { serialize } from "@/lib/serialization";
+import { EstimateForm } from "../_components/estimate-form";
 
-export default async function NewEstimatePage() {
+export default async function NewEstimatePage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ requestId?: string }> 
+}) {
   const session = await auth();
   
   if (!session?.user) {
@@ -16,29 +41,67 @@ export default async function NewEstimatePage() {
     return <div>No organization selected</div>;
   }
 
-  // Get clients with their properties
-  const clients = await prisma.client.findMany({
-    where: { orgId: selectedOrgId },
-    include: {
-      properties: true,
-    },
-    orderBy: { name: 'asc' }
-  });
+  const params = await searchParams;
+  const requestId = params.requestId;
 
-  // Get leads
-  const leads = await prisma.lead.findMany({
+  // Fetch all clients (both active and leads)
+  const allClients = await prisma.client.findMany({
     where: { 
       orgId: selectedOrgId,
-      status: { not: 'CONVERTED' }
+      clientStatus: { in: ['LEAD', 'ACTIVE'] },
     },
-    orderBy: { createdAt: 'desc' }
+    include: {
+      properties: {
+        select: {
+          id: true,
+          address: true,
+        },
+      },
+    },
+    orderBy: [
+      { companyName: 'asc' },
+      { lastName: 'asc' },
+      { firstName: 'asc' },
+    ],
   });
 
+  // Separate active clients and leads
+  const clients = allClients.filter(c => c.clientStatus === 'ACTIVE');
+  const leads = allClients.filter(c => c.clientStatus === 'LEAD').map(c => ({
+    id: c.id,
+    name: c.name,
+    emails: (c.emails as any)?.length ? c.emails as string[] : [],
+  }));
+
+  // If converting from request, fetch and pre-populate
+  let fromRequest = null;
+  if (requestId) {
+    const request = await withOrgContext(selectedOrgId, async () => {
+      return await prisma.request.findUnique({
+        where: { id: requestId },
+        include: {
+          client: true,
+          property: true,
+        },
+      });
+    });
+
+    if (request) {
+      fromRequest = serialize({
+        clientId: request.clientId,
+        propertyId: request.propertyId,
+        title: request.title,
+        description: request.description,
+      });
+    }
+  }
+
   return (
-    <EstimateWizard
+    <EstimateForm 
       clients={clients}
       leads={leads}
       orgId={selectedOrgId}
+      fromRequest={fromRequest}
     />
   );
 }

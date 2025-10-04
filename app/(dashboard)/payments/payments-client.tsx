@@ -1,3 +1,17 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 508+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - Payment form/modal component
+ * - Payment table component
+ * - Invoice selector component
+ * - Payment method selector component
+ * - Form state logic into custom hook (use-payment-form.ts)
+ */
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -19,34 +33,46 @@ import { recordPayment, deletePayment } from '@/server/actions/payments';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CustomSelect } from '@/ui/components/custom-select';
+import { calculateFullPricing } from '@/lib/pricing-calculator';
 
 interface Payment {
   id: string;
   amount: number;
+  invoiceTotal: number; // Snapshot of invoice total at payment time
   method: string;
   reference: string | null;
   notes: string | null;
   paidAt: Date;
   invoice: {
     id: string;
-    total: number;
+    taxRate: number;
     client: {
       name: string;
     };
     job: {
       title: string;
     } | null;
+    lineItems: Array<{
+      quantity: number;
+      unitPrice: number;
+      total: number;
+    }>;
   };
 }
 
 interface UnpaidInvoice {
   id: string;
-  total: number;
+  taxRate: number;
   createdAt: Date;
   client: {
     name: string;
   };
   payments: { amount: number }[];
+  lineItems: Array<{
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }>;
 }
 
 interface PaymentsClientProps {
@@ -138,17 +164,36 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
 
   const totalReceived = initialPayments.reduce((sum, p) => sum + Number(p.amount), 0);
   const totalOutstanding = unpaidInvoices.reduce((sum, inv) => {
+    const pricing = calculateFullPricing({
+      lineItems: inv.lineItems.map(item => ({
+        quantity: Number(item.quantity) || 1,
+        unitPrice: Number(item.unitPrice) || 0,
+        total: Number(item.total) || 0,
+      })),
+      taxRate: Number(inv.taxRate),
+    });
     const paid = inv.payments.reduce((s, p) => s + Number(p.amount), 0);
-    return sum + (Number(inv.total) - paid);
+    return sum + (pricing.total - paid);
   }, 0);
 
   const selectedInvoice = unpaidInvoices.find(inv => inv.id === paymentForm.invoiceId);
+  
+  const selectedInvoiceTotal = selectedInvoice 
+    ? calculateFullPricing({
+        lineItems: selectedInvoice.lineItems.map(item => ({
+          quantity: Number(item.quantity) || 1,
+          unitPrice: Number(item.unitPrice) || 0,
+          total: Number(item.total) || 0,
+        })),
+        taxRate: Number(selectedInvoice.taxRate),
+      }).total
+    : 0;
+    
   const invoicePaid = selectedInvoice 
     ? selectedInvoice.payments.reduce((sum, p) => sum + Number(p.amount), 0)
     : 0;
-  const invoiceRemaining = selectedInvoice 
-    ? Number(selectedInvoice.total) - invoicePaid
-    : 0;
+    
+  const invoiceRemaining = selectedInvoiceTotal - invoicePaid;
 
   return (
     <div className="space-y-6">
@@ -358,11 +403,19 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                   options={[
                     { value: '', label: 'Select an invoice...' },
                     ...unpaidInvoices.map((invoice) => {
+                      const pricing = calculateFullPricing({
+                        lineItems: invoice.lineItems.map(item => ({
+                          quantity: Number(item.quantity) || 1,
+                          unitPrice: Number(item.unitPrice) || 0,
+                          total: Number(item.total) || 0,
+                        })),
+                        taxRate: Number(invoice.taxRate),
+                      });
                       const paid = invoice.payments.reduce((sum, p) => sum + Number(p.amount), 0);
-                      const remaining = Number(invoice.total) - paid;
+                      const remaining = pricing.total - paid;
                       return {
                         value: invoice.id,
-                        label: `${invoice.client.name} - $${Number(invoice.total).toFixed(2)}${paid > 0 ? ` ($${remaining.toFixed(2)} remaining)` : ''}`
+                        label: `${invoice.client.name} - $${pricing.total.toFixed(2)}${paid > 0 ? ` ($${remaining.toFixed(2)} remaining)` : ''}`
                       };
                     })
                   ]}
@@ -379,7 +432,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <p className="text-brand-text font-medium">Invoice Total</p>
-                      <p className="text-brand-text font-bold">${Number(selectedInvoice.total).toFixed(2)}</p>
+                      <p className="text-brand-text font-bold">${selectedInvoiceTotal.toFixed(2)}</p>
                     </div>
                     {invoicePaid > 0 && (
                       <div>

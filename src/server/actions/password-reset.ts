@@ -1,3 +1,24 @@
+/**
+ * PASSWORD RESET SERVER ACTIONS
+ * 
+ * Purpose:
+ * Server-side logic for password reset flow.
+ * 
+ * Functions:
+ * - requestPasswordReset: Send reset link to user email
+ * - resetPassword: Update password with valid token
+ * - verifyResetToken: Check if reset token is valid
+ * 
+ * Business Logic:
+ * - Generates secure reset tokens
+ * - Sets token expiration (24 hours)
+ * - Sends email with reset link
+ * - Validates token before allowing password change
+ * - Hashes new passwords with bcrypt
+ * 
+ * ⚠️ MODULAR DESIGN: Keep under 350 lines. Currently at 139 lines ✅
+ */
+
 'use server';
 
 import { prisma } from '../db';

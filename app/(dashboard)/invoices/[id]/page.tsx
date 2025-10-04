@@ -1,12 +1,42 @@
+/**
+ * INVOICE DETAIL PAGE
+ * Route: /invoices/[id]
+ * 
+ * Purpose:
+ * - Display invoice details and payment history
+ * - Show line items and pricing breakdown
+ * - Record payments
+ * 
+ * Data Fetching:
+ * - Fetches invoice with client, job, lineItems, payments
+ * - Serializes Decimal fields for client rendering
+ * - Calculates amount paid and remaining
+ * 
+ * Component:
+ * - Server component (static invoice display)
+ * 
+ * Business Logic:
+ * - Tracks payment status (Paid, Partial, Unpaid, Overdue)
+ * - Shows link to associated job if exists
+ * - Displays payment history
+ * 
+ * Notes:
+ * - Shows amount paid, amount remaining
+ * - Links to related job and client
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from 'next/link';
 import { prisma } from '@/server/db';
 import { withOrgContext } from '@/server/tenancy';
 import { 
-  ArrowLeft, User, Receipt, Calendar, DollarSign, 
-  CreditCard, CheckCircle, Clock, FileText, ArrowRight 
+  User, Receipt, Calendar, DollarSign, 
+  CreditCard, CheckCircle, Clock, FileText, ArrowRight
 } from 'lucide-react';
+import { InvoiceActions } from './invoice-actions';
+import { calculateFullPricing } from '@/lib/pricing-calculator';
 
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -29,6 +59,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
           },
         },
         visits: true,
+        lineItems: true, // Invoice line items for pricing calculation
         payments: { orderBy: { paidAt: 'desc' } },
       },
     });
@@ -36,8 +67,18 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
 
   if (!invoice) return <div>Invoice not found</div>;
 
+  // Calculate pricing from line items
+  const pricing = calculateFullPricing({
+    lineItems: (invoice.lineItems || []).map((item: any) => ({
+      quantity: Number(item.quantity),
+      unitPrice: Number(item.unitPrice),
+      total: Number(item.total),
+    })),
+    taxRate: Number(invoice.taxRate),
+  });
+
   const totalPaid = invoice.payments.reduce((sum, p) => sum + parseFloat(p.amount.toString()), 0);
-  const balance = parseFloat(invoice.total.toString()) - totalPaid;
+  const balance = pricing.total - totalPaid;
 
   return (
     <div className="space-y-6">
@@ -62,13 +103,10 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
               }`}>{invoice.status}</span>
             </div>
           </div>
-          <Link
-            href="/invoices"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)]"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Link>
+          <InvoiceActions 
+            invoiceId={invoice.id}
+            status={invoice.status}
+          />
         </div>
 
         {/* Invoice Details Grid */}
@@ -85,15 +123,17 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Job */}
-          <div className="p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1 flex items-center">
-              <FileText className="w-3 h-3 mr-1" />
-              Related Job
-            </p>
-            <Link href={`/jobs/${invoice.job.id}`} className="font-semibold text-gray-900 dark:text-white hover:text-brand text-lg">
-              {invoice.job.title} →
-            </Link>
-          </div>
+          {invoice.job && (
+            <div className="p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1 flex items-center">
+                <FileText className="w-3 h-3 mr-1" />
+                Related Job
+              </p>
+              <Link href={`/jobs/${invoice.job.id}`} className="font-semibold text-gray-900 dark:text-white hover:text-brand text-lg">
+                {invoice.job.title || invoice.job.client.name} →
+              </Link>
+            </div>
+          )}
 
           {/* Dates */}
           <div className="p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
@@ -119,7 +159,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
       </div>
 
       {/* Estimate Chain */}
-      {invoice.job.convertedFromEstimate && (
+      {invoice.job?.convertedFromEstimate && (
         <div className="bg-brand-bg-tertiary border-2 border-brand rounded-xl p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Conversion Trail</h3>
           <div className="flex items-center space-x-3 text-sm">
@@ -128,7 +168,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             </Link>
             <ArrowRight className="w-4 h-4 text-gray-400" />
             <Link href={`/jobs/${invoice.job.id}`} className="px-3 py-2 bg-brand-bg border border-brand rounded-lg hover:bg-[var(--tenant-bg-tertiary)]">
-              💼 Job: {invoice.job.title}
+              💼 Job: {invoice.job.title || invoice.job.client.name}
             </Link>
             <ArrowRight className="w-4 h-4 text-gray-400" />
             <div className="px-3 py-2 bg-green-100 border border-green-300 rounded-lg">
@@ -182,27 +222,27 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             </tr>
           </thead>
           <tbody>
-            {invoice.job.lineItems.map(item => (
+            {invoice.lineItems.map((item: any) => (
               <tr key={item.id} className="border-t border-gray-200 dark:border-gray-700">
                 <td className="px-4 py-3 text-sm text-gray-900 dark:text-white">{item.name}</td>
-                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 text-right">{item.qty}</td>
+                <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 text-right">{Number(item.quantity)}</td>
                 <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400 text-right">${item.unitPrice.toString()}</td>
                 <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white text-right">
-                  ${(parseFloat(item.unitPrice.toString()) * item.qty).toFixed(2)}
+                  ${item.total.toString()}
                 </td>
               </tr>
             ))}
             <tr className="border-t-2 border-gray-300">
               <td colSpan={3} className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white text-right">Subtotal:</td>
-              <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white text-right">${invoice.subtotal.toString()}</td>
+              <td className="px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white text-right">${pricing.subtotal.toFixed(2)}</td>
             </tr>
             <tr>
-              <td colSpan={3} className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 text-right">Tax (13%):</td>
-              <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">${invoice.taxAmount.toString()}</td>
+              <td colSpan={3} className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 text-right">Tax ({pricing.taxRate}%):</td>
+              <td className="px-4 py-3 text-sm text-gray-900 dark:text-white text-right">${pricing.taxAmount.toFixed(2)}</td>
             </tr>
             <tr className="border-t-2 border-gray-300 bg-brand-bg-secondary dark:bg-gray-700">
               <td colSpan={3} className="px-4 py-3 text-lg font-bold text-gray-900 dark:text-white text-right">Total:</td>
-              <td className="px-4 py-3 text-lg font-bold text-brand text-right">${invoice.total.toString()}</td>
+              <td className="px-4 py-3 text-lg font-bold text-brand text-right">${pricing.total.toFixed(2)}</td>
             </tr>
           </tbody>
         </table>
@@ -262,25 +302,6 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         )}
       </div>
 
-      {/* Actions */}
-      {invoice.status !== 'Paid' && (
-        <div className="bg-brand-bg rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Actions</h2>
-          <div className="flex space-x-3">
-            {invoice.status === 'Draft' && (
-              <button className="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand">
-                Send to Client
-              </button>
-            )}
-            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)]">
-              Download PDF
-            </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)]">
-              Email Invoice
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

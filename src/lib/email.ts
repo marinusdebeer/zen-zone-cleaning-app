@@ -1,3 +1,32 @@
+/**
+ * EMAIL UTILITIES
+ * 
+ * Purpose:
+ * Email sending functionality using Nodemailer.
+ * 
+ * Functions:
+ * - sendWelcomeEmail: Send welcome email to new users
+ * - sendPasswordResetLink: Send password reset link
+ * - sendPasswordResetEmail: Send password reset notification
+ * - sendInvoiceEmail: Send invoice to client
+ * - sendEstimateEmail: Send estimate to client
+ * 
+ * Configuration:
+ * - Uses environment variables for SMTP settings
+ * - Supports Gmail and custom SMTP servers
+ * - Graceful degradation if email not configured
+ * 
+ * Environment Variables:
+ * - SMTP_HOST, SMTP_PORT, SMTP_SECURE
+ * - SMTP_USER, SMTP_PASSWORD
+ * - SMTP_FROM_NAME, SMTP_FROM_EMAIL
+ * 
+ * ⚠️ MODULAR DESIGN: Keep under 200 lines. Currently at 359 lines
+ * Consider splitting into:
+ * - email-sender.ts (transport and sending)
+ * - email-templates.ts (HTML templates)
+ */
+
 import nodemailer from 'nodemailer';
 
 // Email configuration from environment variables

@@ -1,6 +1,29 @@
+/**
+ * JOBS LIST PAGE
+ * Route: /jobs
+ * 
+ * Purpose:
+ * - Displays all jobs for the selected organization
+ * - Shows job status, client, next visit, and actions
+ * - Supports filtering and search
+ * 
+ * Data Fetching:
+ * - Fetches all jobs with client, property, and visits relations
+ * - Orders by creation date (newest first)
+ * 
+ * Component:
+ * - Renders JobsPageClient (client component for interactivity)
+ * 
+ * Notes:
+ * - Jobs table is clickable (entire row navigates to detail)
+ * - Shows next upcoming visit for each job
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
+import { serialize } from "@/lib/serialization";
 import { JobsPageClient } from "./jobs-page-client";
 
 export default async function JobsPage() {
@@ -20,7 +43,7 @@ export default async function JobsPage() {
   const jobs = await prisma.job.findMany({
     where: { orgId: selectedOrgId },
     include: {
-      client: { select: { name: true } },
+      client: { select: { firstName: true, lastName: true, companyName: true } },
       property: { select: { address: true } },
       visits: {
         select: {
@@ -41,11 +64,8 @@ export default async function JobsPage() {
     orderBy: { createdAt: 'desc' }
   });
 
-  // Serialize Decimal fields
-  const serializedJobs = jobs.map(job => ({
-    ...job,
-    estimatedCost: job.estimatedCost ? Number(job.estimatedCost) : null,
-  }));
+  // Automatically serialize all Decimal fields
+  const serializedJobs = serialize(jobs);
 
   // Get stats
   const stats = await prisma.job.groupBy({

@@ -29,15 +29,18 @@ model Organization {
 
   // Relations
   memberships Membership[]
-  leads       Lead[]
   clients     Client[]
   properties  Property[]
+  requests    Request[]
   estimates   Estimate[]
   jobs        Job[]
   visits      Visit[]
-  lineItems   LineItem[]
+  expenses    Expense[]
   invoices    Invoice[]
   payments    Payment[]
+  activities  Activity[]
+  files       File[]
+  counters    OrgCounter[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -81,51 +84,42 @@ model Membership {
   @@map("memberships")
 }
 
-model Lead {
-  id              String  @id @default(cuid())
-  orgId           String
-  name            String
-  emails          Json    @default("[]")
-  phones          Json    @default("[]")
-  addresses       Json    @default("[]")
-  source          String? // referral, website, phone, etc.
-  status          String  @default("New") // New, Contacted, Qualified, Lost
-  notes           String?
-  custom          Json    @default("{}")
-  convertedToClientId String? @unique
-
-  // Relations
-  org            Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  convertedClient Client?      @relation("LeadConversion")
-  estimates      Estimate[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("leads")
-}
-
 model Client {
-  id              String  @id @default(cuid())
-  orgId           String
-  name            String
-  emails          Json    @default("[]")
-  phones          Json    @default("[]")
-  addresses       Json    @default("[]")
-  custom          Json    @default("{}")
-  convertedFromLeadId String? @unique
+  id            String  @id @default(cuid())
+  number        Int     // Auto-incrementing display number (per-org unique)
+  orgId         String
+  
+  // Name fields - can be individual or company
+  firstName     String?
+  lastName      String?
+  companyName   String?
+  
+  emails        Json    @default("[]")
+  phones        Json    @default("[]")
+  addresses     Json    @default("[]")
+  
+  // Client lifecycle status
+  clientStatus  String  @default("LEAD") // LEAD, ACTIVE, INACTIVE, ARCHIVED
+  
+  // Lead-specific fields (only used when clientStatus = "LEAD")
+  leadSource    String? // "website", "phone", "referral", "email", etc.
+  leadStatus    String  @default("NEW") // NEW, CONTACTED, QUALIFIED, CONVERTED, LOST
+  
+  notes         String?
+  custom        Json    @default("{}")
 
   // Relations
-  org            Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  convertedFromLead Lead?     @relation("LeadConversion", fields: [convertedFromLeadId], references: [id], onDelete: SetNull)
-  properties     Property[]
-  estimates      Estimate[]
-  jobs           Job[]
-  invoices       Invoice[]
+  org           Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  properties    Property[]
+  requests      Request[]
+  estimates     Estimate[]
+  jobs          Job[]
+  invoices      Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([orgId, number])
   @@map("clients")
 }
 
@@ -140,8 +134,10 @@ model Property {
   // Relations
   org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
   client    Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  requests  Request[]
   estimates Estimate[]
   jobs      Job[]
+  invoices  Invoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -149,70 +145,211 @@ model Property {
   @@map("properties")
 }
 
-model Estimate {
+model Request {
   id              String    @id @default(cuid())
+  number          Int       // Auto-incrementing display number (per-org unique)
   orgId           String
-  leadId          String?
-  clientId        String?
+  clientId        String    // Every request is from a client (with clientStatus LEAD or ACTIVE)
   propertyId      String?
   title           String
   description     String?
-  amount          Decimal   @db.Decimal(12, 2)
-  status          String    @default("Draft") // Draft, Sent, Approved, Rejected, Converted
-  validUntil      DateTime?
-  convertedToJobId String?  @unique
+  source          String?   // "website", "phone", "email", "referral", etc.
+  urgency         String    @default("normal") // low, normal, high, urgent
+  status          String    @default("NEW") // NEW, CONTACTED, QUOTED, CONVERTED, DECLINED
+  notes           String?
   custom          Json      @default("{}")
-
-  // Relations
-  org             Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  lead            Lead?        @relation(fields: [leadId], references: [id], onDelete: SetNull)
-  client          Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
-  property        Property?    @relation(fields: [propertyId], references: [id], onDelete: SetNull)
-  convertedJob    Job?         @relation("EstimateConversion")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("estimates")
-}
-
-model Job {
-  id                    String    @id @default(cuid())
-  orgId                 String
-  clientId              String
-  propertyId            String?
-  title                 String
-  description           String?
-  status                String    @default("Draft") // Draft, Active, Completed, Canceled
-  isRecurring           Boolean   @default(false)
-  recurringPattern      String?   // daily, weekly, biweekly, monthly
-  recurringDays         Json?     // [0,1,2,3,4,5,6] for days of week
-  recurringEndDate      DateTime?
-  estimatedCost         Decimal?  @db.Decimal(12, 2)
-  priority              String    @default("normal") // low, normal, high, urgent
-  convertedFromEstimateId String? @unique
-  custom                Json      @default("{}")
+  
+  // Flexible form data with normalized lookups
+  industryId      String?
+  serviceTypeId   String?
+  hearAboutId     String?
+  details         Json      @default("{}") // Full form snapshot with evolving fields
+  preferredAt     DateTime? // Preferred service date/time
+  
+  // Conversion tracking (data independence - one-way references)
+  convertedToEstimateId String? @unique
+  convertedToJobId      String? @unique
 
   // Relations
   org               Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
   client            Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
   property          Property?    @relation(fields: [propertyId], references: [id], onDelete: SetNull)
-  convertedFromEstimate Estimate? @relation("EstimateConversion", fields: [convertedFromEstimateId], references: [id], onDelete: SetNull)
-  visits            Visit[]
-  lineItems         LineItem[]
-  invoices          Invoice[]
+  industry          Industry?    @relation(fields: [industryId], references: [id], onDelete: SetNull)
+  serviceType       ServiceType? @relation(fields: [serviceTypeId], references: [id], onDelete: SetNull)
+  hearAbout         HearAbout?   @relation(fields: [hearAboutId], references: [id], onDelete: SetNull)
+  lineItems         RequestLineItem[]
+  convertedEstimate Estimate?    @relation("RequestToEstimate")
+  convertedJob      Job?         @relation("RequestToJob")
+  activities        Activity[]
+  files             File[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([orgId, number])
+  @@index([industryId])
+  @@index([serviceTypeId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([preferredAt])
+  @@map("requests")
+}
+
+model RequestLineItem {
+  id          String   @id @default(cuid())
+  requestId   String
+  name        String
+  description String?
+  quantity    Decimal  @default(1) @db.Decimal(10, 2)
+  order       Int      @default(0)
+
+  // Relations
+  request     Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("request_line_items")
+}
+
+model Estimate {
+  id              String    @id @default(cuid())
+  number          Int       // Auto-incrementing estimate number (per-org unique)
+  orgId           String
+  clientId        String    // Every estimate is for a client (LEAD or ACTIVE)
+  propertyId      String?
+  title           String
+  description     String?
+  
+  // Pricing (calculated from line items at runtime)
+  taxRate         Decimal   @default(13) @db.Decimal(5, 2) // Default tax rate (e.g., 13 for 13%)
+  
+  // Deposit settings (optional)
+  depositRequired Boolean   @default(false)
+  depositType     String?   // "percentage" or "fixed"
+  depositValue    Decimal?  @db.Decimal(12, 2)
+  
+  status          String    @default("DRAFT") // DRAFT, SENT, APPROVED, REJECTED, CONVERTED
+  validUntil      DateTime?
+  notes           String?
+  custom          Json      @default("{}")
+  
+  // Conversion tracking (data independence)
+  convertedFromRequestId String? @unique
+  convertedToJobId       String? @unique
+
+  // Relations
+  org                  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  client               Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  property             Property?    @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  convertedFromRequest Request?     @relation("RequestToEstimate", fields: [convertedFromRequestId], references: [id], onDelete: SetNull)
+  convertedJob         Job?         @relation("EstimateToJob")
+  lineItems            EstimateLineItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([orgId, number])
+  @@map("estimates")
+}
+
+model EstimateLineItem {
+  id          String   @id @default(cuid())
+  estimateId  String
+  name        String
+  description String?
+  quantity    Decimal  @db.Decimal(10, 2)
+  unitPrice   Decimal  @db.Decimal(12, 2)
+  total       Decimal  @db.Decimal(12, 2)
+  order       Int      @default(0)
+
+  // Relations
+  estimate    Estimate @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("estimate_line_items")
+}
+
+model Job {
+  id                    String    @id @default(cuid())
+  number                Int       // Auto-incrementing job number (per-org unique)
+  orgId                 String
+  clientId              String    // Required - must have client
+  propertyId            String?
+  title                 String?
+  description           String?
+  status                String    @default("Draft") // Draft, Active, Completed, Canceled, Archived
+  
+  // Scheduling
+  isRecurring           Boolean   @default(false)
+  recurringPattern      String?   // daily, weekly, biweekly, monthly
+  recurringDays         Json?     // [0,1,2,3,4,5,6] for days of week
+  startDate             DateTime?
+  startTime             String?   // Time in HH:mm format (e.g., "14:00")
+  duration              Int       @default(120) // Duration in minutes (default 2 hours)
+  recurringEndDate      DateTime?
+  
+  // Pricing (calculated from line items at runtime)
+  taxRate               Decimal   @default(13) @db.Decimal(5, 2) // Default tax rate (e.g., 13 for 13%)
+  
+  billingFrequency      String    @default("PER_VISIT") // AT_COMPLETION, PER_VISIT, WEEKLY, MONTHLY
+  priority              String    @default("normal") // low, normal, high, urgent
+  assignees             Json      @default("[]") // Team member user IDs assigned to this job
+  notes                 String?
+  custom                Json      @default("{}")
+  
+  // Conversion tracking (data independence)
+  convertedFromRequestId  String? @unique
+  convertedFromEstimateId String? @unique
+
+  // Relations
+  org                   Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  client                Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  property              Property?    @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  convertedFromRequest  Request?     @relation("RequestToJob", fields: [convertedFromRequestId], references: [id], onDelete: SetNull)
+  convertedFromEstimate Estimate?    @relation("EstimateToJob", fields: [convertedFromEstimateId], references: [id], onDelete: SetNull)
+  visits                Visit[]
+  lineItems             JobLineItem[]
+  expenses              Expense[]
+  invoices              Invoice[]
+  files                 File[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([orgId, number])
   @@map("jobs")
+}
+
+model JobLineItem {
+  id          String   @id @default(cuid())
+  jobId       String
+  name        String
+  description String?
+  quantity    Decimal  @db.Decimal(10, 2)
+  unitPrice   Decimal  @db.Decimal(12, 2)
+  total       Decimal  @db.Decimal(12, 2)
+  order       Int      @default(0)
+
+  // Relations
+  job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("job_line_items")
 }
 
 model Visit {
   id            String    @id @default(cuid())
+  number        Int       // Auto-incrementing display number (per-org unique)
   orgId         String
   jobId         String
+  invoiceId     String?   // Which invoice this visit belongs to (null if not invoiced yet)
   scheduledAt   DateTime
+  duration      Int       @default(120) // Duration in minutes (default 2 hours)
   completedAt   DateTime?
   status        String    @default("Scheduled") // Scheduled, InProgress, Completed, Canceled, NoShow
   assignees     Json      @default("[]")
@@ -221,24 +358,48 @@ model Visit {
   custom        Json      @default("{}")
 
   // Relations
-  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  job       Job          @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  invoices  Invoice[]
+  org       Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  job       Job             @relation(fields: [jobId], references: [id], onDelete: Cascade) // Deleting job deletes all visits
+  invoice   Invoice?        @relation(fields: [invoiceId], references: [id], onDelete: SetNull) // Deleting invoice just unlinks visits
+  lineItems VisitLineItem[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([orgId, number])
   @@map("visits")
 }
 
-model LineItem {
-  id        String  @id @default(cuid())
-  orgId     String
-  jobId     String
-  name      String
-  qty       Int
-  unitPrice Decimal @db.Decimal(12, 2)
-  taxRate   Decimal? @db.Decimal(5, 2)
+model VisitLineItem {
+  id          String   @id @default(cuid())
+  visitId     String
+  name        String
+  description String?
+  quantity    Decimal  @db.Decimal(10, 2)
+  unitPrice   Decimal  @db.Decimal(12, 2)
+  total       Decimal  @db.Decimal(12, 2)
+  order       Int      @default(0)
+
+  // Relations
+  visit Visit @relation(fields: [visitId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("visit_line_items")
+}
+
+
+model Expense {
+  id          String  @id @default(cuid())
+  orgId       String
+  jobId       String
+  description String
+  amount      Decimal @db.Decimal(12, 2)
+  category    String? // Materials, Labor, Equipment, Travel, etc.
+  date        DateTime @default(now())
+  receiptUrl  String?
+  notes       String?
 
   // Relations
   org Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
@@ -247,45 +408,75 @@ model LineItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("line_items")
+  @@map("expenses")
 }
 
 model Invoice {
   id            String    @id @default(cuid())
+  number        Int       // Auto-incrementing invoice number (per-org unique)
   orgId         String
-  jobId         String
-  clientId      String
+  jobId         String?   // Optional - can invoice without a job
+  clientId      String    // Required - must have client
+  propertyId    String?
   visitIds      Json      @default("[]") // Array of visit IDs included in this invoice
-  subtotal      Decimal   @db.Decimal(12, 2)
-  taxAmount     Decimal   @db.Decimal(12, 2)
-  total         Decimal   @db.Decimal(12, 2)
-  status        String    @default("Draft") // Draft, Sent, Paid, Overdue, Canceled
+  
+  // Pricing (calculated from line items at runtime)
+  taxRate       Decimal   @default(13) @db.Decimal(5, 2) // Default tax rate (e.g., 13 for 13%)
+  
+  status        String    @default("DRAFT") // DRAFT, SENT, PAID, OVERDUE, CANCELED
   issuedAt      DateTime?
   dueAt         DateTime?
   paidAt        DateTime?
+  notes         String?
+  custom        Json      @default("{}")
 
   // Relations
-  org      Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
-  job      Job          @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  client   Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  visits   Visit[]
-  payments Payment[]
+  org        Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  job        Job?             @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  client     Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  property   Property?        @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  visits     Visit[]          // Visits that belong to this invoice
+  lineItems  InvoiceLineItem[]
+  payments   Payment[]
+  files      File[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([orgId, number])
   @@map("invoices")
 }
 
-model Payment {
+model InvoiceLineItem {
   id          String   @id @default(cuid())
-  orgId       String
   invoiceId   String
-  amount      Decimal  @db.Decimal(12, 2)
-  method      String   // cash, credit_card, debit, etransfer, check
-  reference   String?  // transaction ID, check number, etc.
-  notes       String?
-  paidAt      DateTime @default(now())
+  name        String
+  description String?
+  quantity    Decimal  @db.Decimal(10, 2)
+  unitPrice   Decimal  @db.Decimal(12, 2)
+  total       Decimal  @db.Decimal(12, 2)
+  order       Int      @default(0)
+
+  // Relations
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("invoice_line_items")
+}
+
+model Payment {
+  id           String   @id @default(cuid())
+  number       Int      // Auto-incrementing display number (per-org unique)
+  orgId        String
+  invoiceId    String
+  amount       Decimal  @db.Decimal(12, 2) // Amount paid
+  invoiceTotal Decimal  @db.Decimal(12, 2) // Snapshot of invoice total at payment time
+  method       String   // cash, credit_card, debit, etransfer, check
+  reference    String?  // transaction ID, check number, etc.
+  notes        String?
+  paidAt       DateTime @default(now())
 
   // Relations
   org     Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
@@ -294,7 +485,148 @@ model Payment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([orgId, number])
   @@map("payments")
+}
+
+// Lookup tables for flexible form ingestion
+model Industry {
+  id            String         @id @default(cuid())
+  slug          String         @unique // "home-cleaning", "office", "airbnb"
+  label         String
+  active        Boolean        @default(true)
+  
+  // Relations
+  serviceTypes  ServiceType[]
+  accessMethods AccessMethod[]
+  reasons       Reason[]
+  requests      Request[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("industries")
+}
+
+model ServiceType {
+  id         String    @id @default(cuid())
+  industryId String
+  slug       String    @unique // "standard", "deep", "recurring", etc.
+  label      String
+  active     Boolean   @default(true)
+  
+  // Relations
+  industry   Industry  @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  requests   Request[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("service_types")
+}
+
+model HearAbout {
+  id       String    @id @default(cuid())
+  slug     String    @unique // "gbp", "google-guaranteed", "brochure", "referral", "other"
+  label    String
+  active   Boolean   @default(true)
+  
+  // Relations
+  requests Request[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("hear_about")
+}
+
+model AccessMethod {
+  id         String    @id @default(cuid())
+  industryId String?
+  slug       String    @unique
+  label      String
+  active     Boolean   @default(true)
+  
+  // Relations
+  industry   Industry? @relation(fields: [industryId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("access_methods")
+}
+
+model Reason {
+  id         String    @id @default(cuid())
+  industryId String?
+  slug       String    @unique
+  label      String
+  active     Boolean   @default(true)
+  
+  // Relations
+  industry   Industry? @relation(fields: [industryId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("reasons")
+}
+
+// Utility tables
+model Activity {
+  id        String   @id @default(cuid())
+  orgId     String
+  requestId String
+  type      String   // NOTE, STATUS_CHANGE, EMAIL, FILE_UPLOAD, SYSTEM
+  message   String?
+  meta      Json?
+  
+  // Relations
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  request   Request      @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([requestId, createdAt])
+  @@map("activities")
+}
+
+model File {
+  id         String   @id @default(cuid())
+  orgId      String
+  requestId  String?
+  jobId      String?
+  invoiceId  String?
+  name       String
+  url        String
+  mimeType   String?
+  sizeBytes  Int?
+  
+  // Relations
+  org        Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  request    Request?     @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  job        Job?         @relation(fields: [jobId], references: [id], onDelete: SetNull)
+  invoice    Invoice?     @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([requestId])
+  @@index([jobId])
+  @@index([invoiceId])
+  @@map("files")
+}
+
+model OrgCounter {
+  id     String @id @default(cuid())
+  orgId  String
+  scope  String // "client", "request", "estimate", "job", "visit", "invoice", "payment"
+  value  Int    @default(0)
+  
+  // Relations
+  org    Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  
+  @@unique([orgId, scope])
+  @@map("org_counters")
 }
 
 // Auth.js required tables

@@ -1,3 +1,16 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 329+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - Jobs table component
+ * - Search and filter controls component
+ * - Status filter buttons component
+ * - Stats cards component
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -16,10 +29,12 @@ import {
   Repeat
 } from 'lucide-react';
 import Link from 'next/link';
+import { getClientDisplayName } from '@/lib/client-utils';
+import { format } from 'date-fns';
 
 interface Job {
   id: string;
-  title: string;
+  title: string | null;
   description: string | null;
   status: string;
   isRecurring: boolean;
@@ -65,9 +80,10 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
   const filteredJobs = jobs.filter(job => {
     const matchesStatus = statusFilter === 'ALL' || job.status === statusFilter;
     const searchLower = searchTerm.toLowerCase();
+    const clientName = getClientDisplayName(job.client);
     const matchesSearch = !searchTerm || 
-      job.title.toLowerCase().includes(searchLower) ||
-      job.client.name.toLowerCase().includes(searchLower) ||
+      (job.title && job.title.toLowerCase().includes(searchLower)) ||
+      clientName.toLowerCase().includes(searchLower) ||
       (job.description && job.description.toLowerCase().includes(searchLower)) ||
       (job.property?.address && job.property.address.toLowerCase().includes(searchLower));
     
@@ -215,9 +231,6 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
             <thead className="bg-brand-bg-secondary dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                  Job
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                   Client
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
@@ -250,7 +263,8 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                     <td className="px-6 py-4">
                       <div>
                         <div className="flex items-center">
-                          <p className="font-medium text-gray-900 dark:text-white">{job.title}</p>
+                          <Users className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
+                          <p className="font-medium text-gray-900 dark:text-white">{getClientDisplayName(job.client)}</p>
                           {job.isRecurring && (
                             <span title="Recurring job">
                               <Repeat className="w-4 h-4 ml-2 text-brand" />
@@ -260,12 +274,6 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                         {job.description && (
                           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{job.description}</p>
                         )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <Users className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">{job.client.name}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -298,12 +306,7 @@ export function JobsPageClient({ jobs, statusCounts, orgId }: JobsPageClientProp
                       {nextVisit ? (
                         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                           <Calendar className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
-                          {new Date(nextVisit.scheduledAt).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: 'numeric',
-                            minute: '2-digit'
-                          })}
+                          {format(new Date(nextVisit.scheduledAt), 'MMM d \'at\' h:mm a')}
                         </div>
                       ) : (
                         <p className="text-sm text-gray-400 dark:text-gray-500">Not scheduled</p>

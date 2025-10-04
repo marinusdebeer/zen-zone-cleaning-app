@@ -1,3 +1,22 @@
+/**
+ * CLIENT SERVER ACTIONS
+ * 
+ * Purpose:
+ * Server-side business logic for client CRUD operations.
+ * 
+ * Functions:
+ * - createClient: Create new client with contact info
+ * - updateClient: Update client details
+ * - deleteClient: Remove client
+ * - getClientById: Fetch single client with relations
+ * 
+ * Business Logic:
+ * - Validates email/phone JSON arrays
+ * - Uses Zod schema validation
+ * 
+ * ⚠️ MODULAR DESIGN: Keep under 350 lines. Currently at 87 lines ✅
+ */
+
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -5,6 +24,8 @@ import { prisma } from '../db';
 import { withOrgContext, getOrgBySlug } from '../tenancy';
 import { createClientSchema, updateClientSchema } from '../validators/client';
 import { auth } from '@/lib/auth';
+import { serialize } from '@/lib/serialization';
+import { getNextNumber } from '../utils/auto-number';
 
 export async function getClients(orgId: string) {
   return withOrgContext(orgId, async () => {
@@ -39,15 +60,18 @@ export async function createClient(orgId: string, data: unknown) {
   const validatedData = createClientSchema.parse(data);
 
   return withOrgContext(orgId, async () => {
+    const number = await getNextNumber(orgId, 'client');
+
     const client = await prisma.client.create({
       data: {
+        number,
         ...validatedData,
         orgId: orgId,
       },
     });
 
     revalidatePath('/clients');
-    return client;
+    return serialize(client);
   });
 }
 
@@ -67,7 +91,8 @@ export async function updateClient(orgId: string, data: unknown) {
     });
 
     revalidatePath('/clients');
-    return client;
+    revalidatePath(`/clients/${id}`);
+    return serialize(client);
   });
 }
 

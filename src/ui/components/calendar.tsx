@@ -1,9 +1,21 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 567+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - Calendar header navigation component
+ * - Day/week/month view components
+ * - Event card/block component
+ * - Drag and drop logic into custom hook
+ */
+
 'use client';
 
 import { useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Filter, Calendar as CalendarIcon, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { JobWizard } from '../../../app/(dashboard)/jobs/new/job-wizard';
 
 interface Job {
   id: string;
@@ -15,6 +27,7 @@ interface Job {
   assignee: string;
   status: 'scheduled' | 'in-progress' | 'completed' | 'pending';
   color?: string;
+  visitData?: any; // Full visit data for modal
 }
 
 interface Client {
@@ -47,6 +60,7 @@ interface CalendarProps {
   onDateChange: (date: Date) => void;
   onViewChange: (view: 'month' | 'week' | 'day') => void;
   onJobCreate?: (job: any) => void;
+  onVisitClick?: (visitId: string, visitData?: any) => void;
   clients: Client[];
   teamMembers: TeamMember[];
   services: Service[];
@@ -76,7 +90,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, onJobCreate, clients, teamMembers, services, orgId }: CalendarProps) {
+export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, onJobCreate, onVisitClick, clients, teamMembers, services, orgId }: CalendarProps) {
   const [selectedTeam, setSelectedTeam] = useState<string>('all');
   const [isDragging, setIsDragging] = useState(false);
   const [dragSelection, setDragSelection] = useState<DragSelection | null>(null);
@@ -232,14 +246,17 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                     </div>
                     <div className="space-y-1">
                       {dayJobs.slice(0, 3).map(job => (
-                        <Link
+                        <button
                           key={job.id}
-                          href={`/jobs/${job.id}`}
-                          className={`block text-xs p-1.5 rounded ${getStatusColor(job.status)} text-white truncate hover:opacity-90 transition-opacity`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onVisitClick?.(job.id, job.visitData);
+                          }}
+                          className={`block w-full text-left text-xs p-1.5 rounded ${getStatusColor(job.status)} text-white truncate hover:opacity-90 transition-opacity cursor-pointer`}
                         >
                           <div className="font-medium truncate">{job.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                           <div className="truncate">{job.client}</div>
-                        </Link>
+                        </button>
                       ))}
                       {dayJobs.length > 3 && (
                         <div className="text-xs text-gray-500 dark:text-gray-400 pl-1.5">
@@ -332,15 +349,19 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                             const height = Math.max(duration / 15 * 15, 30); // 15px per 15-min slot
                             
                             return (
-                              <Link
-                                key={job.id}
-                                href={`/jobs/${job.id}`}
-                                className={`absolute top-0 left-0.5 right-0.5 ${getStatusColor(job.status)} text-white rounded p-1 text-[10px] hover:opacity-90 transition-opacity overflow-hidden shadow-sm z-10`}
-                                style={{ height: `${height}px` }}
-                              >
-                                <div className="font-semibold truncate leading-tight">{job.client}</div>
-                                <div className="text-[9px] opacity-90 truncate leading-tight">{job.title}</div>
-                              </Link>
+                            <button
+                              key={job.id}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onVisitClick?.(job.id, job.visitData);
+                              }}
+                              onMouseDown={(e) => e.stopPropagation()}
+                              className={`absolute top-0 left-0.5 right-0.5 ${getStatusColor(job.status)} text-white rounded p-1 text-[10px] hover:opacity-90 transition-opacity overflow-hidden shadow-sm z-10 cursor-pointer text-left`}
+                              style={{ height: `${height}px` }}
+                            >
+                              <div className="font-semibold truncate leading-tight">{job.client}</div>
+                              {job.title && <div className="text-[9px] opacity-90 truncate leading-tight">{job.title}</div>}
+                            </button>
                             );
                           })}
                         </div>
@@ -418,10 +439,14 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                             const height = Math.max(duration / 15 * 15, 30); // 15px per 15-min slot
                             
                             return (
-                              <Link
+                              <button
                                 key={job.id}
-                                href={`/jobs/${job.id}`}
-                                className={`block ${getStatusColor(job.status)} text-white rounded p-2 hover:opacity-90 transition-opacity shadow-sm mb-1`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onVisitClick?.(job.id, job.visitData);
+                                }}
+                                onMouseDown={(e) => e.stopPropagation()}
+                                className={`block w-full text-left ${getStatusColor(job.status)} text-white rounded p-2 hover:opacity-90 transition-opacity shadow-sm mb-1 cursor-pointer`}
                                 style={{ minHeight: `${height}px` }}
                               >
                                 <div className="flex items-center space-x-1 mb-1">
@@ -432,12 +457,12 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
                                   </span>
                                 </div>
                                 <h4 className="font-bold text-sm">{job.client}</h4>
-                                <p className="text-xs opacity-90 mt-0.5">{job.title}</p>
+                                {job.title && <p className="text-xs opacity-90 mt-0.5">{job.title}</p>}
                                 <p className="text-[10px] opacity-75 mt-0.5 truncate">{job.address}</p>
                                 <div className="mt-1 flex items-center space-x-1">
                                   <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded">{job.assignee}</span>
                                 </div>
-                              </Link>
+                              </button>
                             );
                           })}
                         </div>
@@ -537,26 +562,34 @@ export function Calendar({ jobs, view, currentDate, onDateChange, onViewChange, 
       {showModal && modalTimes && (
         <div className="fixed inset-0 top-16 z-50 bg-black/50 backdrop-blur-sm overflow-y-auto">
           <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
-            <div className="bg-brand-bg rounded-xl shadow-2xl max-w-4xl w-full max-h-[calc(100vh-8rem)] flex flex-col my-4">
-              <div className="overflow-y-auto flex-1 p-6">
-                <JobWizard
-                  clients={clients}
-                  teamMembers={teamMembers}
-                  services={services}
-                  orgId={orgId}
-                  initialStartTime={modalTimes.start}
-                  initialEndTime={modalTimes.end}
-                  onCancel={() => {
+            <div className="bg-brand-bg rounded-xl shadow-2xl max-w-md w-full p-6">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Create Job</h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Time slot selected: {modalTimes.start.toLocaleTimeString()} - {modalTimes.end.toLocaleTimeString()}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                Click below to create a new job with this time slot.
+              </p>
+              <div className="flex gap-3">
+                <Link
+                  href={`/jobs/new?startTime=${modalTimes.start.toISOString()}&endTime=${modalTimes.end.toISOString()}`}
+                  className="flex-1 px-4 py-2 bg-brand text-white rounded-lg hover:opacity-90 transition-opacity text-center"
+                  onClick={() => {
                     setShowModal(false);
                     setModalTimes(null);
                   }}
-                  onSuccess={() => {
+                >
+                  Go to Job Creation
+                </Link>
+                <button
+                  onClick={() => {
                     setShowModal(false);
                     setModalTimes(null);
-                    // Optionally refresh the page or update jobs list
-                    window.location.reload();
                   }}
-                />
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           </div>

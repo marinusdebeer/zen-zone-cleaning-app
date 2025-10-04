@@ -1,3 +1,16 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 448+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - Team member card/row component
+ * - Invite member modal component
+ * - Role management component
+ * - Form state logic into custom hook (use-team-form.ts)
+ */
+
 'use client';
 
 import { useState } from 'react';

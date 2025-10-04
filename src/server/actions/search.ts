@@ -1,7 +1,27 @@
+/**
+ * GLOBAL SEARCH SERVER ACTIONS
+ * 
+ * Purpose:
+ * Server-side search functionality across all entities.
+ * Powers the global search bar in the header.
+ * 
+ * Functions:
+ * - globalSearch: Search across clients, jobs, invoices, estimates
+ * 
+ * Business Logic:
+ * - Searches multiple models simultaneously
+ * - Returns results grouped by type
+ * - Limits results per category
+ * - Case-insensitive search
+ * 
+ * ⚠️ MODULAR DESIGN: Keep under 350 lines. Currently at 179 lines ✅
+ */
+
 'use server';
 
 import { prisma } from '../db';
 import { auth } from '@/lib/auth';
+import { serialize } from '@/lib/serialization';
 
 export async function globalSearch(query: string) {
   const session = await auth();
@@ -15,10 +35,10 @@ export async function globalSearch(query: string) {
   if (!searchTerm || searchTerm.length < 2) {
     return {
       clients: [],
+      requests: [],
+      estimates: [],
       jobs: [],
       invoices: [],
-      estimates: [],
-      leads: [],
       properties: [],
       payments: [],
     };
@@ -29,17 +49,23 @@ export async function globalSearch(query: string) {
     where: { orgId: selectedOrgId },
     select: {
       id: true,
-      name: true,
+      firstName: true,
+      lastName: true,
+      companyName: true,
       emails: true,
       phones: true,
       addresses: true,
+      clientStatus: true,
+      leadStatus: true,
       createdAt: true,
     },
   });
 
   // Filter clients by name, email, phone, or address
   const clients = allClients.filter(client => {
-    const nameMatch = client.name.toLowerCase().includes(searchTerm);
+    const firstNameMatch = (client.firstName || '').toLowerCase().includes(searchTerm);
+    const lastNameMatch = (client.lastName || '').toLowerCase().includes(searchTerm);
+    const companyNameMatch = (client.companyName || '').toLowerCase().includes(searchTerm);
     const emails = Array.isArray(client.emails) ? client.emails : [];
     const phones = Array.isArray(client.phones) ? client.phones : [];
     const addresses = Array.isArray(client.addresses) ? client.addresses : [];
@@ -48,23 +74,44 @@ export async function globalSearch(query: string) {
     const phoneMatch = phones.some((p: any) => typeof p === 'string' && p.toLowerCase().includes(searchTerm));
     const addressMatch = addresses.some((a: any) => typeof a === 'string' && a.toLowerCase().includes(searchTerm));
     
-    return nameMatch || emailMatch || phoneMatch || addressMatch;
+    return firstNameMatch || lastNameMatch || companyNameMatch || emailMatch || phoneMatch || addressMatch;
   }).slice(0, 5);
 
   // Search across all other entities in parallel
-  const [jobs, invoices, estimates, leads, properties, payments] = await Promise.all([
+  const [requests, jobs, invoices, estimates, properties, payments] = await Promise.all([
 
-    // Search jobs
+    // Search requests (by title, description, or client name)
+    prisma.request.findMany({
+      where: {
+        orgId: selectedOrgId,
+        OR: [
+          { title: { contains: searchTerm, mode: 'insensitive' } },
+          { description: { contains: searchTerm, mode: 'insensitive' } },
+          { client: { firstName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { lastName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { companyName: { contains: searchTerm, mode: 'insensitive' } } },
+        ]
+      },
+      include: {
+        client: { select: { firstName: true, lastName: true, companyName: true } },
+      },
+      take: 5,
+    }),
+
+    // Search jobs (by title, description, or client name)
     prisma.job.findMany({
       where: {
         orgId: selectedOrgId,
         OR: [
           { title: { contains: searchTerm, mode: 'insensitive' } },
           { description: { contains: searchTerm, mode: 'insensitive' } },
+          { client: { firstName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { lastName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { companyName: { contains: searchTerm, mode: 'insensitive' } } },
         ]
       },
       include: {
-        client: { select: { name: true } },
+        client: { select: { firstName: true, lastName: true, companyName: true } },
       },
       take: 5,
     }),
@@ -74,66 +121,50 @@ export async function globalSearch(query: string) {
       where: {
         orgId: selectedOrgId,
         OR: [
-          { client: { name: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { firstName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { lastName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { companyName: { contains: searchTerm, mode: 'insensitive' } } },
           { job: { title: { contains: searchTerm, mode: 'insensitive' } } },
         ]
       },
       include: {
-        client: { select: { name: true } },
+        client: { select: { firstName: true, lastName: true, companyName: true } },
         job: { select: { title: true } },
       },
       take: 5,
-    }).then(invs => invs.map(inv => ({
-      ...inv,
-      subtotal: Number(inv.subtotal),
-      taxAmount: Number(inv.taxAmount),
-      total: Number(inv.total),
-    }))),
+    }),
 
-    // Search estimates
+    // Search estimates (by title, description, or client name)
     prisma.estimate.findMany({
       where: {
         orgId: selectedOrgId,
         OR: [
           { title: { contains: searchTerm, mode: 'insensitive' } },
           { description: { contains: searchTerm, mode: 'insensitive' } },
+          { client: { firstName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { lastName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { companyName: { contains: searchTerm, mode: 'insensitive' } } },
         ]
       },
       include: {
-        client: { select: { name: true } },
-        lead: { select: { name: true } },
-      },
-      take: 5,
-    }).then(ests => ests.map(est => ({
-      ...est,
-      amount: Number(est.amount),
-    }))),
-
-    // Search leads
-    prisma.lead.findMany({
-      where: {
-        orgId: selectedOrgId,
-        name: { contains: searchTerm, mode: 'insensitive' }
-      },
-      select: {
-        id: true,
-        name: true,
-        emails: true,
-        phones: true,
-        status: true,
-        createdAt: true,
+        client: { select: { firstName: true, lastName: true, companyName: true } },
       },
       take: 5,
     }),
 
-    // Search properties
+    // Search properties (by address or client name)
     prisma.property.findMany({
       where: {
         orgId: selectedOrgId,
-        address: { contains: searchTerm, mode: 'insensitive' }
+        OR: [
+          { address: { contains: searchTerm, mode: 'insensitive' } },
+          { client: { firstName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { lastName: { contains: searchTerm, mode: 'insensitive' } } },
+          { client: { companyName: { contains: searchTerm, mode: 'insensitive' } } },
+        ]
       },
       include: {
-        client: { select: { name: true } },
+        client: { select: { firstName: true, lastName: true, companyName: true } },
       },
       take: 5,
     }),
@@ -143,37 +174,31 @@ export async function globalSearch(query: string) {
       where: {
         orgId: selectedOrgId,
         OR: [
-          { invoice: { client: { name: { contains: searchTerm, mode: 'insensitive' } } } },
+          { invoice: { client: { firstName: { contains: searchTerm, mode: 'insensitive' } } } },
+          { invoice: { client: { lastName: { contains: searchTerm, mode: 'insensitive' } } } },
+          { invoice: { client: { companyName: { contains: searchTerm, mode: 'insensitive' } } } },
           { reference: { contains: searchTerm, mode: 'insensitive' } },
         ]
       },
       include: {
         invoice: {
           include: {
-            client: { select: { name: true } },
+            client: { select: { firstName: true, lastName: true, companyName: true } },
           }
         }
       },
       take: 5,
-    }).then(payments => payments.map(p => ({
-      ...p,
-      amount: Number(p.amount),
-      invoice: {
-        ...p.invoice,
-        subtotal: Number(p.invoice.subtotal),
-        taxAmount: Number(p.invoice.taxAmount),
-        total: Number(p.invoice.total),
-      }
-    }))),
+    }),
   ]);
 
-  return {
+  // Automatically serialize all Decimal fields
+  return serialize({
     clients,
+    requests,
+    estimates,
     jobs,
     invoices,
-    estimates,
-    leads,
     properties,
     payments,
-  };
+  });
 }

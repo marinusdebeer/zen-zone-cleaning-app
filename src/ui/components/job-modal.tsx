@@ -1,3 +1,19 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 497+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - Job form fields component
+ * - Client/property selector component
+ * - Date/time picker component
+ * - Team assignment component
+ * - Form state logic into custom hook (use-job-modal.ts)
+ * 
+ * Note: Consider deprecating this modal in favor of the new modular job form
+ */
+
 'use client';
 
 import { useState } from 'react';

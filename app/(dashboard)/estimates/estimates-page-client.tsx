@@ -1,3 +1,14 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * Keep this file under 500 lines. Extract components early!
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * 
+ * Suggested extractions when needed:
+ * - Estimate table component
+ * - Search and filter controls
+ * - Stats cards component
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -15,19 +26,27 @@ import {
   DollarSign
 } from 'lucide-react';
 import Link from 'next/link';
+import { calculateFullPricing } from '@/lib/pricing-calculator';
 
 interface Estimate {
   id: string;
   title: string;
   description: string | null;
-  amount: number;
   status: string;
   validUntil: Date | null;
   createdAt: Date;
-  client: { name: string } | null;
-  lead: { name: string } | null;
+  taxRate: number;
+  depositRequired: boolean;
+  depositType: string | null;
+  depositValue: number | null;
+  client: { name: string; clientStatus: string } | null;
   property: { address: string } | null;
   convertedJob: { id: string; title: string } | null;
+  lineItems: Array<{
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }>;
 }
 
 interface EstimatesPageClientProps {
@@ -58,7 +77,6 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
     const matchesSearch = !searchTerm || 
       estimate.title.toLowerCase().includes(searchLower) ||
       (estimate.client?.name && estimate.client.name.toLowerCase().includes(searchLower)) ||
-      (estimate.lead?.name && estimate.lead.name.toLowerCase().includes(searchLower)) ||
       (estimate.description && estimate.description.toLowerCase().includes(searchLower));
     
     return matchesStatus && matchesSearch;
@@ -69,7 +87,7 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center">
+          <h1 className="text-2xl font-bold flex items-center text-gray-900 dark:text-white">
             <FileText className="w-7 h-7 mr-2 text-brand" />
             Estimates
           </h1>
@@ -129,7 +147,7 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
             placeholder="Search estimates by title, client, or description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:placeholder:text-gray-500"
           />
         </div>
 
@@ -140,7 +158,7 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
             className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
               statusFilter === 'ALL'
                 ? 'bg-brand text-white'
-                : 'bg-brand-bg-secondary hover:bg-[var(--tenant-bg-tertiary)]'
+                : 'bg-brand-bg-secondary text-gray-700 dark:text-gray-300 hover:bg-[var(--tenant-bg-tertiary)]'
             }`}
           >
             All ({stats.total})
@@ -152,7 +170,7 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
               className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                 statusFilter === status
                   ? 'bg-brand text-white'
-                  : 'bg-brand-bg-secondary hover:bg-[var(--tenant-bg-tertiary)]'
+                  : 'bg-brand-bg-secondary text-gray-700 dark:text-gray-300 hover:bg-[var(--tenant-bg-tertiary)]'
               }`}
             >
               {status} ({statusCounts[status] || 0})
@@ -205,6 +223,19 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredEstimates.map((estimate) => {
                 const StatusIcon = statusConfig[estimate.status as keyof typeof statusConfig]?.icon || FileText;
+                
+                // Calculate total from line items
+                const pricing = calculateFullPricing({
+                  lineItems: estimate.lineItems.map(item => ({
+                    quantity: Number(item.quantity) || 1,
+                    unitPrice: Number(item.unitPrice) || 0,
+                    total: Number(item.total) || 0,
+                  })),
+                  taxRate: Number(estimate.taxRate),
+                  depositRequired: estimate.depositRequired,
+                  depositType: estimate.depositType,
+                  depositValue: estimate.depositValue ? Number(estimate.depositValue) : undefined,
+                });
 
                 return (
                   <tr key={estimate.id} onClick={() => window.location.href = `/estimates/${estimate.id}`} className="hover:bg-[var(--tenant-bg-tertiary)] transition-colors cursor-pointer">
@@ -219,9 +250,14 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <Users className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
-                          {estimate.client?.name || estimate.lead?.name || '-'}
-                        </p>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 dark:text-white">
+                            {estimate.client?.name || '-'}
+                          </p>
+                          {estimate.client?.clientStatus === 'LEAD' && (
+                            <span className="text-xs text-gray-500 dark:text-gray-400">Lead</span>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -256,7 +292,7 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
                     </td>
                     <td className="px-6 py-4 text-right">
                       <p className="text-sm font-semibold text-brand">
-                        ${estimate.amount.toFixed(2)}
+                        ${pricing.total.toFixed(2)}
                       </p>
                     </td>
                   </tr>
@@ -269,3 +305,4 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
     </div>
   );
 }
+

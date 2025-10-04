@@ -1,3 +1,16 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 428+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - User row component
+ * - Add user modal component
+ * - Role selector component
+ * - Form state logic into custom hook
+ */
+
 'use client';
 
 import { useState } from 'react';

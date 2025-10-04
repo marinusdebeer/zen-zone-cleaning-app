@@ -1,3 +1,21 @@
+/**
+ * INVOICE VALIDATION SCHEMAS
+ * 
+ * Purpose:
+ * Zod schemas for validating invoice and line item inputs.
+ * 
+ * Schemas:
+ * - lineItemSchema: Validation for individual line items
+ * - createInvoiceSchema: Validation for new invoice creation
+ * - updateInvoiceSchema: Validation for invoice updates
+ * 
+ * Business Logic:
+ * - Validates line item quantities and prices
+ * - Tax rate validation (0-100%)
+ * - Requires at least one line item
+ * - Ensures numeric values are non-negative
+ */
+
 import { z } from 'zod';
 
 export const lineItemSchema = z.object({

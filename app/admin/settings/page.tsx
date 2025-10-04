@@ -250,7 +250,7 @@ export default async function AdminSettingsPage() {
             <div className="bg-gray-750 rounded-lg p-4 border border-gray-700">
               <p className="text-sm text-gray-300 mb-3">To enable email functionality:</p>
               <ol className="text-sm text-gray-400 space-y-2 list-decimal list-inside">
-                <li>Add SMTP credentials to your <code className="admin-bg-tertiary admin-text-primary px-2 py-1 rounded">.env.local</code> file</li>
+                <li>Add SMTP credentials to your <code className="admin-bg-tertiary admin-text-primary px-2 py-1 rounded">.env</code> file</li>
                 <li>Required variables: <code className="admin-bg-tertiary admin-text-primary px-2 py-1 rounded">SMTP_HOST</code>, <code className="admin-bg-tertiary admin-text-primary px-2 py-1 rounded">SMTP_PORT</code>, <code className="admin-bg-tertiary admin-text-primary px-2 py-1 rounded">SMTP_USER</code>, <code className="admin-bg-tertiary admin-text-primary px-2 py-1 rounded">SMTP_PASSWORD</code></li>
                 <li>Restart the development server</li>
               </ol>

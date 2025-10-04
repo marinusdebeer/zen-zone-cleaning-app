@@ -1,9 +1,42 @@
+/**
+ * CREATE JOB PAGE
+ * Route: /jobs/new
+ * 
+ * Purpose:
+ * - Create new one-off or recurring jobs
+ * - Generate visits automatically based on recurring pattern
+ * - Preview visit schedule before creation
+ * 
+ * Data Fetching:
+ * - Fetches all clients with their properties
+ * - Fetches team members for assignment
+ * 
+ * Component:
+ * - Renders JobForm (modular form with multiple sections)
+ * 
+ * Business Logic:
+ * - Job type selection (one-off vs recurring)
+ * - Visit generation happens server-side on creation
+ * - Validates required fields (title, client, start date)
+ * 
+ * Notes:
+ * - Uses modular components from _components folder
+ * - Form state managed by useJobForm hook
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
-import { JobWizard } from './job-wizard';
+import { withOrgContext } from "@/server/tenancy";
+import { serialize } from "@/lib/serialization";
+import { JobForm } from '../_components/job-form';
 
-export default async function NewJobPage() {
+export default async function NewJobPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ requestId?: string; estimateId?: string; fromEstimate?: string; startTime?: string; endTime?: string }> 
+}) {
   const session = await auth();
   
   if (!session?.user) {
@@ -16,13 +49,20 @@ export default async function NewJobPage() {
     return <div>No organization selected</div>;
   }
 
+  const params = await searchParams;
+  const { requestId, estimateId, fromEstimate, startTime, endTime } = params;
+
   // Get clients with their properties
   const clients = await prisma.client.findMany({
     where: { orgId: selectedOrgId },
     include: {
       properties: true,
     },
-    orderBy: { name: 'asc' }
+    orderBy: [
+      { companyName: 'asc' },
+      { lastName: 'asc' },
+      { firstName: 'asc' },
+    ]
   });
 
   // Get team members
@@ -39,13 +79,31 @@ export default async function NewJobPage() {
     }
   });
 
-  // Get services from org settings
-  const org = await prisma.organization.findUnique({
-    where: { id: selectedOrgId },
-    select: { settings: true }
-  });
+  // If converting from estimate, fetch estimate data
+  let sourceEstimate = null;
+  if (fromEstimate) {
+    sourceEstimate = await withOrgContext(selectedOrgId, async () => {
+      return await prisma.estimate.findUnique({
+        where: { id: fromEstimate },
+        include: {
+          lineItems: {
+            orderBy: { order: 'asc' },
+          },
+        },
+      });
+    });
+  }
 
-  const services = (org?.settings as any)?.services || [];
+  const serializedEstimate = sourceEstimate ? serialize(sourceEstimate) : null;
 
-  return <JobWizard clients={clients} teamMembers={teamMembers} services={services} orgId={selectedOrgId} />;
+  return (
+    <JobForm 
+      clients={clients} 
+      teamMembers={teamMembers} 
+      orgId={selectedOrgId}
+      sourceEstimate={serializedEstimate}
+      initialStartTime={startTime}
+      initialEndTime={endTime}
+    />
+  );
 }

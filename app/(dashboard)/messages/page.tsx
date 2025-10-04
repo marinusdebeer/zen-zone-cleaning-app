@@ -1,3 +1,29 @@
+/**
+ * MESSAGES PAGE
+ * Route: /messages
+ * 
+ * Purpose:
+ * - Internal messaging/communication system
+ * - Send messages to team members
+ * - View message threads
+ * 
+ * Data Fetching:
+ * - Currently uses mock/demo data
+ * - Future: Will fetch real messages from database
+ * 
+ * Component:
+ * - Renders MessagesClient (client component for inbox UI)
+ * 
+ * Features:
+ * - Message inbox with read/unread status
+ * - Compose new messages
+ * - Search and filter messages
+ * 
+ * Notes:
+ * - Placeholder for future messaging system
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { MessagesClient } from './messages-client';

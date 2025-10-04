@@ -1,3 +1,9 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * Keep this file under500lines. Extract components early!
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ */
+
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';

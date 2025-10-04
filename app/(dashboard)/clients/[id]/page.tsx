@@ -1,9 +1,35 @@
+/**
+ * CLIENT DETAIL PAGE
+ * Route: /clients/[id]
+ * 
+ * Purpose:
+ * - Display comprehensive client information
+ * - Show all properties, jobs, estimates, and invoices
+ * - Provide contact details and history
+ * 
+ * Data Fetching:
+ * - Fetches client with all relations:
+ *   - properties, jobs, estimates, invoices, convertedFromLead
+ * - Jobs include visit counts
+ * - Invoices include payment totals
+ * 
+ * Component:
+ * - Server component (static rendering of client data)
+ * 
+ * Notes:
+ * - Email/phone stored as JSON arrays
+ * - Shows stats: total jobs, active jobs, total invoiced, total paid
+ * - Lists all associated properties, jobs, estimates, invoices
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from 'next/link';
 import { prisma } from '@/server/db';
 import { withOrgContext } from '@/server/tenancy';
-import { ArrowLeft, Mail, Phone, MapPin, FileText, Briefcase, Receipt, Home, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, FileText, Briefcase, Receipt, Home, CheckCircle } from 'lucide-react';
+import { ClientActions } from './client-actions';
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -19,9 +45,18 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
       where: { id },
       include: {
         properties: true,
-        estimates: { orderBy: { createdAt: 'desc' } },
-        jobs: { orderBy: { createdAt: 'desc' } },
-        invoices: { orderBy: { createdAt: 'desc' } },
+        estimates: { 
+          include: { lineItems: true },
+          orderBy: { createdAt: 'desc' } 
+        },
+        jobs: { 
+          include: { lineItems: true },
+          orderBy: { createdAt: 'desc' } 
+        },
+        invoices: { 
+          include: { lineItems: true },
+          orderBy: { createdAt: 'desc' } 
+        },
       },
     });
   });
@@ -48,13 +83,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{client.name}</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Client ID: {client.id.slice(0, 8)}</p>
           </div>
-          <Link
-            href="/clients"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-[var(--tenant-bg-tertiary)]"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Clients
-          </Link>
+          <ClientActions clientId={client.id} />
         </div>
 
         {/* Contact Information */}
@@ -156,12 +185,12 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                     <p className="font-medium text-gray-900 dark:text-white">{estimate.title}</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{estimate.description}</p>
                     <div className="flex items-center space-x-4 mt-2">
-                      <span className="text-sm text-brand font-semibold">${estimate.amount.toString()}</span>
                       <span className={`text-xs px-2 py-1 rounded ${
                         estimate.status === 'Approved' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
                         estimate.status === 'Sent' ? 'bg-brand-bg-tertiary text-blue-800 dark:text-blue-300' :
                         'bg-gray-100 text-gray-800'
                       }`}>{estimate.status}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{estimate.lineItems?.length || 0} items</span>
                     </div>
                   </div>
                   <span className="text-brand text-sm font-medium">View →</span>
@@ -191,7 +220,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <p className="font-medium text-gray-900 dark:text-white">{job.title}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{job.title || job.client.name}</p>
                       {job.isRecurring && (
                         <span className="text-xs bg-brand-bg-tertiary text-brand-text px-2 py-0.5 rounded">Recurring</span>
                       )}
@@ -203,9 +232,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                         job.status === 'Completed' ? 'bg-brand-bg-tertiary text-blue-800 dark:text-blue-300' :
                         'bg-gray-100 text-gray-800'
                       }`}>{job.status}</span>
-                      {job.estimatedCost && (
-                        <span className="text-sm text-gray-600 dark:text-gray-400">${job.estimatedCost.toString()}</span>
-                      )}
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{job.lineItems?.length || 0} items</span>
                     </div>
                   </div>
                   <span className="text-brand text-sm font-medium">View →</span>
@@ -234,14 +261,14 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <p className="font-medium text-gray-900 dark:text-white">Invoice #{invoice.id.slice(0, 8)}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">Invoice #{invoice.number}</p>
                     <div className="flex items-center space-x-4 mt-2">
-                      <span className="text-lg text-brand font-bold">${invoice.total.toString()}</span>
                       <span className={`text-xs px-2 py-1 rounded ${
                         invoice.status === 'Paid' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
                         invoice.status === 'Sent' ? 'bg-brand-bg-tertiary text-blue-800 dark:text-blue-300' :
                         'bg-gray-100 text-gray-800'
                       }`}>{invoice.status}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{invoice.lineItems?.length || 0} items</span>
                     </div>
                   </div>
                   <span className="text-brand text-sm font-medium">View →</span>

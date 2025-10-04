@@ -1,7 +1,40 @@
+/**
+ * SCHEDULE (CALENDAR) PAGE
+ * Route: /schedule
+ * 
+ * Purpose:
+ * - Display calendar view of ALL VISITS (not jobs)
+ * - Show visit scheduling, team assignments, and invoice status
+ * - Allow drag-and-drop rescheduling
+ * 
+ * Data Fetching:
+ * - Fetches visits directly with job, client, property, invoice relations
+ * - Each calendar event is a visit (click → /visits/[id])
+ * - Fetches team members for filtering
+ * 
+ * Component:
+ * - Renders ScheduleClient (client component with calendar)
+ * 
+ * Features:
+ * - Month/week/day calendar views
+ * - Click visit → View visit detail page
+ * - Visit detail → Link to parent job
+ * - Color-coded by visit status
+ * - Shows invoice status on visits
+ * 
+ * Notes:
+ * - Schedule shows VISITS (not jobs)
+ * - One job can have multiple visits on calendar
+ * - Clicking calendar event goes to /visits/[id]
+ * - Visit page has link to job for editing
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
 import { ScheduleClient } from "./schedule-client";
+import { serialize } from "@/lib/serialization";
+import { getClientDisplayName } from "@/lib/client-utils";
 
 export default async function SchedulePage() {
   const session = await auth();
@@ -22,7 +55,11 @@ export default async function SchedulePage() {
     include: {
       properties: true,
     },
-    orderBy: { name: 'asc' }
+    orderBy: [
+      { companyName: 'asc' },
+      { lastName: 'asc' },
+      { firstName: 'asc' },
+    ]
   });
 
   // Get team members
@@ -49,43 +86,69 @@ export default async function SchedulePage() {
 
   const services = (organization?.settings as any)?.services || [];
 
-  // Get jobs for the calendar
-  const jobs = await prisma.job.findMany({
-    where: { orgId: selectedOrgId },
-    include: {
-      client: true,
-      property: true,
-      visits: {
-        where: {
-          status: {
-            in: ['Scheduled', 'InProgress']
-          }
-        },
-        orderBy: {
-          scheduledAt: 'asc'
-        }
+  // Get visits for the calendar (not jobs)
+  const visits = await prisma.visit.findMany({
+    where: { 
+      orgId: selectedOrgId,
+      status: {
+        in: ['Scheduled', 'InProgress', 'Completed']
       }
     },
+    include: {
+      job: {
+        include: {
+          client: true,
+          property: true,
+        },
+      },
+      lineItems: {
+        orderBy: { order: 'asc' },
+      },
+      invoice: {
+        select: {
+          id: true,
+          number: true,
+          status: true,
+        },
+      },
+    },
     orderBy: {
-      createdAt: 'desc'
+      scheduledAt: 'asc'
     }
   });
 
-  // Transform jobs to calendar format
-  const calendarJobs = jobs.flatMap(job => 
-    job.visits.map(visit => ({
+  // Transform visits to calendar format with full visit data for modal
+  const calendarJobs = visits.map(visit => {
+    const status = visit.status === 'Scheduled' ? 'scheduled' : 
+                   visit.status === 'InProgress' ? 'in-progress' :
+                   visit.status === 'Completed' ? 'completed' : 'pending';
+    
+    // Serialize the visit data (includes Decimal fields)
+    const serializedVisit = serialize({
+      ...visit,
+      job: visit.job,
+    });
+    
+    const clientName = getClientDisplayName(visit.job.client);
+    
+    return {
       id: visit.id,
-      title: job.title,
-      client: job.client.name,
-      address: job.property?.address || 'No address',
+      jobId: visit.job.id,
+      jobNumber: visit.job.number,
+      title: visit.job.title || clientName,
+      client: clientName,
+      address: visit.job.property?.address || 'No address',
       startTime: visit.scheduledAt,
       endTime: new Date(visit.scheduledAt.getTime() + 2 * 60 * 60 * 1000), // Default 2 hours
       assignee: (visit.assignees as any[])?.[0] || 'Unassigned',
-      status: visit.status === 'Scheduled' ? 'scheduled' : 
-              visit.status === 'InProgress' ? 'in-progress' :
-              visit.status === 'Completed' ? 'completed' : 'pending',
-    }))
-  );
+      status: status as 'scheduled' | 'in-progress' | 'completed' | 'pending',
+      visitStatus: visit.status,
+      isInvoiced: !!visit.invoiceId,
+      invoiceNumber: visit.invoice?.number,
+      // Include serialized visit data for modal
+      visitData: serializedVisit,
+    };
+  });
 
   return (
     <ScheduleClient

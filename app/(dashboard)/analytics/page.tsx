@@ -1,3 +1,31 @@
+/**
+ * ANALYTICS & REPORTS PAGE
+ * Route: /analytics
+ * 
+ * Purpose:
+ * - View business analytics and insights
+ * - Track revenue, jobs, and client metrics
+ * - Generate reports
+ * 
+ * Data Fetching:
+ * - Currently uses demo/placeholder data
+ * - Future: Will fetch real analytics from database
+ * 
+ * Component:
+ * - Server component (static analytics display)
+ * 
+ * Features:
+ * - Revenue trends and charts
+ * - Job completion rates
+ * - Client acquisition metrics
+ * - Top clients and services
+ * 
+ * Notes:
+ * - Placeholder for future analytics system
+ * - Shows mock charts and graphs
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { BarChart3, TrendingUp, DollarSign, Users, Briefcase, Calendar } from 'lucide-react';

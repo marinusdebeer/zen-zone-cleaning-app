@@ -1,4 +1,4 @@
 {
-  "buildCommand": "npm run build:vercel",
+  "buildCommand": "prisma generate && prisma migrate deploy && npm run db:seed:prod && next build",
   "installCommand": "npm install"
 }

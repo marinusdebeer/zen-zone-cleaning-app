@@ -1,3 +1,16 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 312+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - Invoice table component
+ * - Search and filter controls component
+ * - Stats cards component
+ * - Status filter buttons component
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -15,20 +28,24 @@ import {
   Plus
 } from 'lucide-react';
 import Link from 'next/link';
+import { calculateFullPricing } from '@/lib/pricing-calculator';
 
 interface Invoice {
   id: string;
   status: string;
-  subtotal: number;
-  taxAmount: number;
-  total: number;
-  issuedAt: Date;
-  dueAt: Date | null;
-  paidAt: Date | null;
-  createdAt: Date;
+  taxRate: number;
+  issuedAt: Date | string | null; // Can be Date, ISO string, or null after serialize()
+  dueAt: Date | string | null;
+  paidAt: Date | string | null;
+  createdAt: Date | string;
   client: { name: string };
   job: { title: string } | null;
   payments: { amount: number }[];
+  lineItems: Array<{
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }>;
 }
 
 interface InvoicesPageClientProps {
@@ -223,8 +240,19 @@ export function InvoicesPageClient({ invoices, statusCounts, stats }: InvoicesPa
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredInvoices.map((invoice) => {
                 const StatusIcon = statusConfig[invoice.status as keyof typeof statusConfig]?.icon || FileText;
+                
+                // Calculate total from line items
+                const pricing = calculateFullPricing({
+                  lineItems: invoice.lineItems.map(item => ({
+                    quantity: Number(item.quantity) || 1,
+                    unitPrice: Number(item.unitPrice) || 0,
+                    total: Number(item.total) || 0,
+                  })),
+                  taxRate: Number(invoice.taxRate),
+                });
+                
                 const amountPaid = invoice.payments.reduce((sum, p) => sum + p.amount, 0);
-                const amountRemaining = invoice.total - amountPaid;
+                const amountRemaining = pricing.total - amountPaid;
 
                 return (
                   <tr key={invoice.id} onClick={() => window.location.href = `/invoices/${invoice.id}`} className="hover:bg-[var(--tenant-bg-tertiary)] transition-colors cursor-pointer">
@@ -248,7 +276,7 @@ export function InvoicesPageClient({ invoices, statusCounts, stats }: InvoicesPa
                     </td>
                     <td className="px-6 py-4">
                       {invoice.job ? (
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.job.title}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.job.title || invoice.job.client.name}</p>
                       ) : (
                         <p className="text-sm text-gray-400 dark:text-gray-500">-</p>
                       )}
@@ -261,11 +289,14 @@ export function InvoicesPageClient({ invoices, statusCounts, stats }: InvoicesPa
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {new Date(invoice.issuedAt).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}
+                        {invoice.issuedAt 
+                          ? new Date(invoice.issuedAt).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })
+                          : '-'
+                        }
                       </div>
                       {invoice.dueAt && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -275,11 +306,11 @@ export function InvoicesPageClient({ invoices, statusCounts, stats }: InvoicesPa
                     </td>
                     <td className="px-6 py-4 text-right">
                       <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                        ${invoice.total.toFixed(2)}
+                        ${pricing.total.toFixed(2)}
                       </p>
-                      {invoice.taxAmount > 0 && (
+                      {pricing.taxAmount > 0 && (
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                          +${invoice.taxAmount.toFixed(2)} tax
+                          +${pricing.taxAmount.toFixed(2)} tax
                         </p>
                       )}
                     </td>

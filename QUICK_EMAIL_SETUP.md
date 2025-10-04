@@ -35,13 +35,7 @@ I've set up a complete email system for CleanFlow. Here's what's working:
    - Select "Mail" → Your device
    - Copy the 16-character password (remove spaces)
 
-3. **Create `.env.local` file** in your project root:
-```bash
-# Copy the template
-cp ENV_TEMPLATE.txt .env.local
-```
-
-4. **Edit `.env.local` and add:**
+3. **Add to `.env` file:**
 ```bash
 SMTP_HOST="smtp.gmail.com"
 SMTP_PORT="587"
@@ -80,7 +74,7 @@ npm run dev
    - Go to Settings → Sender Authentication
    - Verify an email address
 
-4. **Add to `.env.local`:**
+4. **Add to `.env`:**
 ```bash
 SMTP_HOST="smtp.sendgrid.net"
 SMTP_PORT="587"
@@ -268,7 +262,7 @@ For production:
 
 - [ ] Choose email provider (Gmail for dev, SendGrid for prod)
 - [ ] Create account and get credentials
-- [ ] Add credentials to `.env.local`
+- [ ] Add credentials to `.env`
 - [ ] Restart dev server
 - [ ] Test creating organization
 - [ ] Test password reset

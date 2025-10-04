@@ -4,77 +4,31 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  const isDev = process.env.NODE_ENV === 'development';
-  const isPreview = process.env.VERCEL_ENV === 'preview';
-  const isProd = process.env.VERCEL_ENV === 'production';
-
-  const environment = isDev ? 'development' : isPreview ? 'preview' : isProd ? 'production' : 'unknown';
-  console.log(`🌱 Seeding database for ${environment} environment...`);
-  console.log('ℹ️  This seed supports multiple businesses - each organization is isolated by RLS');
+  console.log('🌱 Seeding database...');
 
   // ==================================================================
-  // ORGANIZATION 1: Zen Zone Cleaning (Primary/Demo Organization)
+  // ORGANIZATION: Zen Zone Cleaning
   // ==================================================================
   const zenZoneOrg = await prisma.organization.upsert({
-    where: { slug: 'zenzone' },
+    where: { slug: 'zen-zone-cleaning' },
     update: {},
     create: {
       name: 'Zen Zone Cleaning',
       slug: 'zen-zone-cleaning',
       industry: 'cleaning',
-      settings: {
-        features: {
-          quotes: true,
-          invoices: true,
-          routePlanning: false,
-          customerPortal: false,
-        },
-        workflows: {
-          jobLifecycle: {
-            states: ['Draft', 'Scheduled', 'InProgress', 'Completed', 'QA', 'Paid', 'Canceled'],
-            transitions: {
-              Draft: ['Scheduled', 'Canceled'],
-              Scheduled: ['InProgress', 'Canceled'],
-              InProgress: ['Completed', 'Canceled'],
-              Completed: ['QA', 'Paid'],
-              QA: ['Completed', 'Paid'],
-              Paid: [],
-              Canceled: [],
-            },
-            createWizard: {
-              steps: [
-                {
-                  name: 'Client',
-                  fields: ['clientId'],
-                },
-                {
-                  name: 'Details',
-                  fields: ['title', 'scheduledAt', 'custom.squareFootage', 'custom.floorType', 'custom.petNotes'],
-                },
-                {
-                  name: 'Assign',
-                  fields: ['assignees'],
-                },
-              ],
-            },
-          },
-        },
-        forms: {
-          job: {
-            showFields: ['title', 'scheduledAt', 'custom.squareFootage', 'custom.floorType', 'custom.petNotes'],
-            required: ['title', 'clientId'],
-          },
-        },
-      },
+      timezone: 'America/Toronto',
+      settings: {},
     },
   });
 
   console.log(`✅ Created organization: ${zenZoneOrg.name}`);
 
-  // Create users
+  // ==================================================================
+  // USERS & MEMBERSHIPS
+  // ==================================================================
   const hashedPassword = await bcrypt.hash('password123', 10);
   
-  // Super Admin (manages all organizations - not tied to any tenant)
+  // Super Admin
   const superAdmin = await prisma.user.upsert({
     where: { email: 'marinusdebeer@gmail.com' },
     update: {},
@@ -86,9 +40,7 @@ async function main() {
     },
   });
 
-  console.log(`✅ Created super admin: ${superAdmin.email}`);
-  
-  // Zen Zone Cleaning organization admin
+  // Organization Admin
   const zenZoneAdmin = await prisma.user.upsert({
     where: { email: 'admin@zenzonecleaning.com' },
     update: {},
@@ -100,10 +52,7 @@ async function main() {
     },
   });
 
-  console.log(`✅ Created organization admin: ${zenZoneAdmin.email}`);
-
-  // Create membership for Zen Zone admin
-  const membership = await prisma.membership.upsert({
+  await prisma.membership.upsert({
     where: {
       userId_orgId: {
         userId: zenZoneAdmin.id,
@@ -118,439 +67,576 @@ async function main() {
     },
   });
 
-  console.log(`✅ Created membership: ${membership.role} for ${zenZoneAdmin.email} in ${zenZoneOrg.name}`);
+  console.log(`✅ Created users and memberships`);
 
   // ==================================================================
-  // SEED DATA: Complete Business Workflow
-  // Leads → Estimates → Clients → Jobs → Visits → Invoices → Payments
+  // LOOKUP TABLES (Form Ingestion)
   // ==================================================================
-  console.log('\n📊 Creating comprehensive test data...');
+  
+  // Industries
+  const homeIndustry = await prisma.industry.upsert({
+    where: { slug: 'home-cleaning' },
+    update: {},
+    create: {
+      slug: 'home-cleaning',
+      label: 'Home Cleaning',
+      active: true,
+    },
+  });
 
-  // 1. LEADS (Potential clients, not yet converted)
-  const leads = await Promise.all([
-    prisma.lead.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        name: 'David Wilson',
-        emails: ['david.wilson@email.com'],
-        phones: ['(705) 555-0201'],
-        addresses: ['999 Prospect Ave, Barrie, ON'],
-        source: 'website',
-        status: 'Contacted',
-        notes: 'Interested in bi-weekly home cleaning',
-      },
-    }),
-    prisma.lead.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        name: 'ABC Corporation',
-        emails: ['contact@abccorp.com'],
-        phones: ['(705) 555-0202'],
-        addresses: ['1000 Enterprise Dr, Barrie, ON'],
-        source: 'referral',
-        status: 'Qualified',
-        notes: 'Large office space, needs estimate',
-      },
-    }),
-  ]);
-  console.log(`✅ Created ${leads.length} leads`);
+  const officeIndustry = await prisma.industry.upsert({
+    where: { slug: 'office' },
+    update: {},
+    create: {
+      slug: 'office',
+      label: 'Office Cleaning',
+      active: true,
+    },
+  });
 
-  // 2. CLIENTS (Converted from leads or direct)
-  const clients = await Promise.all([
-    prisma.client.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        name: 'Sarah Johnson',
-        emails: ['sarah.johnson@gmail.com'],
-        phones: ['(705) 555-0101'],
-        addresses: ['123 Main St, Barrie, ON L4N 1A1'],
-        custom: { preferredContact: 'email', petNotes: '2 cats - friendly' },
-      },
-    }),
-    prisma.client.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        name: 'Mike Chen',
-        emails: ['mike@techcorp.com', 'mike.chen@gmail.com'],
-        phones: ['(705) 555-0102'],
-        addresses: ['456 Business Blvd, Barrie, ON L4N 2B2'],
-        custom: { businessClient: true, billingEmail: 'accounting@techcorp.com' },
-      },
-    }),
-    prisma.client.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        name: 'Lisa Davis',
-        emails: ['lisa.davis@outlook.com'],
-        phones: ['(705) 555-0103', '(705) 555-0104'],
-        addresses: ['789 Oak Ave, Barrie, ON L4N 3C3'],
-        custom: { petNotes: 'Large dog - keep gates closed' },
-      },
-    }),
-    prisma.client.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        name: 'Robert & Emily Martinez',
-        emails: ['martinez.family@gmail.com'],
-        phones: ['(705) 555-0105'],
-        addresses: ['321 Pine St, Barrie, ON L4N 4D4'],
-        custom: { accessCode: '1234', gateCode: '5678' },
-      },
-    }),
-    prisma.client.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        name: 'BuildCo Construction',
-        emails: ['admin@buildco.ca'],
-        phones: ['(705) 555-0106'],
-        addresses: ['555 Commercial Rd, Barrie, ON L4N 5E5'],
-        custom: { businessClient: true, recurringWeekly: true },
-      },
-    }),
-    prisma.client.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        name: 'Jennifer Thompson',
-        emails: ['jen.thompson@yahoo.com'],
-        phones: ['(705) 555-0107'],
-        addresses: ['888 Maple Dr, Orillia, ON L3V 1F1'],
-        custom: {},
-      },
-    }),
-  ]);
+  const airbnbIndustry = await prisma.industry.upsert({
+    where: { slug: 'airbnb' },
+    update: {},
+    create: {
+      slug: 'airbnb',
+      label: 'Airbnb Cleaning',
+      active: true,
+    },
+  });
 
-  console.log(`✅ Created ${clients.length} clients`);
+  console.log(`✅ Created 3 industries`);
 
-  // Properties
-  const properties = await Promise.all([
-    prisma.property.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        clientId: clients[0].id,
-        address: '123 Main St, Barrie, ON L4N 1A1',
-        notes: '3 bedroom house, 2 bathrooms',
-        custom: { squareFeet: 1800, floors: 2 },
-      },
-    }),
-    prisma.property.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        clientId: clients[1].id,
-        address: '456 Business Blvd, Barrie, ON L4N 2B2',
-        notes: 'Office space - 5000 sq ft',
-        custom: { squareFeet: 5000, floors: 1, afterHours: true },
-      },
-    }),
-    prisma.property.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        clientId: clients[2].id,
-        address: '789 Oak Ave, Barrie, ON L4N 3C3',
-        notes: 'Large family home with basement',
-        custom: { squareFeet: 2400, floors: 2, basement: true },
-      },
-    }),
-  ]);
+  // Service Types
+  const serviceTypes = [
+    { industryId: homeIndustry.id, slug: 'standard', label: 'Standard Cleaning' },
+    { industryId: homeIndustry.id, slug: 'deep', label: 'Deep Cleaning' },
+    { industryId: homeIndustry.id, slug: 'moving-standard', label: 'Moving Standard Cleaning' },
+    { industryId: homeIndustry.id, slug: 'moving-deep', label: 'Moving Deep Cleaning' },
+    { industryId: homeIndustry.id, slug: 'post-renovation', label: 'Post-Renovation Cleaning' },
+    { industryId: homeIndustry.id, slug: 'recurring', label: 'Recurring Cleaning' },
+    { industryId: officeIndustry.id, slug: 'office', label: 'Office Cleaning' },
+    { industryId: airbnbIndustry.id, slug: 'airbnb', label: 'Airbnb Cleaning' },
+  ];
+
+  for (const st of serviceTypes) {
+    await prisma.serviceType.upsert({
+      where: { slug: st.slug },
+      update: {},
+      create: st,
+    });
+  }
+
+  console.log(`✅ Created ${serviceTypes.length} service types`);
+
+  // Hear About options
+  const hearAboutOptions = [
+    { slug: 'gbp', label: 'Google Maps or GBP' },
+    { slug: 'google-guaranteed', label: 'Google Guaranteed' },
+    { slug: 'brochure', label: 'Brochure' },
+    { slug: 'referral', label: 'Referral' },
+    { slug: 'other', label: 'Other' },
+  ];
+
+  for (const option of hearAboutOptions) {
+    await prisma.hearAbout.upsert({
+      where: { slug: option.slug },
+      update: {},
+      create: option,
+    });
+  }
+
+  console.log(`✅ Created ${hearAboutOptions.length} hear-about options`);
+
+  // Access Methods
+  const accessMethods = [
+    { industryId: homeIndustry.id, slug: 'home-let-in', label: 'I\'ll be home to let you in' },
+    { industryId: homeIndustry.id, slug: 'home-lockbox', label: 'Lockbox or keypad code' },
+    { industryId: homeIndustry.id, slug: 'home-key-hidden', label: 'Key hidden on premises' },
+    { industryId: homeIndustry.id, slug: 'home-neighbor', label: 'Key left with neighbor or concierge' },
+    { industryId: homeIndustry.id, slug: 'home-other', label: 'Other' },
+    { industryId: officeIndustry.id, slug: 'office-guard', label: 'Security guard on site' },
+    { industryId: officeIndustry.id, slug: 'office-manager', label: 'Building manager will provide access' },
+    { industryId: officeIndustry.id, slug: 'office-keypad', label: 'Keypad entry system' },
+    { industryId: officeIndustry.id, slug: 'office-keycard', label: 'Key or card provided to crew' },
+    { industryId: officeIndustry.id, slug: 'office-after-hours', label: 'Cleaning outside business hours' },
+    { industryId: officeIndustry.id, slug: 'office-other', label: 'Other' },
+    { industryId: airbnbIndustry.id, slug: 'airbnb-lockbox', label: 'Lockbox on premises' },
+    { industryId: airbnbIndustry.id, slug: 'airbnb-code', label: 'Electronic lock with code' },
+    { industryId: airbnbIndustry.id, slug: 'airbnb-exchange', label: 'Key exchange with guest' },
+    { industryId: airbnbIndustry.id, slug: 'airbnb-manager', label: 'Property manager provides access' },
+    { industryId: airbnbIndustry.id, slug: 'airbnb-concierge', label: 'Concierge or front desk' },
+    { industryId: airbnbIndustry.id, slug: 'airbnb-other', label: 'Other' },
+  ];
+
+  for (const method of accessMethods) {
+    await prisma.accessMethod.upsert({
+      where: { slug: method.slug },
+      update: {},
+      create: method,
+    });
+  }
+
+  console.log(`✅ Created ${accessMethods.length} access methods`);
+
+  // Reasons
+  const reasons = [
+    { industryId: homeIndustry.id, slug: 'spring-clean', label: 'Spring cleaning' },
+    { industryId: homeIndustry.id, slug: 'moving', label: 'Moving' },
+    { industryId: homeIndustry.id, slug: 'post-renovation', label: 'Post renovation' },
+    { industryId: homeIndustry.id, slug: 'recurring', label: 'Recurring upkeep' },
+    { industryId: officeIndustry.id, slug: 'routine', label: 'Routine janitorial' },
+    { industryId: officeIndustry.id, slug: 'deep', label: 'Deep clean' },
+    { industryId: airbnbIndustry.id, slug: 'turnover', label: 'Turnover prep' },
+    { industryId: airbnbIndustry.id, slug: 'seasonal', label: 'Seasonal reset' },
+  ];
+
+  for (const reason of reasons) {
+    await prisma.reason.upsert({
+      where: { slug: reason.slug },
+      update: {},
+      create: reason,
+    });
+  }
+
+  console.log(`✅ Created ${reasons.length} reasons`);
+
+  // ==================================================================
+  // INITIALIZE ORG COUNTERS
+  // ==================================================================
+  // Set counters to match our seed data so new entities don't conflict
+  await prisma.orgCounter.upsert({
+    where: { orgId_scope: { orgId: zenZoneOrg.id, scope: 'client' } },
+    update: { value: 5 }, // We're creating 5 clients
+    create: { orgId: zenZoneOrg.id, scope: 'client', value: 5 },
+  });
+
+  await prisma.orgCounter.upsert({
+    where: { orgId_scope: { orgId: zenZoneOrg.id, scope: 'request' } },
+    update: { value: 1 }, // We're creating 1 request
+    create: { orgId: zenZoneOrg.id, scope: 'request', value: 1 },
+  });
+
+  await prisma.orgCounter.upsert({
+    where: { orgId_scope: { orgId: zenZoneOrg.id, scope: 'estimate' } },
+    update: { value: 2 }, // We're creating 2 estimates
+    create: { orgId: zenZoneOrg.id, scope: 'estimate', value: 2 },
+  });
+
+  await prisma.orgCounter.upsert({
+    where: { orgId_scope: { orgId: zenZoneOrg.id, scope: 'job' } },
+    update: { value: 2 }, // We're creating 2 jobs
+    create: { orgId: zenZoneOrg.id, scope: 'job', value: 2 },
+  });
+
+  await prisma.orgCounter.upsert({
+    where: { orgId_scope: { orgId: zenZoneOrg.id, scope: 'visit' } },
+    update: { value: 2 }, // We're creating 2 visits
+    create: { orgId: zenZoneOrg.id, scope: 'visit', value: 2 },
+  });
+
+  await prisma.orgCounter.upsert({
+    where: { orgId_scope: { orgId: zenZoneOrg.id, scope: 'invoice' } },
+    update: { value: 1 }, // We're creating 1 invoice
+    create: { orgId: zenZoneOrg.id, scope: 'invoice', value: 1 },
+  });
+
+  await prisma.orgCounter.upsert({
+    where: { orgId_scope: { orgId: zenZoneOrg.id, scope: 'payment' } },
+    update: { value: 1 }, // We're creating 1 payment
+    create: { orgId: zenZoneOrg.id, scope: 'payment', value: 1 },
+  });
+
+  console.log(`✅ Initialized org counters`);
+
+  // ==================================================================
+  // CLIENTS (Unified - includes leads and active clients)
+  // ==================================================================
+  const client1 = await prisma.client.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 1 } },
+    update: {},
+    create: {
+      number: 1,
+      orgId: zenZoneOrg.id,
+      firstName: 'Sarah',
+      lastName: 'Johnson',
+      emails: ['sarah.johnson@gmail.com'],
+      phones: ['(705) 555-0101'],
+      addresses: ['123 Main St, Barrie, ON L4N 1A1'],
+      clientStatus: 'ACTIVE',
+      notes: 'Preferred client - weekly service',
+    },
+  });
+
+  const client2 = await prisma.client.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 2 } },
+    update: {},
+    create: {
+      number: 2,
+      orgId: zenZoneOrg.id,
+      firstName: 'Mike',
+      lastName: 'Chen',
+      companyName: 'TechCorp Office',
+      emails: ['mike@techcorp.com'],
+      phones: ['(705) 555-0102'],
+      addresses: ['456 Business Blvd, Barrie, ON'],
+      clientStatus: 'ACTIVE',
+    },
+  });
+
+  const client3 = await prisma.client.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 3 } },
+    update: {},
+    create: {
+      number: 3,
+      orgId: zenZoneOrg.id,
+      firstName: 'Lisa',
+      lastName: 'Davis',
+      emails: ['lisa.davis@outlook.com'],
+      phones: ['(705) 555-0103'],
+      addresses: ['789 Oak Ave, Barrie, ON'],
+      clientStatus: 'ACTIVE',
+      notes: 'Large dog - keep gates closed',
+    },
+  });
+
+  const client4 = await prisma.client.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 4 } },
+    update: {},
+    create: {
+      number: 4,
+      orgId: zenZoneOrg.id,
+      firstName: 'David',
+      lastName: 'Wilson',
+      emails: ['david.wilson@email.com'],
+      phones: ['(705) 555-0201'],
+      addresses: ['999 Prospect Ave, Barrie, ON'],
+      clientStatus: 'LEAD',
+      leadSource: 'website',
+      leadStatus: 'CONTACTED',
+      notes: 'Interested in bi-weekly home cleaning',
+    },
+  });
+
+  const client5 = await prisma.client.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 5 } },
+    update: {},
+    create: {
+      number: 5,
+      orgId: zenZoneOrg.id,
+      companyName: 'ABC Corporation',
+      emails: ['contact@abccorp.com'],
+      phones: ['(705) 555-0202'],
+      clientStatus: 'LEAD',
+      leadSource: 'referral',
+      leadStatus: 'QUALIFIED',
+      notes: 'Large office space, needs estimate',
+    },
+  });
+
+  const clients = [client1, client2, client3, client4, client5];
+
+  console.log(`✅ Created ${clients.length} clients (3 active, 2 leads)`);
+
+  // ==================================================================
+  // PROPERTIES
+  // ==================================================================
+  // Find or create properties by checking unique constraint (orgId + clientId + address)
+  const property1 = await prisma.property.findFirst({
+    where: {
+      orgId: zenZoneOrg.id,
+      clientId: clients[0].id,
+      address: '123 Main St, Barrie, ON L4N 1A1',
+    },
+  }) || await prisma.property.create({
+    data: {
+      orgId: zenZoneOrg.id,
+      clientId: clients[0].id,
+      address: '123 Main St, Barrie, ON L4N 1A1',
+      notes: '3 bedroom house, 2 bathrooms',
+    },
+  });
+
+  const property2 = await prisma.property.findFirst({
+    where: {
+      orgId: zenZoneOrg.id,
+      clientId: clients[1].id,
+      address: '456 Business Blvd, Barrie, ON L4N 2B2',
+    },
+  }) || await prisma.property.create({
+    data: {
+      orgId: zenZoneOrg.id,
+      clientId: clients[1].id,
+      address: '456 Business Blvd, Barrie, ON L4N 2B2',
+      notes: 'Office space - 5000 sq ft, after hours access',
+    },
+  });
+
+  const property3 = await prisma.property.findFirst({
+    where: {
+      orgId: zenZoneOrg.id,
+      clientId: clients[2].id,
+      address: '789 Oak Ave, Barrie, ON L4N 3C3',
+    },
+  }) || await prisma.property.create({
+    data: {
+      orgId: zenZoneOrg.id,
+      clientId: clients[2].id,
+      address: '789 Oak Ave, Barrie, ON L4N 3C3',
+      notes: 'Large family home with basement',
+    },
+  });
+
+  const properties = [property1, property2, property3];
 
   console.log(`✅ Created ${properties.length} properties`);
 
-  // 3. ESTIMATES (For leads and clients)
-  const estimates = await Promise.all([
-    // Estimate for lead
-    prisma.estimate.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        leadId: leads[0].id,
-        title: 'Bi-Weekly Home Cleaning',
-        description: 'Regular cleaning service every two weeks',
-        amount: 250.00,
-        status: 'Sent',
-        validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  // ==================================================================
+  // REQUESTS (Customer inquiries)
+  // ==================================================================
+  const request1 = await prisma.request.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 1 } },
+    update: {},
+    create: {
+      number: 1,
+      orgId: zenZoneOrg.id,
+      clientId: clients[3].id, // Lead
+      title: 'Bi-Weekly Home Cleaning Request',
+      description: 'Looking for regular cleaning service',
+      source: 'website',
+      urgency: 'normal',
+      status: 'CONTACTED',
+      lineItems: {
+        create: [
+          { name: 'General Cleaning', quantity: 1, order: 0 },
+          { name: 'Kitchen Deep Clean', quantity: 1, order: 1 },
+        ],
       },
-    }),
-    // Approved estimate (will be converted to job)
-    prisma.estimate.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        clientId: clients[0].id,
-        propertyId: properties[0].id,
-        title: 'Deep Clean Service',
-        description: 'Complete deep cleaning with carpet treatment',
-        amount: 450.00,
-        status: 'Approved',
-        validUntil: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+    },
+  });
+
+  const requests = [request1];
+
+  console.log(`✅ Created ${requests.length} requests`);
+
+  // ==================================================================
+  // ESTIMATES (Quotes with pricing)
+  // ==================================================================
+  const estimate1 = await prisma.estimate.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 1 } },
+    update: {},
+    create: {
+      number: 1,
+      orgId: zenZoneOrg.id,
+      clientId: clients[3].id, // Lead
+      convertedFromRequestId: requests[0].id,
+      title: 'Bi-Weekly Home Cleaning',
+      description: 'Regular cleaning service every two weeks',
+      taxRate: 13, // Cost calculated from line items
+      status: 'SENT',
+      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      lineItems: {
+        create: [
+          { name: 'General Cleaning', quantity: 1, unitPrice: 150, total: 150, order: 0 },
+          { name: 'Kitchen Deep Clean', quantity: 1, unitPrice: 50, total: 50, order: 1 },
+        ],
       },
-    }),
-  ]);
+    },
+  });
+
+  const estimate2 = await prisma.estimate.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 2 } },
+    update: {},
+    create: {
+      number: 2,
+      orgId: zenZoneOrg.id,
+      clientId: clients[0].id, // Active client
+      propertyId: properties[0].id,
+      title: 'Deep Clean Service',
+      description: 'Complete deep cleaning with carpet treatment',
+      taxRate: 13, // Cost calculated from line items
+      depositRequired: true,
+      depositType: 'percentage',
+      depositValue: 25, // 25% deposit
+      status: 'APPROVED',
+      validUntil: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      lineItems: {
+        create: [
+          { name: 'Deep Clean Service', quantity: 1, unitPrice: 300, total: 300, order: 0 },
+          { name: 'Carpet Cleaning - 2 Rooms', quantity: 2, unitPrice: 75, total: 150, order: 1 },
+        ],
+      },
+    },
+  });
+
+  const estimates = [estimate1, estimate2];
+
   console.log(`✅ Created ${estimates.length} estimates`);
 
-  // 4. JOBS (Some converted from estimates, some direct)
+  // ==================================================================
+  // JOBS (Scheduled work)
+  // ==================================================================
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const nextWeek = new Date(today);
-  nextWeek.setDate(nextWeek.getDate() + 7);
 
-  const jobs = await Promise.all([
-    // Job converted from approved estimate - with multiple visits
-    prisma.job.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        clientId: clients[0].id,
-        propertyId: properties[0].id,
-        convertedFromEstimateId: estimates[1].id,
-        title: 'Deep Clean Service',
-        description: 'Complete deep cleaning with carpet treatment',
-        status: 'Active',
-        isRecurring: false,
-        estimatedCost: 450.00,
-        priority: 'normal',
+  // Job converted from estimate
+  const job1 = await prisma.job.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 1 } },
+    update: {},
+    create: {
+      number: 1,
+      orgId: zenZoneOrg.id,
+      clientId: clients[0].id,
+      propertyId: properties[0].id,
+      convertedFromEstimateId: estimates[1].id,
+      title: 'Deep Clean Service',
+      description: 'Complete deep cleaning with carpet treatment',
+      status: 'Active',
+      isRecurring: false,
+      startDate: yesterday,
+      taxRate: 13, // Default tax rate - cost comes from line items
+      priority: 'normal',
+      lineItems: {
+        create: [
+          { name: 'Deep Clean Service', quantity: 1, unitPrice: 300, total: 300, order: 0 },
+          { name: 'Carpet Cleaning - 2 Rooms', quantity: 2, unitPrice: 75, total: 150, order: 1 },
+        ],
       },
-    }),
-    // Recurring job with weekly pattern
-    prisma.job.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        clientId: clients[1].id,
-        propertyId: properties[1].id,
-        title: 'Weekly Office Cleaning',
-        description: 'Regular office maintenance',
-        status: 'Active',
-        isRecurring: true,
-        recurringPattern: 'weekly',
-        recurringDays: [1, 3, 5], // Monday, Wednesday, Friday
-        estimatedCost: 200.00,
-        priority: 'normal',
+    },
+  });
+
+  // Recurring job
+  const job2 = await prisma.job.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 2 } },
+    update: {},
+    create: {
+      number: 2,
+      orgId: zenZoneOrg.id,
+      clientId: clients[1].id,
+      propertyId: properties[1].id,
+      title: 'Weekly Office Cleaning',
+      description: 'Regular office maintenance',
+      status: 'Active',
+      isRecurring: true,
+      recurringPattern: 'weekly',
+      recurringDays: [1, 3, 5], // Mon, Wed, Fri
+      startDate: new Date('2025-10-01'),
+      recurringEndDate: new Date('2026-01-01'),
+      taxRate: 13, // Default tax rate - cost comes from line items
+      billingFrequency: 'WEEKLY',
+      priority: 'normal',
+      lineItems: {
+        create: [
+          { name: 'Office Cleaning Service', quantity: 1, unitPrice: 200, total: 200, order: 0 },
+        ],
       },
-    }),
-    // One-time job with multiple visits
-    prisma.job.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        clientId: clients[2].id,
-        propertyId: properties[2].id,
-        title: 'Post-Renovation Cleanup',
-        description: 'Multi-phase cleaning after renovation',
-        status: 'Active',
-        isRecurring: false,
-        estimatedCost: 1200.00,
-        priority: 'high',
-      },
-    }),
-    // Draft job
-    prisma.job.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        clientId: clients[3].id,
-        title: 'Move In Cleaning',
-        description: 'Prepare home for new residents',
-        status: 'Draft',
-        isRecurring: false,
-        estimatedCost: 350.00,
-        priority: 'normal',
-      },
-    }),
-  ]);
+    },
+  });
+
+  const jobs = [job1, job2];
 
   console.log(`✅ Created ${jobs.length} jobs`);
 
-  // 5. LINE ITEMS (Attached to jobs, transferred to visits)
-  const lineItems = await Promise.all([
-    prisma.lineItem.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[0].id,
-        name: 'Deep Clean Service',
-        qty: 1,
-        unitPrice: 300.00,
-        taxRate: 13.00,
+  // ==================================================================
+  // VISITS
+  // ==================================================================
+  const visit1 = await prisma.visit.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 1 } },
+    update: {},
+    create: {
+      number: 1,
+      orgId: zenZoneOrg.id,
+      jobId: jobs[0].id,
+      scheduledAt: yesterday,
+      completedAt: yesterday,
+      status: 'Completed',
+      assignees: ['Team A'],
+      notes: 'Completed successfully. Client very happy!',
+      lineItems: {
+        create: [
+          { name: 'Deep Clean Service', quantity: 1, unitPrice: 300, total: 300, order: 0 },
+          { name: 'Carpet Cleaning - 2 Rooms', quantity: 2, unitPrice: 75, total: 150, order: 1 },
+        ],
       },
-    }),
-    prisma.lineItem.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[0].id,
-        name: 'Carpet Cleaning - 2 Rooms',
-        qty: 1,
-        unitPrice: 150.00,
-        taxRate: 13.00,
-      },
-    }),
-    prisma.lineItem.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[1].id,
-        name: 'Office Cleaning Service',
-        qty: 1,
-        unitPrice: 200.00,
-        taxRate: 13.00,
-      },
-    }),
-    prisma.lineItem.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[2].id,
-        name: 'Renovation Phase 1 Cleaning',
-        qty: 1,
-        unitPrice: 400.00,
-        taxRate: 13.00,
-      },
-    }),
-    prisma.lineItem.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[2].id,
-        name: 'Renovation Phase 2 Cleaning',
-        qty: 1,
-        unitPrice: 400.00,
-        taxRate: 13.00,
-      },
-    }),
-  ]);
+    },
+  });
 
-  console.log(`✅ Created ${lineItems.length} line items`);
+  const visit2 = await prisma.visit.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 2 } },
+    update: {},
+    create: {
+      number: 2,
+      orgId: zenZoneOrg.id,
+      jobId: jobs[1].id,
+      scheduledAt: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 0),
+      status: 'Scheduled',
+      assignees: ['Team B'],
+      lineItems: {
+        create: [
+          { name: 'Office Cleaning Service', quantity: 1, unitPrice: 200, total: 200, order: 0 },
+        ],
+      },
+    },
+  });
 
-  // 6. VISITS (Individual appointments on the calendar)
-  const visits = await Promise.all([
-    // Visit 1 for Job 1 (Deep Clean) - Completed
-    prisma.visit.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[0].id,
-        scheduledAt: yesterday,
-        completedAt: yesterday,
-        status: 'Completed',
-        assignees: ['John Smith', 'Emily Davis'],
-        notes: 'Completed successfully. Client very happy!',
-      },
-    }),
-    // Visit 1 for Job 2 (Recurring Office) - Completed
-    prisma.visit.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[1].id,
-        scheduledAt: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3, 18, 0),
-        completedAt: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 3, 20, 0),
-        status: 'Completed',
-        assignees: ['Team B'],
-      },
-    }),
-    // Visit 2 for Job 2 (Recurring Office) - Today
-    prisma.visit.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[1].id,
-        scheduledAt: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 0),
-        status: 'Scheduled',
-        assignees: ['Team B'],
-      },
-    }),
-    // Visit 3 for Job 2 (Recurring Office) - Future
-    prisma.visit.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[1].id,
-        scheduledAt: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2, 18, 0),
-        status: 'Scheduled',
-        assignees: ['Team B'],
-      },
-    }),
-    // Visit 1 for Job 3 (Multi-visit renovation) - Completed
-    prisma.visit.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[2].id,
-        scheduledAt: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 5, 9, 0),
-        completedAt: new Date(today.getFullYear(), today.getMonth(), today.getDate() - 5, 13, 0),
-        status: 'Completed',
-        assignees: ['Team A'],
-        notes: 'Phase 1 complete - rough cleanup done',
-      },
-    }),
-    // Visit 2 for Job 3 - Scheduled for tomorrow
-    prisma.visit.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[2].id,
-        scheduledAt: new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 9, 0),
-        status: 'Scheduled',
-        assignees: ['Team A', 'Team B'],
-        notes: 'Phase 2 - detail cleaning',
-      },
-    }),
-    // Visit 3 for Job 3 - Scheduled next week
-    prisma.visit.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[2].id,
-        scheduledAt: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate(), 9, 0),
-        status: 'Scheduled',
-        assignees: ['Team A'],
-        notes: 'Phase 3 - final touch-up',
-      },
-    }),
-    // Manual visit added to recurring job
-    prisma.visit.create({
-      data: {
-        orgId: zenZoneOrg.id,
-        jobId: jobs[1].id,
-        scheduledAt: new Date(nextWeek.getFullYear(), nextWeek.getMonth(), nextWeek.getDate(), 14, 0),
-        status: 'Scheduled',
-        assignees: ['Team A'],
-        isManual: true,
-        notes: 'Extra visit requested by client for special event',
-      },
-    }),
-  ]);
+  const visits = [visit1, visit2];
 
   console.log(`✅ Created ${visits.length} visits`);
 
-  // 7. INVOICES (Generated from completed visits)
-  const subtotal1 = 450.00;
-  const tax1 = subtotal1 * 0.13;
-  const invoice1 = await prisma.invoice.create({
-    data: {
+  // ==================================================================
+  // INVOICES
+  // ==================================================================
+  const invoice = await prisma.invoice.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 1 } },
+    update: {},
+    create: {
+      number: 1,
       orgId: zenZoneOrg.id,
       jobId: jobs[0].id,
       clientId: clients[0].id,
+      propertyId: properties[0].id,
       visitIds: [visits[0].id],
-      subtotal: subtotal1,
-      taxAmount: tax1,
-      total: subtotal1 + tax1,
-      status: 'Paid',
+      taxRate: 13, // Cost calculated from line items
+      status: 'PAID',
       issuedAt: yesterday,
       dueAt: new Date(yesterday.getTime() + 14 * 24 * 60 * 60 * 1000),
       paidAt: yesterday,
+      lineItems: {
+        create: [
+          { name: 'Deep Clean Service', quantity: 1, unitPrice: 300, total: 300, order: 0 },
+          { name: 'Carpet Cleaning - 2 Rooms', quantity: 2, unitPrice: 75, total: 150, order: 1 },
+        ],
+      },
     },
   });
+  
+  // Link visit to invoice (only if not already linked)
+  if (!visits[0].invoiceId) {
+    await prisma.visit.update({
+      where: { id: visits[0].id },
+      data: { invoiceId: invoice.id },
+    });
+  }
 
-  const subtotal2 = 400.00;
-  const tax2 = subtotal2 * 0.13;
-  const invoice2 = await prisma.invoice.create({
-    data: {
+  console.log(`✅ Created invoice`);
+
+  // ==================================================================
+  // PAYMENTS
+  // ==================================================================
+  // Calculate invoice total from line items for payment
+  const invoiceLineItemsTotal = 300 + 150; // $450
+  const invoiceTax = invoiceLineItemsTotal * 0.13; // $58.50
+  const invoiceTotal = invoiceLineItemsTotal + invoiceTax; // $508.50
+  
+  const payment = await prisma.payment.upsert({
+    where: { orgId_number: { orgId: zenZoneOrg.id, number: 1 } },
+    update: {},
+    create: {
+      number: 1,
       orgId: zenZoneOrg.id,
-      jobId: jobs[2].id,
-      clientId: clients[2].id,
-      visitIds: [visits[4].id], // Phase 1 visit
-      subtotal: subtotal2,
-      taxAmount: tax2,
-      total: subtotal2 + tax2,
-      status: 'Sent',
-      issuedAt: new Date(today.getTime() - 2 * 24 * 60 * 60 * 1000),
-      dueAt: new Date(today.getTime() + 12 * 24 * 60 * 60 * 1000),
-    },
-  });
-
-  console.log(`✅ Created 2 invoices`);
-
-  // 8. PAYMENTS (For paid invoice)
-  const payment = await prisma.payment.create({
-    data: {
-      orgId: zenZoneOrg.id,
-      invoiceId: invoice1.id,
-      amount: invoice1.total,
+      invoiceId: invoice.id,
+      amount: invoiceTotal,
+      invoiceTotal,
       method: 'credit_card',
       reference: 'VISA-****1234',
       paidAt: yesterday,
@@ -559,71 +645,35 @@ async function main() {
 
   console.log(`✅ Created payment: $${payment.amount.toString()}`);
 
-  // ==================================================================
-  // ADDITIONAL ORGANIZATIONS (Optional - Add your clients here)
-  // ==================================================================
-  // Example: Add more organizations as needed for your multi-business setup
-  // Each organization's data will be isolated by Row Level Security
-  
-  // Uncomment and customize to add more organizations:
-  /*
-  const org2 = await prisma.organization.upsert({
-    where: { slug: 'acme-cleaning' },
-    update: {},
-    create: {
-      name: 'Acme Cleaning Services',
-      slug: 'acme-cleaning',
-      industry: 'cleaning',
-      settings: {
-        features: {
-          quotes: true,
-          invoices: true,
-        },
-      },
-    },
-  });
-
-  const org2Owner = await prisma.user.upsert({
-    where: { email: 'owner@acmecleaning.com' },
-    update: {},
-    create: {
-      email: 'owner@acmecleaning.com',
-      name: 'Acme Owner',
-      passwordHash: await bcrypt.hash('password123', 10),
-    },
-  });
-
-  await prisma.membership.upsert({
-    where: {
-      userId_orgId: {
-        userId: org2Owner.id,
-        orgId: org2.id,
-      },
-    },
-    update: {},
-    create: {
-      userId: org2Owner.id,
-      orgId: org2.id,
-      role: 'OWNER',
-    },
-  });
-
-  console.log(`✅ Created organization: ${org2.name}`);
-  */
+  // Note: Conversion relationships are already set during entity creation
+  // Request → Estimate link set in estimate1 creation (convertedFromRequestId)
+  // Estimate → Job link set in job1 creation (convertedFromEstimateId)
+  // These create bidirectional relationships automatically
 
   console.log('\n🎉 Seeding completed successfully!');
   console.log('\n📝 Login credentials:');
-  console.log('\n🔧 SUPER ADMIN (Platform Administrator):');
+  console.log('\n🔧 SUPER ADMIN:');
   console.log('   Email: marinusdebeer@gmail.com');
   console.log('   Password: password123');
-  console.log('   Access: http://localhost:3000/admin');
-  console.log('   Note: Not tied to any organization - manages entire platform');
-  console.log('\n👤 ZEN ZONE CLEANING ADMIN:');
+  console.log('\n👤 ORG ADMIN:');
   console.log('   Email: admin@zenzonecleaning.com');
   console.log('   Password: password123');
   console.log('   Organization: Zen Zone Cleaning');
-  console.log('   Role: OWNER');
-  console.log('\n💡 To add more organizations, edit prisma/seed.ts');
+  console.log('\n📊 Lookup Data:');
+  console.log('   • 3 industries');
+  console.log('   • 8 service types');
+  console.log('   • 5 hear-about options');
+  console.log('   • 17 access methods');
+  console.log('   • 8 reasons');
+  console.log('\n📊 Test Data:');
+  console.log(`   • ${clients.length} clients (3 active, 2 leads)`);
+  console.log(`   • ${properties.length} properties`);
+  console.log(`   • ${requests.length} requests`);
+  console.log(`   • ${estimates.length} estimates`);
+  console.log(`   • ${jobs.length} jobs`);
+  console.log(`   • ${visits.length} visits`);
+  console.log(`   • 1 invoice (paid)`);
+  console.log(`   • 1 payment`);
 }
 
 main()
@@ -634,4 +684,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-

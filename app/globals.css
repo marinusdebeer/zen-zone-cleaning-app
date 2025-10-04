@@ -130,3 +130,22 @@ body {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
+
+/* Cursor pointer for all interactive elements */
+button,
+a,
+[role="button"],
+[onclick] {
+  cursor: pointer;
+}
+
+/* Ensure buttons have pointer cursor */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* Disabled elements should not have pointer cursor */
+button:disabled,
+[disabled] {
+  cursor: not-allowed;
+}

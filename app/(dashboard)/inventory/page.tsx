@@ -1,3 +1,31 @@
+/**
+ * INVENTORY PAGE
+ * Route: /inventory
+ * 
+ * Purpose:
+ * - Track supplies and equipment inventory
+ * - Monitor stock levels
+ * - Manage reorder alerts
+ * 
+ * Data Fetching:
+ * - Currently uses demo/placeholder data
+ * - Future: Will fetch inventory from database
+ * 
+ * Component:
+ * - Server component (static inventory display)
+ * 
+ * Features:
+ * - Low stock alerts
+ * - Inventory categories
+ * - Stock level tracking
+ * - Add/edit inventory items
+ * 
+ * Notes:
+ * - Placeholder for future inventory system
+ * - Shows mock data for demonstration
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Package, AlertCircle, TrendingDown, Plus } from 'lucide-react';

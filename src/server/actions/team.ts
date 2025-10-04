@@ -1,3 +1,23 @@
+/**
+ * TEAM SERVER ACTIONS
+ * 
+ * Purpose:
+ * Server-side business logic for team member management.
+ * 
+ * Functions:
+ * - getTeamMembers: Fetch all team members for organization
+ * - inviteTeamMember: Send invitation to join organization
+ * - updateMemberRole: Change team member role
+ * - removeMember: Remove member from organization
+ * 
+ * Business Logic:
+ * - Manages organization memberships
+ * - Sends invitation emails
+ * - Enforces role-based permissions
+ * 
+ * ⚠️ MODULAR DESIGN: Keep under 350 lines. Currently at 183 lines ✅
+ */
+
 'use server';
 
 import { prisma } from '../db';

@@ -1,3 +1,14 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * Keep this file under500lines. Extract components early!
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * 
+ * Suggested extractions when needed:
+ * - Message list component
+ * - Message compose component
+ * - Message thread component
+ */
+
 'use client';
 
 import { MessageSquare, Send, Clock } from 'lucide-react';

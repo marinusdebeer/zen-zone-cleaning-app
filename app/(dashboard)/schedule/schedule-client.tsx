@@ -1,8 +1,20 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * Keep this file under500lines. Extract components early!
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * 
+ * Suggested extractions when needed:
+ * - Calendar wrapper/controls component
+ * - Filter panel component
+ * - View mode selector component
+ */
+
 'use client';
 
 import { useState } from 'react';
 import { Calendar } from '@/ui/components/calendar';
 import { FullPageWrapper } from '@/ui/components/full-page-wrapper';
+import { VisitEditModal } from '@/ui/components/visit-edit-modal';
 
 interface Client {
   id: string;
@@ -57,6 +69,8 @@ export function ScheduleClient({
   const [view, setView] = useState<'month' | 'week' | 'day'>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [jobs, setJobs] = useState(initialJobs);
+  const [selectedVisit, setSelectedVisit] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleJobCreate = (jobData: any) => {
     // Create new job with unique ID
@@ -77,6 +91,13 @@ export function ScheduleClient({
     console.log('New job created:', newJob);
   };
 
+  const handleVisitClick = (visitId: string, visitData?: any) => {
+    if (visitData) {
+      setSelectedVisit(visitData);
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <FullPageWrapper>
       <Calendar
@@ -86,10 +107,21 @@ export function ScheduleClient({
         onDateChange={setCurrentDate}
         onViewChange={setView}
         onJobCreate={handleJobCreate}
+        onVisitClick={handleVisitClick}
         clients={clients}
         teamMembers={teamMembers}
         services={services}
         orgId={orgId}
+      />
+      
+      <VisitEditModal
+        visit={selectedVisit}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedVisit(null);
+        }}
+        teamMembers={teamMembers}
       />
     </FullPageWrapper>
   );

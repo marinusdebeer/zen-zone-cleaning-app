@@ -1,3 +1,28 @@
+/**
+ * ADMIN (PLATFORM) SERVER ACTIONS
+ * 
+ * Purpose:
+ * Server-side business logic for platform administration.
+ * Only accessible to super admins.
+ * 
+ * Functions:
+ * - createOrganization: Create new tenant organization
+ * - updateOrganization: Update organization details
+ * - deleteOrganization: Remove organization and all data
+ * - getAllOrganizations: Fetch all organizations (admin only)
+ * - updateUserRole: Change user roles within organizations
+ * - removeUserFromOrg: Remove user from organization
+ * - addUserToOrg: Add existing user to organization
+ * - sendPasswordReset: Send password reset email
+ * 
+ * ⚠️ MODULAR DESIGN WARNING
+ * This file is 348 lines (exceeds 350 line limit for server actions).
+ * Should be split into:
+ * - organization-actions.ts (CRUD for organizations)
+ * - user-actions.ts (user management)
+ * - admin-helpers.ts (utility functions)
+ */
+
 'use server';
 
 import { prisma } from '../db';

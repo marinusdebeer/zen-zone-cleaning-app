@@ -1,3 +1,16 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 432+ lines into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: < 500 lines per component
+ * 
+ * Suggested extractions:
+ * - Client form/modal component
+ * - Client table component
+ * - Search and filter controls component
+ * - Form state logic into custom hook (use-client-form.ts)
+ */
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -23,23 +36,26 @@ import {
 import Link from 'next/link';
 import { createClient } from '@/server/actions/clients';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getClientDisplayName, getClientInitials } from '@/lib/client-utils';
 
 interface Client {
   id: string;
-  name: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  companyName?: string | null;
   emails: any;
   phones: any;
   addresses: any;
-  createdAt: Date;
+  clientStatus: string; // LEAD, ACTIVE, INACTIVE, ARCHIVED
+  leadSource: string | null; // Source if client started as lead
+  leadStatus: string; // Lead pipeline status
+  createdAt: Date | string;
   _count: {
     properties: number;
     jobs: number;
     invoices: number;
     estimates: number;
   };
-  convertedFromLead: {
-    source: string | null;
-  } | null;
 }
 
 interface ClientsPageClientProps {
@@ -56,6 +72,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('ALL'); // ALL, LEAD, ACTIVE, INACTIVE
   const [showAddModal, setShowAddModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -73,7 +90,9 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
   }, [searchParams]);
 
   const [newClient, setNewClient] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
+    companyName: '',
     email: '',
     phone: '',
     address: '',
@@ -95,7 +114,9 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
 
     try {
       await createClient(orgId, {
-        name: newClient.name,
+        firstName: newClient.firstName || null,
+        lastName: newClient.lastName || null,
+        companyName: newClient.companyName || null,
         email: newClient.email,
         phone: newClient.phone,
         address: newClient.address,
@@ -103,7 +124,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
       
       showSuccess('Client created successfully!');
       setShowAddModal(false);
-      setNewClient({ name: '', email: '', phone: '', address: '' });
+      setNewClient({ firstName: '', lastName: '', companyName: '', email: '', phone: '', address: '' });
       router.refresh();
     } catch (error) {
       showError(error instanceof Error ? error.message : 'Failed to create client');
@@ -113,17 +134,27 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
   };
 
   const filteredClients = initialClients.filter(client => {
+    // Status filter
+    const matchesStatus = statusFilter === 'ALL' || client.clientStatus === statusFilter;
+    
+    // Search filter
     const searchLower = searchTerm.toLowerCase();
     const emails = Array.isArray(client.emails) ? client.emails : [];
     const phones = Array.isArray(client.phones) ? client.phones : [];
     const addresses = Array.isArray(client.addresses) ? client.addresses : [];
+    const displayName = getClientDisplayName(client).toLowerCase();
 
-    return (
-      client.name.toLowerCase().includes(searchLower) ||
+    const matchesSearch = !searchTerm || (
+      displayName.includes(searchLower) ||
+      (client.firstName?.toLowerCase() || '').includes(searchLower) ||
+      (client.lastName?.toLowerCase() || '').includes(searchLower) ||
+      (client.companyName?.toLowerCase() || '').includes(searchLower) ||
       emails.some((e: string) => e.toLowerCase().includes(searchLower)) ||
       phones.some((p: string) => p.toLowerCase().includes(searchLower)) ||
       addresses.some((a: string) => a.toLowerCase().includes(searchLower))
     );
+    
+    return matchesStatus && matchesSearch;
   });
 
   return (
@@ -200,8 +231,33 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
         </div>
       </div>
 
-      {/* Search Bar */}
+      {/* Search Bar & Filters */}
       <div className="bg-brand-bg rounded-xl shadow-sm p-4">
+        {/* Status Filter Tabs */}
+        <div className="flex gap-2 mb-4 overflow-x-auto">
+          {['ALL', 'LEAD', 'ACTIVE', 'INACTIVE'].map((status) => {
+            const count = status === 'ALL' 
+              ? initialClients.length 
+              : initialClients.filter(c => c.clientStatus === status).length;
+            
+            return (
+              <button
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap cursor-pointer ${
+                  statusFilter === status
+                    ? 'bg-brand text-white shadow-md'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                {status === 'ALL' ? 'All Clients' : status.charAt(0) + status.slice(1).toLowerCase()}
+                <span className="ml-2 opacity-75">({count})</span>
+              </button>
+            );
+          })}
+        </div>
+        
+        {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
           <input
@@ -213,7 +269,7 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
           />
         </div>
         <div className="mt-2 text-sm text-gray-600 dark:text-gray-400 dark:text-gray-500">
-          Showing {filteredClients.length} of {stats.total} clients
+          Showing {filteredClients.length} of {initialClients.length} clients
         </div>
       </div>
 
@@ -274,10 +330,10 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="w-10 h-10 bg-gradient-to-br from-brand to-brand-dark rounded-full flex items-center justify-center text-white font-bold">
-                          {client.name.substring(0, 2).toUpperCase()}
+                          {getClientInitials(client)}
                         </div>
                         <div className="ml-3">
-                          <p className="font-medium text-gray-900 dark:text-white">{client.name}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{getClientDisplayName(client)}</p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500">
                             Added {new Date(client.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </p>
@@ -316,9 +372,14 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      {client.convertedFromLead?.source && (
+                      {client.leadSource && (
                         <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs">
-                          {client.convertedFromLead.source}
+                          {client.leadSource}
+                        </span>
+                      )}
+                      {client.clientStatus === 'LEAD' && (
+                        <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-xs">
+                          Lead
                         </span>
                       )}
                     </td>
@@ -353,19 +414,51 @@ export function ClientsPageClient({ clients: initialClients, stats, orgId }: Cli
 
             {/* Modal Body */}
             <form onSubmit={handleCreateClient} className="p-6 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    value={newClient.firstName}
+                    onChange={(e) => setNewClient({ ...newClient, firstName: e.target.value })}
+                    disabled={loading}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
+                    placeholder="John"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    value={newClient.lastName}
+                    onChange={(e) => setNewClient({ ...newClient, lastName: e.target.value })}
+                    disabled={loading}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
+                    placeholder="Doe"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Client Name <span className="text-red-500">*</span>
+                  Company Name
                 </label>
                 <input
                   type="text"
-                  value={newClient.name}
-                  onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
-                  required
+                  value={newClient.companyName}
+                  onChange={(e) => setNewClient({ ...newClient, companyName: e.target.value })}
                   disabled={loading}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-700 text-gray-900 dark:text-white bg-white dark:bg-gray-700 placeholder:text-gray-400 dark:text-gray-500"
-                  placeholder="John Doe / ABC Corporation"
+                  placeholder="Optional - e.g., ABC Corporation"
                 />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Fill this if the client is a business. Otherwise, use first/last name.
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

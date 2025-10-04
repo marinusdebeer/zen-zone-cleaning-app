@@ -1,17 +1,47 @@
+/**
+ * INVOICE SERVER ACTIONS
+ * 
+ * Purpose:
+ * Server-side business logic for invoice CRUD operations.
+ * 
+ * Functions:
+ * - createInvoice: Create new invoice with line items
+ * - updateInvoice: Update invoice details
+ * - deleteInvoice: Remove invoice
+ * - getJobsForInvoicing: Fetch jobs ready to be invoiced
+ * - getClientsForInvoicing: Fetch clients for manual invoicing
+ * 
+ * Business Logic:
+ * - Calculates subtotal, tax, and total
+ * - Links to jobs if created from job
+ * - Validates with Zod schemas
+ * 
+ * ⚠️ MODULAR DESIGN: Keep under 350 lines. Currently at 108 lines ✅
+ */
+
 'use server';
 
 import { auth } from '@/lib/auth';
 import { prisma } from '../db';
 import { revalidatePath } from 'next/cache';
+import { serialize } from '@/lib/serialization';
+import { getNextNumber } from '../utils/auto-number';
 
 export async function createInvoice(data: {
   clientId: string;
   jobId?: string;
   visitIds?: string[];
-  subtotal: number;
-  taxRate: number;
+  taxRate?: number; // Default 13% - cost calculated from line items
   dueDate?: Date;
   notes?: string;
+  lineItems: Array<{
+    name: string;
+    description?: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+    order: number;
+  }>;
 }) {
   const session = await auth();
   if (!session?.user) {
@@ -43,27 +73,40 @@ export async function createInvoice(data: {
     }
   }
 
-  const taxAmount = data.subtotal * (data.taxRate / 100);
-  const total = data.subtotal + taxAmount;
+  const number = await getNextNumber(orgId, 'invoice');
 
   const invoice = await prisma.invoice.create({
     data: {
+      number,
       orgId,
-      jobId: data.jobId || null,
+      jobId: data.jobId || undefined,
       clientId: data.clientId,
       visitIds: data.visitIds || [],
-      subtotal: data.subtotal,
-      taxAmount: taxAmount,
-      total: total,
+      taxRate: data.taxRate || 13, // Cost calculated from line items
       status: 'DRAFT',
       issuedAt: new Date(),
       dueAt: data.dueDate || null,
-      custom: data.notes ? { notes: data.notes } : {},
+      notes: data.notes || null,
+      custom: {},
+      // Line items (where the cost comes from)
+      lineItems: {
+        create: data.lineItems.map(item => ({
+          name: item.name,
+          description: item.description,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          total: item.total,
+          order: item.order,
+        })),
+      },
+    },
+    include: {
+      lineItems: true,
     },
   });
 
   revalidatePath('/invoices');
-  return invoice;
+  return serialize(invoice);
 }
 
 export async function getClientsForInvoicing(orgId: string) {
@@ -71,10 +114,16 @@ export async function getClientsForInvoicing(orgId: string) {
     where: { orgId },
     select: {
       id: true,
-      name: true,
+      firstName: true,
+      lastName: true,
+      companyName: true,
       emails: true,
     },
-    orderBy: { name: 'asc' }
+    orderBy: [
+      { companyName: 'asc' },
+      { lastName: 'asc' },
+      { firstName: 'asc' },
+    ]
   });
 }
 
@@ -85,7 +134,7 @@ export async function getJobsForInvoicing(orgId: string) {
       status: { in: ['Active', 'Completed'] },
     },
     include: {
-      client: { select: { id: true, name: true } },
+      client: { select: { id: true, firstName: true, lastName: true, companyName: true } },
       property: { select: { address: true } },
       visits: {
         select: {
@@ -101,9 +150,6 @@ export async function getJobsForInvoicing(orgId: string) {
     orderBy: { createdAt: 'desc' }
   });
 
-  // Convert Decimal to Number for client component
-  return jobs.map(job => ({
-    ...job,
-    estimatedCost: job.estimatedCost ? Number(job.estimatedCost) : null
-  }));
+  // Automatically serialize all Decimal fields
+  return serialize(jobs);
 }

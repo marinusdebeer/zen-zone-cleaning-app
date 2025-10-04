@@ -2,6 +2,32 @@
 
 A production-ready Next.js application for managing service businesses, with built-in database multi-tenancy for data isolation.
 
+---
+
+## 📚 Developer Documentation
+
+**⭐ NEW DEVELOPER? START HERE:**
+1. **`docs/BEST_PRACTICES.md`** ⚡ - Essential rules for secure, maintainable code (read first!)
+2. **`docs/README.md`** - Complete documentation index
+3. **`docs/HOW_TO_RUN.md`** - Setup and run the app
+
+**Key Best Practices:**
+- Use `serialize()` for Server → Client data (never manual)
+- Use `withOrgContext()` for database operations (security)
+- Use npm scripts for migrations (never manual SQL)
+- Keep files <300 lines (extract early)
+- Use CSS variables only (never hard-coded colors)
+
+**Essential Guides:**
+- **`docs/development/CODE_STANDARDS.md`** - Detailed coding conventions
+- **`docs/architecture/SERIALIZATION.md`** - Decimal handling
+- **`docs/architecture/MULTI_TENANCY.md`** - Security & RLS
+- **`docs/architecture/COMPONENTS.md`** - Modular design patterns
+
+**Perfect Example:** `app/(dashboard)/jobs/_components/` - Modular component structure
+
+---
+
 ## Features
 
 - **Database multi-tenancy** with Row Level Security (RLS) for secure data isolation
@@ -37,15 +63,27 @@ A production-ready Next.js application for managing service businesses, with bui
    ```
 
 2. **Environment setup:**
-   Create a `.env.local` file in the project root:
+   Create a `.env` file in the project root:
    ```bash
-   # .env.local (git-ignored by default)
+   # .env
    DATABASE_URL="postgresql://username:password@localhost:5432/zenzone?schema=public"
    NEXTAUTH_URL="http://localhost:3000"
    NEXTAUTH_SECRET="your-secret-key-here"
+   
+   # Email (Optional - for sending estimates)
+   SMTP_HOST=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_USER=your-email@gmail.com
+   SMTP_PASSWORD=your-app-password
+   SMTP_FROM="Zen Zone Cleaning <noreply@zenzone.com>"
+   
+   # SMS (Optional - for sending estimates via text)
+   TWILIO_ACCOUNT_SID=your_account_sid
+   TWILIO_AUTH_TOKEN=your_auth_token
+   TWILIO_PHONE_NUMBER=+15551234567
    ```
    
-   > **Note:** Use `.env.local` for local development (automatically git-ignored). 
+   > **Note:** `.env` is git-ignored. Email/SMS are optional - app works without them. 
    > Never commit this file. For production, set environment variables in your hosting platform.
 
 3. **Database setup:**

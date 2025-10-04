@@ -1,3 +1,31 @@
+/**
+ * SERVICE AREAS PAGE
+ * Route: /service-areas
+ * 
+ * Purpose:
+ * - Define service coverage areas
+ * - Set pricing tiers by location
+ * - Manage geographic boundaries
+ * 
+ * Data Fetching:
+ * - Currently uses demo/placeholder data
+ * - Future: Will fetch service areas from database
+ * 
+ * Component:
+ * - Server component (static service areas display)
+ * 
+ * Features:
+ * - Add/edit service areas
+ * - Set radius or boundary for coverage
+ * - Define pricing adjustments per area
+ * - Enable/disable service areas
+ * 
+ * Notes:
+ * - Placeholder for future service area management
+ * - Shows mock ZIP codes and cities
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { MapPin, Plus, Check, X } from 'lucide-react';

@@ -1,7 +1,50 @@
+/**
+ * DASHBOARD (HOME) PAGE
+ * Route: /dashboard
+ * 
+ * Purpose:
+ * - Main overview/landing page after login
+ * - Shows key metrics and statistics
+ * - Displays recent activity and upcoming events
+ * 
+ * Data Fetching:
+ * - Jobs: Total count, active/completed breakdown
+ * - Clients: Total count
+ * - Estimates: Pending count and total value
+ * - Invoices: Unpaid/paid amounts, recent invoices
+ * - Visits: Upcoming visits (next 7 days)
+ * - Recent activity feed (jobs, estimates, invoices)
+ * 
+ * Component:
+ * - Server component (no client interactivity needed)
+ * 
+ * Business Logic:
+ * - Revenue calculations from paid invoices
+ * - Pending amount from unpaid invoices
+ * - Conversion rate from estimates to jobs
+ * 
+ * Notes:
+ * - Metrics cards show trends (increase/decrease)
+ * - Quick actions for common tasks
+ * - Theme-compliant design
+ * 
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This page is 550+ lines (exceeds 500 line limit for pages).
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * 
+ * Suggested refactor:
+ * - Extract UI to dashboard-client.tsx
+ * - Create _components/dashboard-stats.tsx
+ * - Create _components/dashboard-activity.tsx
+ * - Create _components/dashboard-quick-actions.tsx
+ * - Keep page.tsx under 100 lines (data fetching only)
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
 import Link from 'next/link';
+import { calculateFullPricing } from '@/lib/pricing-calculator';
 import { 
   TrendingUp, 
   TrendingDown,
@@ -64,7 +107,7 @@ export default async function DashboardPage() {
     visitsTomorrow,
     totalInvoices,
     paidInvoices,
-    pendingInvoicesAmount,
+    pendingInvoices,
     totalLeads,
     activeLeads,
     upcomingVisits,
@@ -122,23 +165,27 @@ export default async function DashboardPage() {
         status: 'PAID'
       }
     }),
-    // Pending invoices amount
-    prisma.invoice.aggregate({
+    // Pending invoices (with line items for calculation)
+    prisma.invoice.findMany({
       where: {
         orgId: selectedOrgId,
         status: { in: ['DRAFT', 'SENT'] }
       },
-      _sum: { total: true }
+      include: { lineItems: true }
     }),
     // Total leads
-    prisma.lead.count({
-      where: { orgId: selectedOrgId }
-    }),
-    // Active leads (not converted or lost)
-    prisma.lead.count({
+    prisma.client.count({
       where: { 
         orgId: selectedOrgId,
-        status: { notIn: ['CONVERTED', 'LOST'] }
+        clientStatus: 'LEAD'
+      }
+    }),
+    // Active leads (not converted or lost)
+    prisma.client.count({
+      where: { 
+        orgId: selectedOrgId,
+        clientStatus: 'LEAD',
+        leadStatus: { notIn: ['CONVERTED', 'LOST'] }
       }
     }),
     // Upcoming visits (next 7)
@@ -151,7 +198,7 @@ export default async function DashboardPage() {
       include: {
         job: {
           include: {
-            client: { select: { name: true } },
+            client: { select: { firstName: true, lastName: true, companyName: true } },
             property: { select: { address: true } }
           }
         }
@@ -163,16 +210,12 @@ export default async function DashboardPage() {
     prisma.invoice.findMany({
       where: { orgId: selectedOrgId },
       include: {
-        client: { select: { name: true } }
+        client: { select: { firstName: true, lastName: true, companyName: true } },
+        lineItems: true
       },
       orderBy: { createdAt: 'desc' },
       take: 3
-    }).then(invoices => invoices.map(inv => ({
-      ...inv,
-      subtotal: Number(inv.subtotal),
-      taxAmount: Number(inv.taxAmount),
-      total: Number(inv.total),
-    }))),
+    }),
     // Recent clients
     prisma.client.findMany({
       where: { orgId: selectedOrgId },
@@ -181,17 +224,17 @@ export default async function DashboardPage() {
     })
   ]);
 
-  // Calculate revenue (sum of paid invoices)
-  const revenueThisMonth = await prisma.invoice.aggregate({
+  // Calculate revenue (sum of paid invoices with line items)
+  const paidInvoicesThisMonth = await prisma.invoice.findMany({
     where: {
       orgId: selectedOrgId,
       status: 'PAID',
       paidAt: { gte: startOfMonth }
     },
-    _sum: { total: true }
+    include: { lineItems: true }
   });
 
-  const revenueLastMonth = await prisma.invoice.aggregate({
+  const paidInvoicesLastMonth = await prisma.invoice.findMany({
     where: {
       orgId: selectedOrgId,
       status: 'PAID',
@@ -200,11 +243,36 @@ export default async function DashboardPage() {
         lte: endOfLastMonth
       }
     },
-    _sum: { total: true }
+    include: { lineItems: true }
   });
 
-  const currentRevenue = Number(revenueThisMonth._sum.total || 0);
-  const lastRevenue = Number(revenueLastMonth._sum.total || 0);
+  // Calculate totals from line items
+  const revenueThisMonth = paidInvoicesThisMonth.reduce((sum, invoice) => {
+    const pricing = calculateFullPricing({
+      lineItems: invoice.lineItems.map(item => ({
+        quantity: Number(item.quantity) || 1,
+        unitPrice: Number(item.unitPrice) || 0,
+        total: Number(item.total) || 0,
+      })),
+      taxRate: Number(invoice.taxRate),
+    });
+    return sum + pricing.total;
+  }, 0);
+
+  const revenueLastMonth = paidInvoicesLastMonth.reduce((sum, invoice) => {
+    const pricing = calculateFullPricing({
+      lineItems: invoice.lineItems.map(item => ({
+        quantity: Number(item.quantity) || 1,
+        unitPrice: Number(item.unitPrice) || 0,
+        total: Number(item.total) || 0,
+      })),
+      taxRate: Number(invoice.taxRate),
+    });
+    return sum + pricing.total;
+  }, 0);
+
+  const currentRevenue = revenueThisMonth;
+  const lastRevenue = revenueLastMonth;
   const revenueChange = lastRevenue > 0 
     ? ((currentRevenue - lastRevenue) / lastRevenue * 100).toFixed(1)
     : '0';
@@ -333,7 +401,17 @@ export default async function DashboardPage() {
             <div>
               <p className="text-sm font-medium text-brand-danger">Pending Amount</p>
               <p className="text-3xl font-bold mt-2">
-                ${Number(pendingInvoicesAmount._sum.total || 0).toLocaleString('en-US', { minimumFractionDigits: 0 })}
+                ${pendingInvoices.reduce((sum, invoice) => {
+                  const pricing = calculateFullPricing({
+                    lineItems: invoice.lineItems.map(item => ({
+                      quantity: Number(item.quantity) || 1,
+                      unitPrice: Number(item.unitPrice) || 0,
+                      total: Number(item.total) || 0,
+                    })),
+                    taxRate: Number(invoice.taxRate),
+                  });
+                  return sum + pricing.total;
+                }, 0).toLocaleString('en-US', { minimumFractionDigits: 0 })}
               </p>
               <p className="text-xs mt-1">awaiting payment</p>
             </div>
@@ -377,7 +455,7 @@ export default async function DashboardPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium truncate">
-                          {visit.job.client.name} - {visit.job.title}
+                          {visit.job.client.name}{visit.job.title ? ` - ${visit.job.title}` : ''}
                         </p>
                         <p className="text-sm text-brand-text-tertiary truncate">
                           {visit.scheduledAt.toLocaleDateString('en-US', { 
@@ -462,33 +540,43 @@ export default async function DashboardPage() {
               Recent Activity
             </h3>
             <div className="space-y-4">
-              {recentInvoices.slice(0, 2).map((invoice) => (
-                <Link 
-                  key={invoice.id}
-                  href={`/invoices/${invoice.id}`}
-                  className="flex items-start space-x-3 hover:bg-brand-bg-secondary p-2 rounded-lg transition-colors -m-2"
-                >
-                  <div className={`p-1.5 rounded ${
-                    invoice.status === 'PAID' ? 'bg-green-100 dark:bg-green-900/30' :
-                    invoice.status === 'SENT' ? 'bg-brand-bg-tertiary' :
-                    'bg-brand-bg-secondary'
-                  }`}>
-                    <Receipt className={`h-4 w-4 ${
-                      invoice.status === 'PAID' ? 'text-green-600 dark:text-green-400' :
-                      invoice.status === 'SENT' ? 'text-brand' :
-                      'text-brand-text-tertiary'
-                    }`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">
-                      Invoice {invoice.status === 'PAID' ? 'paid' : invoice.status.toLowerCase()}
-                    </p>
-                    <p className="text-xs text-brand-text-tertiary truncate">
-                      {invoice.client.name} - ${Number(invoice.total).toFixed(2)}
-                    </p>
-                  </div>
-                </Link>
-              ))}
+              {recentInvoices.slice(0, 2).map((invoice) => {
+                const pricing = calculateFullPricing({
+                  lineItems: invoice.lineItems.map(item => ({
+                    quantity: Number(item.quantity) || 1,
+                    unitPrice: Number(item.unitPrice) || 0,
+                    total: Number(item.total) || 0,
+                  })),
+                  taxRate: Number(invoice.taxRate),
+                });
+                return (
+                  <Link 
+                    key={invoice.id}
+                    href={`/invoices/${invoice.id}`}
+                    className="flex items-start space-x-3 hover:bg-brand-bg-secondary p-2 rounded-lg transition-colors -m-2"
+                  >
+                    <div className={`p-1.5 rounded ${
+                      invoice.status === 'PAID' ? 'bg-green-100 dark:bg-green-900/30' :
+                      invoice.status === 'SENT' ? 'bg-brand-bg-tertiary' :
+                      'bg-brand-bg-secondary'
+                    }`}>
+                      <Receipt className={`h-4 w-4 ${
+                        invoice.status === 'PAID' ? 'text-green-600 dark:text-green-400' :
+                        invoice.status === 'SENT' ? 'text-brand' :
+                        'text-brand-text-tertiary'
+                      }`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        Invoice {invoice.status === 'PAID' ? 'paid' : invoice.status.toLowerCase()}
+                      </p>
+                      <p className="text-xs text-brand-text-tertiary truncate">
+                        {invoice.client.name} - ${pricing.total.toFixed(2)}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
               
               {recentClients.slice(0, 2).map((client) => (
                 <Link 

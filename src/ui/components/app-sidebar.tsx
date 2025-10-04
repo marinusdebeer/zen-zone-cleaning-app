@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
-  UserPlus,
   FileText,
   Briefcase,
   Receipt,
@@ -41,14 +40,14 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
       icon: LayoutDashboard,
     },
     {
-      label: 'Leads',
-      href: '/leads',
-      icon: UserPlus,
-    },
-    {
       label: 'Clients',
       href: '/clients',
       icon: Users,
+    },
+    {
+      label: 'Requests',
+      href: '/requests',
+      icon: FileText,
     },
     {
       label: 'Estimates',
@@ -117,7 +116,7 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
       {/* Mobile overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden cursor-pointer"
           onClick={onClose}
         />
       )}
@@ -136,7 +135,7 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
         <div className="lg:hidden p-4 flex justify-end">
           <button
             onClick={onClose}
-            className="p-2 rounded-md hover:bg-brand-accent transition-colors"
+            className="p-2 rounded-md hover:bg-brand-accent transition-colors cursor-pointer"
           >
             <X className="h-5 w-5 text-gray-700 dark:text-gray-300" />
           </button>
@@ -162,7 +161,7 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
           <div className="hidden lg:flex items-center justify-end h-16 px-4 border-b border-white/10">
             <button
               onClick={toggleCollapse}
-              className="p-2 rounded-md hover:bg-brand-accent transition-colors"
+              className="p-2 rounded-md hover:bg-brand-accent transition-colors cursor-pointer"
               title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
               {isCollapsed ? (

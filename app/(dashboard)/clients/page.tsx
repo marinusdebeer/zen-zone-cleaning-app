@@ -1,7 +1,32 @@
+/**
+ * CLIENTS LIST PAGE
+ * Route: /clients
+ * 
+ * Purpose:
+ * - Displays all clients for the selected organization
+ * - Shows contact info, properties, and job counts
+ * - Supports search and filtering
+ * 
+ * Data Fetching:
+ * - Fetches all clients with properties relation
+ * - Includes job and invoice counts via _count
+ * - Orders by name alphabetically
+ * 
+ * Component:
+ * - Renders ClientsPageClient (client component with search)
+ * 
+ * Notes:
+ * - Email/phone stored as JSON arrays
+ * - Table rows clickable (navigate to client detail)
+ * - Shows property count per client
+ * - Theme-compliant design
+ */
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
 import { ClientsPageClient } from "./clients-page-client";
+import { serialize } from "@/lib/serialization";
 
 export default async function ClientsPage() {
   const session = await auth();
@@ -26,11 +51,6 @@ export default async function ClientsPage() {
           jobs: true,
           invoices: true,
           estimates: true,
-        }
-      },
-      convertedFromLead: {
-        select: {
-          source: true,
         }
       }
     },
@@ -61,9 +81,12 @@ export default async function ClientsPage() {
     })
   ]);
 
+  // Serialize clients for client component
+  const serializedClients = serialize(clients);
+
   return (
     <ClientsPageClient 
-      clients={clients} 
+      clients={serializedClients} 
       stats={{
         total: totalClients,
         newThisMonth: newClientsThisMonth,

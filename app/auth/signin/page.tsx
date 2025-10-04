@@ -1,17 +1,28 @@
 'use client';
 
 import { signIn, getSession } from 'next-auth/react';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, AlertCircle, Loader2 } from 'lucide-react';
 
-export default function SignIn() {
+function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Check for error in URL params (e.g., from invalid org redirect)
+  useEffect(() => {
+    const urlError = searchParams.get('error');
+    if (urlError === 'OrgNotFound') {
+      setError('Your organization no longer exists. Please sign in again.');
+    } else if (urlError === 'SessionInvalid') {
+      setError('Your session is invalid. This can happen after a database reset or if you were removed from the organization. Please sign in again.');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -169,5 +180,17 @@ export default function SignIn() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={
+      <div className="admin-layout min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }

@@ -1,3 +1,29 @@
+/**
+ * AUTHENTICATION CONFIGURATION
+ * 
+ * Purpose:
+ * NextAuth configuration for user authentication and session management.
+ * 
+ * Features:
+ * - Credentials-based login (email/password)
+ * - JWT session strategy
+ * - Multi-organization support
+ * - Auto-selects organization if user has only one
+ * - Stores all user orgs in session for switching
+ * 
+ * Session Data:
+ * - user: User info (id, email, name, isSuperAdmin)
+ * - selectedOrgId: Currently active organization
+ * - selectedOrgSlug: URL slug of active org
+ * - userRole: Role in active org
+ * - userOrgs: All organizations user belongs to
+ * 
+ * Security:
+ * - Passwords hashed with bcrypt
+ * - JWT tokens for sessions
+ * - Organization access validated via membership
+ */
+
 import { AuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -114,5 +140,10 @@ export const authConfig = {
   },
   session: {
     strategy: "jwt" as const,
+    maxAge: 7 * 24 * 60 * 60, // 7 days (in seconds)
+    updateAge: 12 * 60 * 60, // Update/refresh session every 12 hours
+  },
+  jwt: {
+    maxAge: 7 * 24 * 60 * 60, // 7 days (must match session.maxAge)
   },
 } as AuthOptions;

@@ -1,3 +1,16 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 548+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - Organization settings form component
+ * - Services management component
+ * - Tab navigation component
+ * - Settings form sections (billing, notifications, etc.)
+ */
+
 'use client';
 
 import { useState } from 'react';
@@ -81,7 +94,7 @@ export function SettingsClient({ organization, user }: SettingsClientProps) {
     organization?.settings?.services || [
       { name: 'Standard Cleaning', defaultPrice: 100 },
       { name: 'Deep Cleaning', defaultPrice: 200 },
-      { name: 'Move In/Out Cleaning', defaultPrice: 300 },
+      { name: 'Move In/Out Cleaning', defaultPrice:500},
     ]
   );
 

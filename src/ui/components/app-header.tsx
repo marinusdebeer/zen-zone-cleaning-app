@@ -1,3 +1,17 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * This file is 573+ lines and should be refactored into smaller components.
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * Target: <300 lines per component
+ * 
+ * Suggested extractions:
+ * - Search bar component
+ * - User menu dropdown component
+ * - Notifications dropdown component
+ * - Organization switcher component
+ * - Search results component
+ */
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -107,7 +121,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <div className="flex items-center">
             <button
               onClick={onMenuClick}
-              className="p-2 rounded-md lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-2 rounded-md lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
             >
               <Menu className="h-6 w-6 text-gray-700 dark:text-white" />
             </button>
@@ -170,8 +184,17 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                             }}
                             className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                           >
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">{client.name}</p>
-                            {emails[0] && <p className="text-xs text-gray-500 dark:text-gray-400">{emails[0]}</p>}
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-sm font-medium text-gray-900 dark:text-white">{client.name}</p>
+                                {emails[0] && <p className="text-xs text-gray-500 dark:text-gray-400">{emails[0]}</p>}
+                              </div>
+                              {client.clientStatus === 'LEAD' && (
+                                <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded text-xs">
+                                  Lead
+                                </span>
+                              )}
+                            </div>
                           </Link>
                         );
                       })}
@@ -179,28 +202,28 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   </div>
                 )}
 
-                {/* Leads */}
-                {searchResults.leads.length > 0 && (
+                {/* Requests */}
+                {searchResults.requests?.length > 0 && (
                   <div className="border-b border-gray-200 dark:border-gray-700">
                     <div className="px-4 py-2 bg-gray-50 dark:bg-gray-700">
                       <h3 className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase flex items-center">
-                        <UserPlus className="w-4 h-4 mr-2" />
-                        Leads ({searchResults.leads.length})
+                        <FileText className="w-4 h-4 mr-2" />
+                        Requests ({searchResults.requests.length})
                       </h3>
                     </div>
                     <div>
-                      {searchResults.leads.map((lead: any) => (
+                      {searchResults.requests.map((request: any) => (
                         <Link
-                          key={lead.id}
-                          href={`/leads`}
+                          key={request.id}
+                          href={`/requests/${request.id}`}
                           onClick={() => {
                             setShowSearchResults(false);
                             setSearchQuery('');
                           }}
                           className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">{lead.name}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">Status: {lead.status}</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-white">{request.title}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{request.client.name}</p>
                         </Link>
                       ))}
                     </div>
@@ -227,7 +250,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                           }}
                           className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">{job.title}</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-white">{job.title || job.client.name}</p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">{job.client.name}</p>
                         </Link>
                       ))}
@@ -289,7 +312,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                             {invoice.client.name} - ${invoice.total.toFixed(2)}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {invoice.status} {invoice.job?.title ? `• ${invoice.job.title}` : ''}
+                            {invoice.status}{invoice.job ? ` • ${invoice.job.title || invoice.job.client.name}` : ''}
                           </p>
                         </Link>
                       ))}
@@ -361,10 +384,10 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                 {/* No Results */}
                 {searchResults && 
                   !searchResults.clients.length && 
+                  !searchResults.requests?.length &&
+                  !searchResults.estimates.length &&
                   !searchResults.jobs.length && 
                   !searchResults.invoices.length && 
-                  !searchResults.estimates.length && 
-                  !searchResults.leads.length && 
                   !searchResults.properties.length && 
                   !searchResults.payments?.length && (
                   <div className="px-4 py-8 text-center">
@@ -389,7 +412,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                 e.stopPropagation();
                 toggleTheme();
               }}
-              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
               {theme === 'light' ? (
@@ -411,7 +434,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
             )}
 
             {/* Mobile Search */}
-            <button className="p-2 rounded-md md:hidden hover:bg-gray-100 dark:hover:bg-gray-700">
+            <button className="p-2 rounded-md md:hidden hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
               <Search className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>
 
@@ -424,7 +447,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowMessages(false);
                   setShowUserMenu(false);
                 }}
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative"
+                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative cursor-pointer"
               >
                 <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 {unreadNotifications > 0 && (
@@ -470,7 +493,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowNotifications(false);
                   setShowUserMenu(false);
                 }}
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative"
+                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative cursor-pointer"
               >
                 <MessageSquare className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                 {unreadMessages > 0 && (
@@ -524,7 +547,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowNotifications(false);
                   setShowMessages(false);
                 }}
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
               >
                 <div className="w-8 h-8 bg-brand rounded-full flex items-center justify-center text-white text-sm font-medium">
                   {session?.user?.name?.charAt(0).toUpperCase() || 'U'}

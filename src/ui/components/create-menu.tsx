@@ -1,3 +1,13 @@
+/**
+ * ⚠️ MODULAR DESIGN REMINDER
+ * Keep this file under500lines. Extract components early!
+ * See docs/MODULAR_DESIGN.md for guidelines.
+ * 
+ * Suggested extractions when needed:
+ * - Menu item component
+ * - Menu items data/config to constants
+ */
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,7 +15,6 @@ import {
   Plus,
   X,
   Users,
-  UserPlus,
   Briefcase,
   FileText,
   Receipt,
@@ -32,24 +41,17 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
 
   const createOptions = [
     {
-      label: 'New Job',
-      description: 'Schedule a cleaning job',
-      icon: Briefcase,
-      href: '/jobs/new',
-      color: 'from-brand to-brand-dark',
-    },
-    {
-      label: 'New Lead',
-      description: 'Capture a potential client',
-      icon: UserPlus,
-      href: '/leads?action=create',
-      color: 'from-brand to-brand-dark',
-    },
-    {
       label: 'New Client',
-      description: 'Add a client to your database',
+      description: 'Add a client or lead',
       icon: Users,
       href: '/clients?action=create',
+      color: 'from-brand to-brand-dark',
+    },
+    {
+      label: 'New Request',
+      description: 'Capture a service inquiry',
+      icon: FileText,
+      href: '/requests/new',
       color: 'from-brand to-brand-dark',
     },
     {
@@ -57,6 +59,13 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
       description: 'Create a quote for services',
       icon: FileText,
       href: '/estimates/new',
+      color: 'from-brand to-brand-dark',
+    },
+    {
+      label: 'New Job',
+      description: 'Schedule a cleaning job',
+      icon: Briefcase,
+      href: '/jobs/new',
       color: 'from-brand to-brand-dark',
     },
     {
@@ -82,14 +91,14 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
           e.stopPropagation();
           setShowMenu(!showMenu);
         }}
-        className={`p-3 rounded-full transition-all shadow-md ${
+        className={`p-2 rounded-lg transition-all cursor-pointer ${
           showMenu 
-            ? 'bg-gray-700 text-white rotate-45' 
-            : 'bg-brand text-white hover:bg-brand-dark'
+            ? 'bg-brand-dark text-white rotate-45 scale-95' 
+            : 'bg-brand text-white hover:bg-brand-dark hover:scale-105 hover:shadow-lg'
         }`}
         title="Create new..."
       >
-        <Plus className="w-6 h-6" />
+        <Plus className="w-5 h-5" />
       </button>
 
       {showMenu && (
@@ -98,7 +107,7 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Create New</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">What would you like to create?</p>
           </div>
-          <div className="p-2 max-h-96 overflow-y-auto">
+          <div className="p-2">
             {createOptions.map((option) => {
               const Icon = option.icon;
               return (

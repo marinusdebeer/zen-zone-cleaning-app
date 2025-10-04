@@ -1,3 +1,19 @@
+/**
+ * DATABASE CLIENT
+ * 
+ * Purpose:
+ * Singleton Prisma client instance for database access.
+ * 
+ * Features:
+ * - Reuses client in development (prevents connection exhaustion)
+ * - Creates new client in production
+ * - Enables query logging in development
+ * 
+ * Usage:
+ * import { prisma } from '@/server/db';
+ * await prisma.model.findMany();
+ */
+
 import { PrismaClient } from '@/generated/prisma';
 
 declare global {

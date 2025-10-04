@@ -1,140 +1,73 @@
-# 📚 Zen Zone Cleaning - Documentation
+# Documentation Index
 
-Complete documentation for your multi-tenant cleaning business management platform.
+Clean, organized documentation for the Zen Zone Cleaning application.
 
-## 🚀 Quick Start
+## ⚡ Best Practices (Start Here!)
 
-- **[HOW_TO_RUN.md](./HOW_TO_RUN.md)** - Starting and stopping the app
+- **[BEST PRACTICES](/docs/BEST_PRACTICES.md)** ← Read this first for secure, maintainable code
 
-## 👤 User Management
+Key rules:
+- Use `serialize()` for Server → Client data
+- Use `withOrgContext()` for database operations
+- Use npm scripts for migrations
+- Keep files under 300 lines
+- Never hard-code colors
 
-- **[USER_ACCOUNTS.md](./USER_ACCOUNTS.md)** - Login credentials, password reset, account settings
-- **[EMAIL_SETUP.md](./EMAIL_SETUP.md)** ⭐ **NEW** - Email configuration for password resets and notifications
+## 🚀 Getting Started
 
-## 🏢 Multi-Tenancy
+- [How to Run](/docs/HOW_TO_RUN.md) - Setup and run the application
 
-- **[MULTI_TENANCY.md](./MULTI_TENANCY.md)** - How multi-tenant architecture works
-- **[ADDING_BUSINESSES.md](./ADDING_BUSINESSES.md)** - How to add new organizations
+## 🏗️ Architecture
 
-## 🛡️ Admin Dashboard
+Core system design and patterns.
 
-- **[ADMIN_GUIDE.md](./ADMIN_GUIDE.md)** - Super admin dashboard and tenant management
+- [Database](/docs/architecture/DATABASE.md) - Schema, multi-tenancy, data flow
+- [Components](/docs/architecture/COMPONENTS.md) - Modular design patterns
+- [Authentication](/docs/architecture/AUTHENTICATION.md) - User accounts & roles
+- [Multi-Tenancy](/docs/architecture/MULTI_TENANCY.md) - Organization isolation
+- [Serialization](/docs/architecture/SERIALIZATION.md) - Decimal serialization best practices
+- [Theming](/docs/architecture/THEMING_GUIDE.md) - CSS variables and theming
 
-## 💼 Business Workflow
+## 📋 Workflow
 
-- **[BUSINESS_WORKFLOW.md](./BUSINESS_WORKFLOW.md)** - Complete lead → payment workflow
-- **[NAVIGATION_FLOW.md](./NAVIGATION_FLOW.md)** - How to navigate between related entities
+- [Business Workflow](/docs/WORKFLOW.md) - Request → Estimate → Job → Invoice flow
+- [Unified Forms](/docs/UNIFIED_FORMS.md) - Standardized create/edit patterns
+- [Conversion Flows](/docs/CONVERSION_FLOWS.md) - How to convert between entities
 
-## 📅 Calendar System
+## ✨ Features
 
-- **[CALENDAR_FEATURES.md](./CALENDAR_FEATURES.md)** - Advanced calendar features
-- **[CALENDAR_USAGE.md](./CALENDAR_USAGE.md)** - How to use the calendar
-- **[DRAG_TO_CREATE_GUIDE.md](./DRAG_TO_CREATE_GUIDE.md)** - Drag-to-create jobs feature
+How each feature works.
 
-## 📊 Test Data
+- [Clients](/docs/features/CLIENTS.md) - Client lifecycle (Lead → Active)
+- [Requests](/docs/features/REQUESTS.md) - Customer service requests
+- [Estimates](/docs/features/ESTIMATES.md) - Quotes and proposals
+- [Jobs](/docs/features/JOBS.md) - Scheduled work
+- [Invoices](/docs/features/INVOICES.md) - Billing and payments
+- [Job Scheduling](/docs/features/JOB_SCHEDULING.md) - Recurring patterns and visits
+- [Calendar](/docs/features/CALENDAR.md) - Calendar interface
+- [Email](/docs/features/EMAIL.md) - Email configuration
 
-- **[TEST_DATA.md](./TEST_DATA.md)** - Overview of seed data and relationships
+## 👨‍💻 Development
 
-## 🔐 Login Credentials
+For developers.
 
-### Super Admin (Platform Manager)
-```
-Email: marinusdebeer@gmail.com
-Password: password123
-Access: /admin
-```
+- [Code Standards](/docs/development/CODE_STANDARDS.md) - Coding conventions
+- [Deployment](/docs/DEPLOYMENT.md) - Production deployment guide
 
-**Can do:**
-- ✅ Manage all organizations
-- ✅ View system-wide stats
-- ✅ Add new tenants
-- ✅ Manage all users
+## 🔧 Admin
 
-### Zen Zone Cleaning Admin
-```
-Email: admin@zenzonecleaning.com
-Password: password123
-Access: /dashboard
-```
+For administrators.
 
-**Can do:**
-- ✅ Manage Zen Zone Cleaning organization
-- ✅ View clients, jobs, invoices
-- ✅ Use calendar and all features
-- ❌ Cannot see other organizations
+- [Admin Guide](/docs/admin/ADMIN_GUIDE.md) - Admin features and setup
+- [Adding Organizations](/docs/admin/ADDING_ORGANIZATIONS.md) - Create new organizations
+- [Test Data](/docs/admin/TEST_DATA.md) - Seed data reference
 
-## 📖 Documentation Structure
+## 📦 Component READMEs
 
-```
-/docs/
-  ├── README.md (this file)
-  │
-  ├── Getting Started
-  │   ├── HOW_TO_RUN.md
-  │   └── USER_ACCOUNTS.md
-  │
-  ├── Platform Architecture
-  │   ├── MULTI_TENANCY.md
-  │   ├── BUSINESS_WORKFLOW.md
-  │   └── ADDING_BUSINESSES.md
-  │
-  ├── Admin Features
-  │   └── ADMIN_GUIDE.md
-  │
-  ├── User Features
-  │   ├── CALENDAR_FEATURES.md
-  │   ├── CALENDAR_USAGE.md
-  │   ├── DRAG_TO_CREATE_GUIDE.md
-  │   └── NAVIGATION_FLOW.md
-  │
-  └── Reference
-      └── TEST_DATA.md
-```
+- [Job Components](/app/(dashboard)/jobs/_components/README.md)
+- [Estimate Components](/app/(dashboard)/estimates/_components/README.md)
+- [Migrations](/prisma/migrations/README.md)
 
-## 🎯 Common Tasks
+## 📚 Archive
 
-### Starting Development
-```bash
-npm run dev
-# Visit: http://localhost:3000
-```
-
-### Resetting Database
-```bash
-npx prisma db push --force-reset
-npm run seed
-```
-
-### Adding Test Data
-```bash
-npm run seed
-```
-
-### Building for Production
-```bash
-npm run build
-npm start
-```
-
-## 🆘 Need Help?
-
-1. Check the relevant guide in `/docs`
-2. Review `README.md` in project root
-3. Check console for error messages
-4. Verify environment variables are set
-
-## 🔄 Quick Reference
-
-| Task | Command |
-|------|---------|
-| Start dev | `npm run dev` |
-| Build | `npm run build` |
-| Seed database | `npm run seed` |
-| Generate Prisma | `npx prisma generate` |
-| Push schema | `npx prisma db push` |
-| Reset database | `npx prisma db push --force-reset` |
-| Stop server | `Ctrl + C` or `lsof -ti:3000 \| xargs kill -9` |
-
----
-
-**Happy building! 🎉**
+Historical documentation (migrations, upgrade guides) in `/docs/archive/`.
