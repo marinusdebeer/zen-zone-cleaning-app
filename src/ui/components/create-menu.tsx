@@ -91,18 +91,19 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
           e.stopPropagation();
           setShowMenu(!showMenu);
         }}
-        className={`p-2 rounded-lg transition-all cursor-pointer ${
+        className={`p-0.5 sm:p-3 rounded-lg transition-all cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation ${
           showMenu 
-            ? 'bg-brand-dark text-white rotate-45 scale-95' 
-            : 'bg-brand text-white hover:bg-brand-dark hover:scale-105 hover:shadow-lg'
+            ? 'bg-brand-dark text-white rotate-45 scale-90 xs:scale-95 active:scale-85' 
+            : 'bg-brand text-white hover:bg-brand-dark active:bg-brand-dark sm:hover:scale-105 sm:hover:shadow-lg active:scale-95'
         }`}
         title="Create new..."
+        aria-label="Create new"
       >
-        <Plus className="w-5 h-5" />
+        <Plus className="w-8 h-8 sm:w-5 sm:h-5" />
       </button>
 
       {showMenu && (
-        <div className="absolute top-full right-0 mt-2 w-80 bg-brand-bg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50">
+        <div className="fixed left-1/2 -translate-x-1/2 mt-2 w-[calc(100vw-1rem)] max-w-sm sm:absolute sm:left-auto sm:right-0 sm:translate-x-0 sm:w-80 bg-brand-bg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 z-50" style={{ top: 'var(--header-height, 64px)' }}>
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Create New</h3>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">What would you like to create?</p>
@@ -115,16 +116,16 @@ export function CreateMenu({ onJobCreate }: CreateMenuProps) {
                   key={option.label}
                   href={option.href}
                   onClick={() => setShowMenu(false)}
-                  className="flex items-start p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
+                  className="flex items-start p-3 sm:p-3.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-600 transition-colors group min-h-[56px] touch-manipulation"
                 >
                   <div className={`p-2 rounded-lg bg-gradient-to-br ${option.color} flex-shrink-0`}>
                     <Icon className="w-5 h-5 text-white" />
                   </div>
-                  <div className="ml-3 flex-1">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-brand">
+                  <div className="ml-3 flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-brand truncate">
                       {option.label}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{option.description}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{option.description}</p>
                   </div>
                 </Link>
               );

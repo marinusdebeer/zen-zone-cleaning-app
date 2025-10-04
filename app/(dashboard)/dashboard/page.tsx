@@ -289,7 +289,8 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Mobile Optimized Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
         {/* Revenue Card */}
         <div className="bg-brand-bg border border-brand-border rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-l-brand">
           <div className="flex items-center justify-between">
@@ -373,8 +374,8 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Secondary Stats Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      {/* Secondary Stats Row - Mobile Optimized */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="rounded-xl p-6 border" style={{ background: 'linear-gradient(to bottom right, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05))', borderColor: 'var(--tenant-warning)' }}>
           <div className="flex items-center justify-between">
             <div>

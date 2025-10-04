@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -32,6 +32,19 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
   const pathname = usePathname();
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const { isCollapsed, toggleCollapse } = useSidebar();
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isOpen && window.innerWidth < 1024) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const menuItems = [
     {
@@ -113,10 +126,10 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
 
   return (
     <>
-      {/* Mobile overlay */}
+      {/* Mobile overlay - subtle darkening with blur */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden cursor-pointer"
+          className="fixed inset-0 bg-black/10 backdrop-blur-[2px] z-20 lg:hidden"
           onClick={onClose}
         />
       )}
@@ -183,6 +196,12 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={() => {
+                      // Close sidebar on mobile when item is clicked
+                      if (window.innerWidth < 1024 && onClose) {
+                        onClose();
+                      }
+                    }}
                     className={`
                       flex items-center rounded-lg
                       transition-all duration-200
@@ -214,6 +233,12 @@ export function AppSidebar({ isOpen = true, onClose }: AppSidebarProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={() => {
+                      // Close sidebar on mobile when item is clicked
+                      if (window.innerWidth < 1024 && onClose) {
+                        onClose();
+                      }
+                    }}
                     className={`
                       flex items-center rounded-lg
                       transition-all duration-200

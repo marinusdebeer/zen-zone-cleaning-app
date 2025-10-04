@@ -116,25 +116,27 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
 
   return (
     <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 transition-colors">
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Left side - Logo and Company Name */}
-          <div className="flex items-center">
+      <div className="px-2 xs:px-3 sm:px-4 lg:px-8">
+        <div className="flex items-center justify-between h-14 xs:h-[60px] sm:h-16">
+          {/* Left side - Logo and Company Name (Mobile Optimized) */}
+          <div className="flex items-center min-w-0">
             <button
               onClick={onMenuClick}
-              className="p-2 rounded-md lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+              className="p-0.5 sm:p-3 rounded-md lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 cursor-pointer touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-label="Open menu"
             >
-              <Menu className="h-6 w-6 text-gray-700 dark:text-white" />
+              <Menu className="h-8 w-8 sm:h-5 sm:w-5 text-gray-700 dark:text-white" />
             </button>
             
-            <div className="flex items-center ml-2 lg:ml-0">
+            <div className="flex items-center ml-1 xs:ml-2 lg:ml-0 min-w-0">
               {/* Logo */}
-              <div className="bg-gradient-to-br from-brand to-brand-dark w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+              <div className="bg-gradient-to-br from-brand to-brand-dark w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm xs:text-base sm:text-lg flex-shrink-0">
                 ZZ
               </div>
-              <div className="ml-3">
-                <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Zen Zone Cleaning</h1>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Service Management System</p>
+              {/* Hide company name on very small screens */}
+              <div className="ml-2 xs:ml-2.5 sm:ml-3 hidden xs:block min-w-0">
+                <h1 className="text-sm xs:text-base sm:text-xl font-semibold text-gray-900 dark:text-white truncate leading-tight">Zen Zone Cleaning</h1>
+                <p className="text-[10px] xs:text-xs text-gray-600 dark:text-gray-400 hidden sm:block leading-tight">Service Management System</p>
               </div>
             </div>
           </div>
@@ -401,20 +403,21 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
             )}
           </div>
 
-          {/* Right side - Notifications, Messages, User */}
-          <div className="flex items-center space-x-4">
-            {/* Create Menu */}
+          {/* Right side - Notifications, Messages, User (Mobile Optimized) */}
+          <div className="flex items-center gap-1 xs:gap-1.5 sm:gap-2 md:gap-3">
+            {/* Create Menu - Always visible */}
             <CreateMenu />
 
-            {/* Theme Toggle */}
+            {/* Theme Toggle - Hide on mobile */}
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 toggleTheme();
               }}
-              className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+              className="p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer hidden md:flex items-center justify-center min-h-[44px] min-w-[44px] touch-manipulation"
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
               {theme === 'light' ? (
                 <Moon className="h-5 w-5 text-gray-600" />
@@ -423,23 +426,19 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
               )}
             </button>
 
-            {/* Admin Link (Super Admin Only) */}
+            {/* Admin Link (Super Admin Only) - Icon only on mobile */}
             {isSuperAdmin && (
               <Link
                 href="/admin"
-                className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-brand to-brand-dark text-white rounded-lg hover:from-brand hover:to-brand-dark transition-all text-sm font-medium shadow-lg"
+                className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-brand to-brand-dark text-white rounded-lg hover:from-brand hover:to-brand-dark transition-all text-sm font-medium shadow-lg min-h-[44px] touch-manipulation"
+                aria-label="Admin panel"
               >
-                <Shield className="w-4 h-4" />
+                <Shield className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
                 <span className="hidden md:inline">Admin</span>
               </Link>
             )}
 
-            {/* Mobile Search */}
-            <button className="p-2 rounded-md md:hidden hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
-              <Search className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-            </button>
-
-            {/* Notifications */}
+            {/* Notifications - Always visible, mobile optimized */}
             <div className="relative">
               <button
                 onClick={(e) => {
@@ -448,17 +447,18 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowMessages(false);
                   setShowUserMenu(false);
                 }}
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative cursor-pointer"
+                className="p-0.5 sm:p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 relative cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
+                aria-label="Notifications"
               >
-                <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <Bell className="h-8 w-8 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
                 {unreadNotifications > 0 && (
-                  <span className="absolute top-1 right-1 h-2 w-2 bg-brand rounded-full"></span>
+                  <span className="absolute top-1 right-1 h-2 w-2 xs:h-2.5 xs:w-2.5 bg-brand rounded-full ring-2 ring-white dark:ring-gray-900"></span>
                 )}
               </button>
 
-              {/* Notifications Dropdown */}
+              {/* Notifications Dropdown - Mobile optimized width */}
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                <div className="fixed left-1/2 -translate-x-1/2 mt-2 w-[calc(100vw-1rem)] max-w-sm sm:absolute sm:left-auto sm:right-0 sm:translate-x-0 sm:w-80 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50" style={{ top: 'var(--header-height, 64px)' }}>
                   <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</h3>
                   </div>
@@ -485,7 +485,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
               )}
             </div>
 
-            {/* Messages */}
+            {/* Messages - Always visible, mobile optimized */}
             <div className="relative">
               <button
                 onClick={(e) => {
@@ -494,17 +494,18 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowNotifications(false);
                   setShowUserMenu(false);
                 }}
-                className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 relative cursor-pointer"
+                className="p-0.5 sm:p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 relative cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
+                aria-label="Messages"
               >
-                <MessageSquare className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+                <MessageSquare className="h-8 w-8 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
                 {unreadMessages > 0 && (
-                  <span className="absolute top-1 right-1 h-2 w-2 bg-brand rounded-full"></span>
+                  <span className="absolute top-1 right-1 h-2 w-2 xs:h-2.5 xs:w-2.5 bg-brand rounded-full ring-2 ring-white dark:ring-gray-900"></span>
                 )}
               </button>
 
-              {/* Messages Dropdown */}
+              {/* Messages Dropdown - Mobile optimized width */}
               {showMessages && (
-                <div className="absolute right-0 mt-2 w-80 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                <div className="fixed left-1/2 -translate-x-1/2 mt-2 w-[calc(100vw-1rem)] max-w-sm sm:absolute sm:left-auto sm:right-0 sm:translate-x-0 sm:w-80 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50" style={{ top: 'var(--header-height, 64px)' }}>
                   <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Client Messages</h3>
                   </div>
@@ -539,7 +540,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
               )}
             </div>
 
-            {/* User Menu */}
+            {/* User Menu - Mobile Optimized */}
             <div className="relative">
               <button
                 onClick={(e) => {
@@ -548,17 +549,18 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   setShowNotifications(false);
                   setShowMessages(false);
                 }}
-                className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                className="flex items-center gap-1 sm:gap-2 p-0.5 sm:p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 cursor-pointer min-h-[44px] touch-manipulation"
+                aria-label="User menu"
               >
-                <div className="w-8 h-8 bg-brand rounded-full flex items-center justify-center text-white text-sm font-medium">
+                <div className="w-11 h-11 sm:w-8 sm:h-8 bg-brand rounded-full flex items-center justify-center text-white text-xl sm:text-sm font-medium flex-shrink-0">
                   {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
                 </div>
-                <ChevronDown className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                <ChevronDown className="h-4 w-4 text-gray-600 dark:text-gray-300 hidden sm:block" />
               </button>
 
-              {/* User Dropdown */}
+              {/* User Dropdown - Mobile Optimized */}
               {showUserMenu && (
-                <div className="absolute right-0 mt-2 w-56 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                <div className="fixed left-1/2 -translate-x-1/2 mt-2 w-[calc(100vw-1rem)] max-w-xs sm:absolute sm:left-auto sm:right-0 sm:translate-x-0 sm:w-56 bg-brand-bg rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50" style={{ top: 'var(--header-height, 64px)' }}>
                   <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{session?.user?.name}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{session?.user?.email}</p>
@@ -566,23 +568,23 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                   <div className="py-2">
                     <a
                       href="/profile"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 min-h-[44px] touch-manipulation"
                     >
-                      <User className="h-4 w-4 mr-3" />
+                      <User className="h-4 w-4 mr-3 flex-shrink-0" />
                       Profile
                     </a>
                     <a
                       href="/settings"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 min-h-[44px] touch-manipulation"
                     >
-                      <Settings className="h-4 w-4 mr-3" />
+                      <Settings className="h-4 w-4 mr-3 flex-shrink-0" />
                       Settings
                     </a>
                     <button
                       onClick={() => signOut()}
-                      className="w-full flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="w-full flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 min-h-[44px] touch-manipulation"
                     >
-                      <LogOut className="h-4 w-4 mr-3" />
+                      <LogOut className="h-4 w-4 mr-3 flex-shrink-0" />
                       Sign out
                     </button>
                   </div>

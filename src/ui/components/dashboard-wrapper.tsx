@@ -32,8 +32,8 @@ export function DashboardWrapper({ children }: DashboardWrapperProps) {
         {/* Header */}
         <AppHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
-        {/* Page content */}
-        <main className="flex-1 px-6 py-6 bg-brand-bg-secondary">
+        {/* Page content - Mobile optimized spacing */}
+        <main className="flex-1 px-4 py-4 sm:px-6 sm:py-6 bg-brand-bg-secondary">
           {children}
         </main>
       </div>

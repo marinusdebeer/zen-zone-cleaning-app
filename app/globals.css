@@ -8,6 +8,7 @@
 @variant dark (&:is(.dark *));
 
 @theme {
+  --breakpoint-xs: 475px;
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
@@ -148,4 +149,66 @@ button:not(:disabled) {
 button:disabled,
 [disabled] {
   cursor: not-allowed;
+}
+
+/* ==============================================
+   MOBILE OPTIMIZATIONS
+   ============================================== */
+
+/* Minimum touch target size for mobile (44px per Apple/Google guidelines) */
+@media (max-width: 768px) {
+  button,
+  a,
+  [role="button"],
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Larger tap targets for interactive icons */
+  button > svg,
+  a > svg {
+    padding: 8px;
+  }
+}
+
+/* Prevent text size adjustment on iOS */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Smooth scrolling for better mobile experience */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Mobile-friendly cards and containers */
+@media (max-width: 640px) {
+  .mobile-card {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Reduce horizontal padding on mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Prevent horizontal scroll on mobile */
+body {
+  overflow-x: hidden;
+}
+
+/* Better mobile form inputs */
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
 }
