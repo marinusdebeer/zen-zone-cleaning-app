@@ -158,10 +158,13 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
                 )}
               </div>
               {property && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center mt-2">
+                <Link 
+                  href={`/properties/${property.id}`}
+                  className="text-sm text-gray-600 dark:text-gray-400 hover:text-brand flex items-center mt-2 cursor-pointer"
+                >
                   <MapPin className="w-4 h-4 mr-1" />
                   {property.address}
-                </p>
+                </Link>
               )}
             </div>
           </div>

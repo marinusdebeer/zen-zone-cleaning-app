@@ -334,7 +334,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                       {searchResults.properties.map((property: any) => (
                         <Link
                           key={property.id}
-                          href={`/clients/${property.client.id}`}
+                          href={`/properties/${property.id}`}
                           onClick={() => {
                             setShowSearchResults(false);
                             setSearchQuery('');

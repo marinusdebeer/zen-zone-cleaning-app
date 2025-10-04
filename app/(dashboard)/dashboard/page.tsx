@@ -510,13 +510,6 @@ export default async function DashboardPage() {
                 Create New Job
               </Link>
               <Link 
-                href="/leads"
-                className="w-full flex items-center justify-center px-4 py-2.5 border-2 border-brand text-brand rounded-lg hover:bg-brand-bg-secondary transition-colors font-medium"
-              >
-                <UserPlus className="w-4 h-4 mr-2" />
-                Add New Lead
-              </Link>
-              <Link 
                 href="/clients"
                 className="w-full flex items-center justify-center px-4 py-2.5 border border-brand-border rounded-lg hover:bg-brand-bg-secondary transition-colors font-medium"
               >
