@@ -29,6 +29,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getJobsForInvoicing } from "@/server/actions/invoices";
 import { prisma } from "@/server/db";
+import { getClientDisplayName } from "@/lib/client-utils";
 import { InvoiceForm } from "../_components/invoice-form";
 
 export default async function NewInvoicePage() {
@@ -48,7 +49,7 @@ export default async function NewInvoicePage() {
   const jobs = await getJobsForInvoicing(selectedOrgId);
 
   // Get all active clients for direct invoicing
-  const clients = await prisma.client.findMany({
+  const rawClients = await prisma.client.findMany({
     where: { 
       orgId: selectedOrgId,
       clientStatus: 'ACTIVE',
@@ -66,6 +67,16 @@ export default async function NewInvoicePage() {
       { firstName: 'asc' },
     ],
   });
+
+  // Map clients to include computed name field
+  const clients = rawClients.map(c => ({
+    id: c.id,
+    name: getClientDisplayName(c),
+    firstName: c.firstName,
+    lastName: c.lastName,
+    companyName: c.companyName,
+    emails: c.emails,
+  }));
 
   return <InvoiceForm jobs={jobs} clients={clients} orgId={selectedOrgId} />;
 }

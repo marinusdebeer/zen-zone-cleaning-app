@@ -327,7 +327,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">{payment.invoice.client.name}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{getClientDisplayName(payment.invoice.client)}</p>
                     </td>
                     <td className="px-6 py-4">
                       <Link 
@@ -415,7 +415,7 @@ export function PaymentsClient({ payments: initialPayments, unpaidInvoices }: Pa
                       const remaining = pricing.total - paid;
                       return {
                         value: invoice.id,
-                        label: `${invoice.client.name} - $${pricing.total.toFixed(2)}${paid > 0 ? ` ($${remaining.toFixed(2)} remaining)` : ''}`
+                        label: `${getClientDisplayName(invoice.client)} - $${pricing.total.toFixed(2)}${paid > 0 ? ` ($${remaining.toFixed(2)} remaining)` : ''}`
                       };
                     })
                   ]}

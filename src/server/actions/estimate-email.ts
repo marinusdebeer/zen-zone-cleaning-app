@@ -15,6 +15,7 @@ import { sendEstimateSMS } from '@/lib/sms';
 import { revalidatePath } from 'next/cache';
 import { serialize } from '@/lib/serialization';
 import { calculateFullPricing } from '@/lib/pricing-calculator';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 export async function sendEstimate(data: {
   estimateId: string;
@@ -72,7 +73,7 @@ export async function sendEstimate(data: {
       subject: data.subject || `Estimate for ${estimate.title}`,
       body: data.body,
       estimateId: estimate.id,
-      clientName: estimate.client?.name || 'Unknown',
+      clientName: estimate.client ? getClientDisplayName(estimate.client) : 'Unknown',
       estimateTitle: estimate.title,
       estimateTotal: pricing.total,
       attachments: data.attachments,

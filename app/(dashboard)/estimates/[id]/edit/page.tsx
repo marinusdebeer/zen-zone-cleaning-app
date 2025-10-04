@@ -23,6 +23,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
 import { withOrgContext } from "@/server/tenancy";
 import { serialize } from "@/lib/serialization";
+import { getClientDisplayName } from "@/lib/client-utils";
 import { EstimateForm } from "../../_components/estimate-form";
 
 export default async function EditEstimatePage({ params }: { params: Promise<{ id: string }> }) {
@@ -80,15 +81,20 @@ export default async function EditEstimatePage({ params }: { params: Promise<{ i
   });
 
   // Separate leads from active clients for the form
-  const clients = allClients.filter(c => c.clientStatus === 'ACTIVE');
+  const clients = allClients.filter(c => c.clientStatus === 'ACTIVE').map(c => ({
+    id: c.id,
+    name: getClientDisplayName(c),
+    properties: c.properties,
+  }));
   
   // Format leads to match expected interface
   const leads = allClients
     .filter(c => c.clientStatus === 'LEAD')
     .map(c => ({
       id: c.id,
-      name: c.name,
+      name: getClientDisplayName(c),
       emails: Array.isArray(c.emails) ? c.emails as string[] : [],
+      properties: c.properties,
     }));
 
   // Automatically serialize all Decimal fields (pricing, line items, etc.)

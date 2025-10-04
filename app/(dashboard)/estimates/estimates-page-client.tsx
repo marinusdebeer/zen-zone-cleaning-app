@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { calculateFullPricing } from '@/lib/pricing-calculator';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 interface Estimate {
   id: string;
@@ -39,7 +40,12 @@ interface Estimate {
   depositRequired: boolean;
   depositType: string | null;
   depositValue: number | null;
-  client: { name: string; clientStatus: string } | null;
+  client: { 
+    firstName?: string | null;
+    lastName?: string | null;
+    companyName?: string | null;
+    clientStatus: string;
+  } | null;
   property: { address: string } | null;
   convertedJob: { id: string; title: string } | null;
   lineItems: Array<{
@@ -75,8 +81,8 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
     const matchesStatus = statusFilter === 'ALL' || estimate.status === statusFilter;
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = !searchTerm || 
-      estimate.title.toLowerCase().includes(searchLower) ||
-      (estimate.client?.name && estimate.client.name.toLowerCase().includes(searchLower)) ||
+      (estimate.title && estimate.title.toLowerCase().includes(searchLower)) ||
+      (estimate.client && getClientDisplayName(estimate.client).toLowerCase().includes(searchLower)) ||
       (estimate.description && estimate.description.toLowerCase().includes(searchLower));
     
     return matchesStatus && matchesSearch;
@@ -241,7 +247,9 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
                   <tr key={estimate.id} onClick={() => window.location.href = `/estimates/${estimate.id}`} className="hover:bg-[var(--tenant-bg-tertiary)] transition-colors cursor-pointer">
                     <td className="px-6 py-4">
                       <div>
-                        <p className="font-medium text-gray-900 dark:text-white">{estimate.title}</p>
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          {estimate.title || (estimate.client ? getClientDisplayName(estimate.client) : 'Untitled Estimate')}
+                        </p>
                         {estimate.description && (
                           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{estimate.description}</p>
                         )}
@@ -250,12 +258,14 @@ export function EstimatesPageClient({ estimates, statusCounts, stats }: Estimate
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <Users className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
-                        <div>
+                        <div className="flex items-center gap-2">
                           <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {estimate.client?.name || '-'}
+                            {estimate.client ? getClientDisplayName(estimate.client) : '-'}
                           </p>
                           {estimate.client?.clientStatus === 'LEAD' && (
-                            <span className="text-xs text-gray-500 dark:text-gray-400">Lead</span>
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300">
+                              Lead
+                            </span>
                           )}
                         </div>
                       </div>

@@ -2,13 +2,13 @@
  * ESTIMATE RECIPIENT SELECTOR
  * 
  * Purpose:
- * Select recipient for estimate - either existing client or lead
- * Includes property selection for clients
+ * Select recipient for estimate - shows all clients and leads in one selector
+ * Includes property selection for all clients
  */
 
 'use client';
 
-import { Users, UserPlus } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { CustomSelect } from '@/ui/components/custom-select';
 
 interface Client {
@@ -24,6 +24,10 @@ interface Lead {
   id: string;
   name: string;
   emails: string[];
+  properties?: {
+    id: string;
+    address: string;
+  }[];
 }
 
 interface EstimateRecipientSelectorProps {
@@ -49,7 +53,36 @@ export function EstimateRecipientSelector({
   onPropertyChange,
   disabled = false,
 }: EstimateRecipientSelectorProps) {
+  // Find the selected entity (could be in either list)
   const selectedClient = clients.find(c => c.id === selectedClientId);
+  const selectedLead = leads.find(l => l.id === selectedClientId);
+  const selectedEntity = selectedClient || selectedLead;
+  const isLead = !!selectedLead;
+
+  // Get properties from the selected entity
+  const availableProperties = selectedEntity?.properties || [];
+
+  // Combine clients and leads into one list with badges
+  const allClientOptions = [
+    { value: '', label: 'Select a client or lead...' },
+    ...clients.map(client => ({ 
+      value: client.id, 
+      label: client.name,
+      badge: 'Client'
+    })),
+    ...leads.map(lead => ({ 
+      value: lead.id, 
+      label: `${lead.name}${lead.emails[0] ? ` (${lead.emails[0]})` : ''}`,
+      badge: 'Lead'
+    }))
+  ];
+
+  const handleClientChange = (clientId: string) => {
+    // Determine if selected is a lead or client
+    const isSelectedLead = leads.some(l => l.id === clientId);
+    onTypeChange(isSelectedLead ? 'lead' : 'client');
+    onClientChange(clientId);
+  };
 
   return (
     <div className="bg-brand-bg rounded-xl shadow-sm p-6">
@@ -58,98 +91,49 @@ export function EstimateRecipientSelector({
         Recipient
       </h2>
       
-      <div className="space-y-4">
-        {/* Toggle between Client/Lead */}
-        <div className="flex gap-4">
-          <button
-            type="button"
-            onClick={() => onTypeChange('client')}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Client <span className="text-red-500">*</span>
+          </label>
+          <CustomSelect
+            value={selectedClientId}
+            onChange={handleClientChange}
             disabled={disabled}
-            className={`flex-1 p-4 rounded-lg border-2 transition-colors disabled:opacity-50 ${
-              forType === 'client'
-                ? 'bg-brand-bg-tertiary border-brand'
-                : 'bg-brand-bg border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-            }`}
-          >
-            <Users className="w-5 h-5 mx-auto mb-2 text-brand" />
-            <p className="font-medium text-gray-900 dark:text-white">Existing Client</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">For current clients</p>
-          </button>
-          <button
-            type="button"
-            onClick={() => onTypeChange('lead')}
-            disabled={disabled}
-            className={`flex-1 p-4 rounded-lg border-2 transition-colors disabled:opacity-50 ${
-              forType === 'lead'
-                ? 'bg-brand-bg-tertiary border-brand'
-                : 'bg-brand-bg border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-            }`}
-          >
-            <UserPlus className="w-5 h-5 mx-auto mb-2 text-brand" />
-            <p className="font-medium text-gray-900 dark:text-white">Lead</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">For potential clients</p>
-          </button>
+            options={allClientOptions}
+            placeholder="Select a client..."
+            showBadges={true}
+          />
         </div>
 
-        {/* Client Selection */}
-        {forType === 'client' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Client <span className="text-red-500">*</span>
-              </label>
-              <CustomSelect
-                value={selectedClientId}
-                onChange={onClientChange}
-                disabled={disabled}
-                options={[
-                  { value: '', label: 'Select a client...' },
-                  ...clients.map(client => ({ value: client.id, label: client.name }))
-                ]}
-                placeholder="Select a client..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Property</label>
-              <CustomSelect
-                value={selectedPropertyId}
-                onChange={onPropertyChange}
-                disabled={disabled || !selectedClient}
-                options={[
-                  { value: '', label: 'Select a property...' },
-                  ...(selectedClient?.properties.map(property => ({ 
-                    value: property.id, 
-                    label: property.address 
-                  })) || [])
-                ]}
-                placeholder="Select a property..."
-              />
-              {!selectedClient && (
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Select a client first</p>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Lead <span className="text-red-500">*</span>
-            </label>
-            <CustomSelect
-              value={selectedClientId}
-              onChange={onClientChange}
-              disabled={disabled}
-              options={[
-                { value: '', label: 'Select a lead...' },
-                ...leads.map(lead => ({ 
-                  value: lead.id, 
-                  label: `${lead.name}${lead.emails[0] ? ` (${lead.emails[0]})` : ' (No email)'}` 
-                }))
-              ]}
-              placeholder="Select a lead..."
-            />
-          </div>
-        )}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Property <span className="text-gray-400 text-xs">(optional)</span>
+          </label>
+          <CustomSelect
+            value={selectedPropertyId}
+            onChange={onPropertyChange}
+            disabled={disabled || !selectedEntity || availableProperties.length === 0}
+            options={[
+              { value: '', label: 'Select a property...' },
+              ...availableProperties.map(property => ({ 
+                value: property.id, 
+                label: property.address 
+              }))
+            ]}
+            placeholder={
+              !selectedEntity ? 'Select a client first' :
+              availableProperties.length === 0 ? 'No properties available' :
+              'Select a property...'
+            }
+          />
+          {selectedEntity && availableProperties.length === 0 && (
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">No properties on file for this client</p>
+          )}
+          {!selectedEntity && (
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Select a client first</p>
+          )}
+        </div>
       </div>
     </div>
   );

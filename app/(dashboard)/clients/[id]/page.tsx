@@ -27,6 +27,7 @@ import Link from 'next/link';
 import { prisma } from '@/server/db';
 import { withOrgContext } from '@/server/tenancy';
 import { Mail, Phone, MapPin, FileText, Briefcase, Receipt, Home, CheckCircle, DollarSign, MessageSquare } from 'lucide-react';
+import { getClientDisplayName } from '@/lib/client-utils';
 import { ClientActions } from './client-actions';
 
 export default async function ClientDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -88,14 +89,14 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
       <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
         <Link href="/clients" className="hover:text-brand">Clients</Link>
         <span>/</span>
-        <span className="text-gray-900 dark:text-white font-medium">{client.name}</span>
+        <span className="text-gray-900 dark:text-white font-medium">{getClientDisplayName(client)}</span>
       </div>
 
       {/* Header */}
       <div className="bg-brand-bg rounded-xl shadow-sm p-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{client.name}</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{getClientDisplayName(client)}</h1>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Client ID: {client.id.slice(0, 8)}</p>
           </div>
           <ClientActions clientId={client.id} />
@@ -280,7 +281,7 @@ export default async function ClientDetailPage({ params }: { params: Promise<{ i
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <p className="font-medium text-gray-900 dark:text-white">{job.title || job.client.name}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{job.title || getClientDisplayName(job.client)}</p>
                       {job.isRecurring && (
                         <span className="text-xs bg-brand-bg-tertiary text-brand-text px-2 py-0.5 rounded">Recurring</span>
                       )}

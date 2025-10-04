@@ -61,11 +61,23 @@ export default async function EditJobPage({ params }: { params: Promise<{ id: st
 
   if (!job) return <div>Job not found</div>;
 
-  // Get clients with their properties
+  // Get all clients with their properties
   const clients = await prisma.client.findMany({
-    where: { orgId: selectedOrgId },
-    include: {
-      properties: true,
+    where: { 
+      orgId: selectedOrgId,
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      companyName: true,
+      clientStatus: true,
+      properties: {
+        select: {
+          id: true,
+          address: true,
+        }
+      }
     },
     orderBy: [
       { companyName: 'asc' },

@@ -12,6 +12,7 @@ import { ChevronDown, Check } from 'lucide-react';
 interface Option {
   value: string;
   label: string;
+  badge?: string;
 }
 
 interface CustomSelectProps {
@@ -21,6 +22,7 @@ interface CustomSelectProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  showBadges?: boolean;
 }
 
 export function CustomSelect({ 
@@ -29,7 +31,8 @@ export function CustomSelect({
   onChange, 
   placeholder = 'Select...', 
   disabled = false,
-  className = ''
+  className = '',
+  showBadges = false
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -65,10 +68,17 @@ export function CustomSelect({
           flex items-center justify-between
         `}
       >
-        <span className={selectedOption ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'}>
-          {selectedOption ? selectedOption.label : placeholder}
-        </span>
-        <ChevronDown className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <span className={`truncate ${selectedOption ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'}`}>
+            {selectedOption ? selectedOption.label : placeholder}
+          </span>
+          {showBadges && selectedOption?.badge === 'Lead' && (
+            <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300">
+              Lead
+            </span>
+          )}
+        </div>
+        <ChevronDown className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && !disabled && (
@@ -87,11 +97,18 @@ export function CustomSelect({
                   : 'w-full px-4 py-2.5 text-left flex items-center justify-between transition-colors hover:bg-gray-50 dark:hover:bg-gray-700'
               }
             >
-              <span className={`text-sm ${option.value === value ? 'font-semibold text-brand dark:text-brand' : 'text-gray-700 dark:text-gray-300'}`}>
-                {option.label}
-              </span>
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <span className={`text-sm truncate ${option.value === value ? 'font-semibold text-brand dark:text-brand' : 'text-gray-700 dark:text-gray-300'}`}>
+                  {option.label}
+                </span>
+                {showBadges && option.badge === 'Lead' && (
+                  <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300">
+                    Lead
+                  </span>
+                )}
+              </div>
               {option.value === value && (
-                <Check className="w-4 h-4 text-brand dark:text-brand" />
+                <Check className="w-4 h-4 text-brand dark:text-brand flex-shrink-0" />
               )}
             </button>
           ))}

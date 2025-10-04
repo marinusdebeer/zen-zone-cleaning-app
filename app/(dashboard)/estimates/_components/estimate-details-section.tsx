@@ -33,13 +33,12 @@ export function EstimateDetailsSection({
       <div className="grid grid-cols-1 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Estimate Title <span className="text-red-500">*</span>
+            Estimate Title <span className="text-gray-400 text-xs">(optional)</span>
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
-            required
             disabled={disabled}
             className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-600 focus:border-brand disabled:bg-gray-100 dark:disabled:bg-gray-800 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder:text-gray-400"
             placeholder="e.g., Deep Cleaning Service"

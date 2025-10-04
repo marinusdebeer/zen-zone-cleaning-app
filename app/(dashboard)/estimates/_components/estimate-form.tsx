@@ -106,7 +106,6 @@ export function EstimateForm({
 
   // Validation
   const isValid = 
-    formData.title && 
     formData.clientId &&
     lineItems.length > 0 &&
     lineItems.every(item => item.name && item.quantity && item.unitPrice);

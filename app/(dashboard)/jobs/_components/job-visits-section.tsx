@@ -31,7 +31,10 @@ interface JobVisitsSectionProps {
     number: number;
     title: string | null;
     client: {
-      name: string;
+      id?: string;
+      firstName?: string | null;
+      lastName?: string | null;
+      companyName?: string | null;
     };
     property?: {
       address: string;

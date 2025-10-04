@@ -28,6 +28,7 @@ import {
 import { format } from 'date-fns';
 import { updateVisit, updateVisitStatus } from '@/server/actions/visits';
 import { formatDuration } from '@/lib/time-utils';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 interface TeamMember {
   id: string;
@@ -59,7 +60,10 @@ interface Visit {
     number?: number;
     title: string | null;
     client: {
-      name: string;
+      id?: string;
+      firstName?: string | null;
+      lastName?: string | null;
+      companyName?: string | null;
     };
     property?: {
       address: string;
@@ -287,7 +291,7 @@ export function VisitEditModal({ visit, isOpen, onClose, teamMembers = [] }: Vis
           >
             <div className="flex-1 min-w-0">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate">
-                {visit.job?.title || visit.job?.client.name || 'Visit'}
+                {visit.job?.title || (visit.job?.client ? getClientDisplayName(visit.job.client) : 'Visit')}
               </h2>
               <p className="text-xs text-gray-600 dark:text-gray-400">
                 {visit.number ? `Visit #${visit.number}` : 'Visit'}
@@ -364,7 +368,7 @@ export function VisitEditModal({ visit, isOpen, onClose, teamMembers = [] }: Vis
               <div className={`grid ${visit.job.property ? 'grid-cols-3' : 'grid-cols-2'} gap-3`}>
                 <div className="bg-brand-bg-secondary dark:bg-gray-700 rounded-lg p-3">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">CLIENT</p>
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{visit.job.client.name}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{getClientDisplayName(visit.job.client)}</p>
                 </div>
                 <div className="bg-brand-bg-secondary dark:bg-gray-700 rounded-lg p-3">
                   <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-0.5">JOB</p>

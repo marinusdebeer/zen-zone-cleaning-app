@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { AlertCircle, CheckCircle, X, FileText, User, Home, Package, Calendar, DollarSign, TrendingUp } from 'lucide-react';
 import { CustomSelect } from '@/ui/components/custom-select';
 import { createRequest } from '@/server/actions/requests';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 interface Industry {
   id: string;
@@ -281,10 +282,12 @@ export function RequestFormEnhanced({
                   { value: '', label: 'Select a client...' },
                   ...clients.map(client => ({
                     value: client.id,
-                    label: client.companyName || `${client.firstName} ${client.lastName}`,
+                    label: getClientDisplayName(client),
+                    badge: client.clientStatus === 'LEAD' ? 'Lead' : 'Client'
                   })),
                 ]}
                 placeholder="Choose a client"
+                showBadges={true}
               />
             </div>
 

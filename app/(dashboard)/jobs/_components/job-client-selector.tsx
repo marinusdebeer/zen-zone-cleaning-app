@@ -25,6 +25,7 @@ interface Client {
   firstName?: string | null;
   lastName?: string | null;
   companyName?: string | null;
+  clientStatus?: string;
   properties: {
     id: string;
     address: string;
@@ -73,9 +74,14 @@ export function JobClientSelector({
             disabled={disabled}
             options={[
               { value: '', label: 'Select client...' },
-              ...clients.map(client => ({ value: client.id, label: getClientDisplayName(client) }))
+              ...clients.map(client => ({ 
+                value: client.id, 
+                label: getClientDisplayName(client),
+                badge: client.clientStatus === 'LEAD' ? 'Lead' : undefined
+              }))
             ]}
             placeholder="Select client..."
+            showBadges={true}
           />
         </div>
 

@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { calculateFullPricing } from '@/lib/pricing-calculator';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 interface Invoice {
   id: string;
@@ -38,7 +39,11 @@ interface Invoice {
   dueAt: Date | string | null;
   paidAt: Date | string | null;
   createdAt: Date | string;
-  client: { name: string };
+  client: { 
+    firstName?: string | null;
+    lastName?: string | null;
+    companyName?: string | null;
+  };
   job: { title: string } | null;
   payments: { amount: number }[];
   lineItems: Array<{
@@ -75,7 +80,7 @@ export function InvoicesPageClient({ invoices, statusCounts, stats }: InvoicesPa
     const matchesStatus = statusFilter === 'ALL' || invoice.status === statusFilter;
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = !searchTerm || 
-      invoice.client.name.toLowerCase().includes(searchLower) ||
+      getClientDisplayName(invoice.client).toLowerCase().includes(searchLower) ||
       (invoice.job?.title && invoice.job.title.toLowerCase().includes(searchLower)) ||
       invoice.id.toLowerCase().includes(searchLower);
     
@@ -271,12 +276,12 @@ export function InvoicesPageClient({ invoices, statusCounts, stats }: InvoicesPa
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <Users className="w-4 h-4 mr-2 text-gray-400 dark:text-gray-500" />
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">{invoice.client.name}</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{getClientDisplayName(invoice.client)}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       {invoice.job ? (
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.job.title || invoice.job.client.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{invoice.job.title || getClientDisplayName(invoice.job.client)}</p>
                       ) : (
                         <p className="text-sm text-gray-400 dark:text-gray-500">-</p>
                       )}

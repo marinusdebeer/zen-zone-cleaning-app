@@ -52,11 +52,23 @@ export default async function NewJobPage({
   const params = await searchParams;
   const { requestId, estimateId, fromEstimate, startTime, endTime } = params;
 
-  // Get clients with their properties
+  // Get all clients with their properties
   const clients = await prisma.client.findMany({
-    where: { orgId: selectedOrgId },
-    include: {
-      properties: true,
+    where: { 
+      orgId: selectedOrgId,
+    },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      companyName: true,
+      clientStatus: true,
+      properties: {
+        select: {
+          id: true,
+          address: true,
+        }
+      }
     },
     orderBy: [
       { companyName: 'asc' },

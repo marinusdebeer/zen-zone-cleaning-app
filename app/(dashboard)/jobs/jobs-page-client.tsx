@@ -42,7 +42,11 @@ interface Job {
   estimatedCost: number | null;
   priority: string;
   createdAt: Date;
-  client: { name: string };
+  client: { 
+    firstName?: string | null;
+    lastName?: string | null;
+    companyName?: string | null;
+  };
   property: { address: string } | null;
   visits: { id: string; scheduledAt: Date; status: string }[];
   _count: {

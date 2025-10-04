@@ -27,7 +27,7 @@ import { serialize } from '@/lib/serialization';
 import { getNextNumber } from '../utils/auto-number';
 
 export async function createEstimate(data: {
-  title: string;
+  title?: string;
   description?: string;
   clientId?: string;
   propertyId?: string;
@@ -62,7 +62,7 @@ export async function createEstimate(data: {
     data: {
       number,
       orgId,
-      title: data.title,
+      title: data.title || '', // Optional field, defaults to empty string
       description: data.description,
       clientId: data.clientId!,  // Required field
       propertyId: data.propertyId,

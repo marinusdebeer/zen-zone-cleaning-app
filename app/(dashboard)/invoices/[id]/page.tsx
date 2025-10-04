@@ -37,6 +37,7 @@ import {
 } from 'lucide-react';
 import { InvoiceActions } from './invoice-actions';
 import { calculateFullPricing } from '@/lib/pricing-calculator';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 export default async function InvoiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -118,7 +119,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
               Client
             </p>
             <Link href={`/clients/${invoice.client.id}`} className="font-semibold text-gray-900 dark:text-white hover:text-brand text-lg">
-              {invoice.client.name} →
+              {getClientDisplayName(invoice.client)} →
             </Link>
           </div>
 
@@ -130,7 +131,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                 Related Job
               </p>
               <Link href={`/jobs/${invoice.job.id}`} className="font-semibold text-gray-900 dark:text-white hover:text-brand text-lg">
-                {invoice.job.title || invoice.job.client.name} →
+                {invoice.job.title || getClientDisplayName(invoice.job.client)} →
               </Link>
             </div>
           )}
@@ -168,7 +169,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             </Link>
             <ArrowRight className="w-4 h-4 text-gray-400" />
             <Link href={`/jobs/${invoice.job.id}`} className="px-3 py-2 bg-brand-bg border border-brand rounded-lg hover:bg-[var(--tenant-bg-tertiary)]">
-              💼 Job: {invoice.job.title || invoice.job.client.name}
+              💼 Job: {invoice.job.title || getClientDisplayName(invoice.job.client)}
             </Link>
             <ArrowRight className="w-4 h-4 text-gray-400" />
             <div className="px-3 py-2 bg-green-100 border border-green-300 rounded-lg">

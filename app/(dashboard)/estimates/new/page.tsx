@@ -22,6 +22,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
 import { withOrgContext } from "@/server/tenancy";
 import { serialize } from "@/lib/serialization";
+import { getClientDisplayName } from "@/lib/client-utils";
 import { EstimateForm } from "../_components/estimate-form";
 
 export default async function NewEstimatePage({ 
@@ -66,11 +67,16 @@ export default async function NewEstimatePage({
   });
 
   // Separate active clients and leads
-  const clients = allClients.filter(c => c.clientStatus === 'ACTIVE');
+  const clients = allClients.filter(c => c.clientStatus === 'ACTIVE').map(c => ({
+    id: c.id,
+    name: getClientDisplayName(c),
+    properties: c.properties,
+  }));
   const leads = allClients.filter(c => c.clientStatus === 'LEAD').map(c => ({
     id: c.id,
-    name: c.name,
+    name: getClientDisplayName(c),
     emails: (c.emails as any)?.length ? c.emails as string[] : [],
+    properties: c.properties,
   }));
 
   // If converting from request, fetch and pre-populate

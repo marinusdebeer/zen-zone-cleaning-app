@@ -9,6 +9,7 @@
 
 import Link from 'next/link';
 import { MapPin } from 'lucide-react';
+import { getClientDisplayName } from '@/lib/client-utils';
 import { JobDetailHeader } from '../../_components/job-detail-header';
 import { JobScheduleInfo } from '../../_components/job-schedule-info';
 import { JobTeamAssignment } from '../../_components/job-team-assignment';
@@ -46,7 +47,9 @@ interface Job {
   taxRate: number;
   client: {
     id: string;
-    name: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    companyName?: string | null;
   };
   property: {
     id: string;
@@ -71,7 +74,7 @@ export function JobDetailClient({ job: initialJob, orgId, teamMembers }: JobDeta
       <div className="flex items-center space-x-2 text-sm text-brand-text-secondary">
         <Link href="/jobs" className="hover:text-brand">Jobs</Link>
         <span>/</span>
-        <span className="text-brand-text font-medium">{initialJob.title || initialJob.client.name}</span>
+        <span className="text-brand-text font-medium">{initialJob.title || getClientDisplayName(initialJob.client)}</span>
       </div>
 
       {/* Header with title, status, and actions */}
@@ -93,7 +96,7 @@ export function JobDetailClient({ job: initialJob, orgId, teamMembers }: JobDeta
           <div className="p-4 bg-brand-bg-secondary rounded-lg border border-brand-border">
             <p className="text-xs font-medium text-brand-text-secondary mb-1.5 uppercase tracking-wide">Client</p>
             <Link href={`/clients/${initialJob.client.id}`} className="font-semibold text-brand-text hover:text-brand flex items-center">
-              {initialJob.client.name}
+              {getClientDisplayName(initialJob.client)}
             </Link>
           </div>
           

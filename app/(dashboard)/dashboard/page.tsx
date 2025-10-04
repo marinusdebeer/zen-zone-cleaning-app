@@ -43,6 +43,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/server/db";
+import { getClientDisplayName } from "@/lib/client-utils";
 import Link from 'next/link';
 import { calculateFullPricing } from '@/lib/pricing-calculator';
 import { 
@@ -455,7 +456,7 @@ export default async function DashboardPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium truncate">
-                          {visit.job.client.name}{visit.job.title ? ` - ${visit.job.title}` : ''}
+                          {getClientDisplayName(visit.job.client)}{visit.job.title ? ` - ${visit.job.title}` : ''}
                         </p>
                         <p className="text-sm text-brand-text-tertiary truncate">
                           {visit.scheduledAt.toLocaleDateString('en-US', { 
@@ -564,7 +565,7 @@ export default async function DashboardPage() {
                         Invoice {invoice.status === 'PAID' ? 'paid' : invoice.status.toLowerCase()}
                       </p>
                       <p className="text-xs text-brand-text-tertiary truncate">
-                        {invoice.client.name} - ${pricing.total.toFixed(2)}
+                        {getClientDisplayName(invoice.client)} - ${pricing.total.toFixed(2)}
                       </p>
                     </div>
                   </Link>
@@ -583,7 +584,7 @@ export default async function DashboardPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">New client added</p>
                     <p className="text-xs text-brand-text-tertiary truncate">
-                      {client.name} - {new Date(client.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      {getClientDisplayName(client)} - {new Date(client.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </p>
                   </div>
                 </Link>

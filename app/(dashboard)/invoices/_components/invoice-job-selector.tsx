@@ -10,12 +10,13 @@
 
 import { Briefcase, FileText } from 'lucide-react';
 import { CustomSelect } from '@/ui/components/custom-select';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 interface Job {
   id: string;
   title: string;
   estimatedCost: any;
-  client: { id: string; name: string };
+  client: { id: string; firstName?: string | null; lastName?: string | null; companyName?: string | null };
   property: { address: string } | null;
   visits: { id: string; scheduledAt: Date | string; completedAt: Date | string | null; status: string }[];
   invoices: { id: string }[];
@@ -23,7 +24,9 @@ interface Job {
 
 interface Client {
   id: string;
-  name: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  companyName?: string | null;
 }
 
 interface InvoiceJobSelectorProps {
@@ -105,7 +108,7 @@ export function InvoiceJobSelector({
               { value: '', label: 'Select a job...' },
               ...jobs.map(job => ({
                 value: job.id,
-                label: `${job.title || job.client.name} - ${job.client.name}`,
+                label: `${job.title || getClientDisplayName(job.client)} - ${getClientDisplayName(job.client)}`,
               })),
             ]}
             placeholder="Choose a job to invoice"
@@ -114,7 +117,7 @@ export function InvoiceJobSelector({
           {selectedJob && (
             <div className="mt-4 p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
               <p className="text-sm font-medium text-gray-900 dark:text-white">
-                {selectedJob.client.name}
+                {getClientDisplayName(selectedJob.client)}
               </p>
               {selectedJob.property && (
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -140,7 +143,7 @@ export function InvoiceJobSelector({
               { value: '', label: 'Select a client...' },
               ...clients.map(client => ({
                 value: client.id,
-                label: client.name,
+                label: getClientDisplayName(client),
               })),
             ]}
             placeholder="Choose a client"

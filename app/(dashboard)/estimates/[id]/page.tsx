@@ -32,6 +32,7 @@ import { withOrgContext } from '@/server/tenancy';
 import { User, FileText, DollarSign, Calendar, CheckCircle, ArrowRight } from 'lucide-react';
 import { EstimateActions } from './estimate-actions';
 import { calculateFullPricing } from '@/lib/pricing-calculator';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 export default async function EstimateDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -76,8 +77,8 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
     depositValue: estimate.depositValue ? Number(estimate.depositValue) : undefined,
   });
 
-  const customerName = estimate.client?.name || 'Unknown';
-  const customerType = 'Client';
+  const customerName = estimate.client ? getClientDisplayName(estimate.client) : 'Unknown';
+  const customerType = estimate.client?.clientStatus === 'LEAD' ? 'Lead' : 'Client';
 
   return (
     <div className="space-y-6">
@@ -85,7 +86,9 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
       <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
         <Link href="/estimates" className="hover:text-brand">Estimates</Link>
         <span>/</span>
-        <span className="text-gray-900 dark:text-white font-medium">{estimate.title}</span>
+        <span className="text-gray-900 dark:text-white font-medium">
+          {estimate.title || (estimate.client ? getClientDisplayName(estimate.client) : 'Untitled Estimate')}
+        </span>
       </div>
 
       {/* Header */}
@@ -93,7 +96,9 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center space-x-3">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{estimate.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                {estimate.title || (estimate.client ? getClientDisplayName(estimate.client) : 'Untitled Estimate')}
+              </h1>
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                 estimate.status === 'Approved' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' :
                 estimate.status === 'Sent' ? 'bg-brand-bg-tertiary text-blue-800' :
@@ -110,14 +115,14 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
             estimateId={estimate.id}
             status={estimate.status}
             convertedToJobId={estimate.convertedToJobId}
-            clientName={estimate.client?.name || 'Unknown'}
+            clientName={estimate.client ? getClientDisplayName(estimate.client) : 'Unknown'}
             clientEmail={Array.isArray(estimate.client?.emails) && estimate.client.emails.length > 0 
               ? (estimate.client.emails[0] as string)
               : ''}
             clientPhone={Array.isArray(estimate.client?.phones) && estimate.client.phones.length > 0 
               ? (estimate.client.phones[0] as string)
               : ''}
-            estimateTitle={estimate.title}
+            estimateTitle={estimate.title || (estimate.client ? getClientDisplayName(estimate.client) : 'Untitled Estimate')}
             estimateTotal={pricing.total}
           />
         </div>
@@ -126,12 +131,18 @@ export default async function EstimateDetailPage({ params }: { params: Promise<{
         <div className="mt-6 p-4 bg-brand-bg-secondary dark:bg-gray-700 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{customerType}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Client</p>
               <Link 
                 href={`/clients/${estimate.client.id}`}
-                className="text-lg font-semibold text-gray-900 dark:text-white hover:text-brand flex items-center"
+                className="text-lg font-semibold text-gray-900 dark:text-white hover:text-brand flex items-center gap-2"
               >
-                {customerName} →
+                {customerName}
+                {estimate.client?.clientStatus === 'LEAD' && (
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300">
+                    Lead
+                  </span>
+                )}
+                <span>→</span>
               </Link>
             </div>
             <div className="text-right">
