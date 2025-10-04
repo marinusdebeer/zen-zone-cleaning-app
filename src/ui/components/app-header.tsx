@@ -43,6 +43,7 @@ import { useSession } from 'next-auth/react';
 import { globalSearch } from '@/server/actions/search';
 import { CreateMenu } from './create-menu';
 import { useTheme } from './theme-provider';
+import { getClientDisplayName } from '@/lib/client-utils';
 
 interface AppHeaderProps {
   onMenuClick?: () => void;
@@ -186,7 +187,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                           >
                             <div className="flex items-center justify-between">
                               <div>
-                                <p className="text-sm font-medium text-gray-900 dark:text-white">{client.name}</p>
+                                <p className="text-sm font-medium text-gray-900 dark:text-white">{getClientDisplayName(client)}</p>
                                 {emails[0] && <p className="text-xs text-gray-500 dark:text-gray-400">{emails[0]}</p>}
                               </div>
                               {client.clientStatus === 'LEAD' && (
@@ -223,7 +224,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                           className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                           <p className="text-sm font-medium text-gray-900 dark:text-white">{request.title}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{request.client.name}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{getClientDisplayName(request.client)}</p>
                         </Link>
                       ))}
                     </div>
@@ -250,8 +251,8 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                           }}
                           className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">{job.title || job.client.name}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{job.client.name}</p>
+                          <p className="text-sm font-medium text-gray-900 dark:text-white">{job.title || getClientDisplayName(job.client)}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{getClientDisplayName(job.client)}</p>
                         </Link>
                       ))}
                     </div>
@@ -280,7 +281,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                         >
                           <p className="text-sm font-medium text-gray-900 dark:text-white">{estimate.title}</p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {estimate.client?.name || estimate.lead?.name} - ${estimate.amount.toFixed(2)}
+                            {estimate.client?.companyName || `${estimate.client?.firstName || ''} ${estimate.client?.lastName || ''}`.trim() || 'Client'}
                           </p>
                         </Link>
                       ))}
@@ -309,10 +310,10 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                           className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                           <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {invoice.client.name} - ${invoice.total.toFixed(2)}
+                            {getClientDisplayName(invoice.client)} - ${invoice.total.toFixed(2)}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {invoice.status}{invoice.job ? ` • ${invoice.job.title || invoice.job.client.name}` : ''}
+                            {invoice.status}{invoice.job ? ` • ${invoice.job.title || getClientDisplayName(invoice.job.client)}` : ''}
                           </p>
                         </Link>
                       ))}
@@ -341,7 +342,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                           className="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                           <p className="text-sm font-medium text-gray-900 dark:text-white">{property.address}</p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{property.client.name}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{getClientDisplayName(property.client)}</p>
                         </Link>
                       ))}
                     </div>
@@ -372,7 +373,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
                             ${payment.amount.toFixed(2)} - {payment.method}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {payment.invoice.client.name}
+                            {getClientDisplayName(payment.invoice.client)}
                             {payment.reference ? ` • Ref: ${payment.reference}` : ''}
                           </p>
                         </Link>
