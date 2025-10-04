@@ -408,21 +408,21 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
             {/* Create Menu - Always visible */}
             <CreateMenu />
 
-            {/* Theme Toggle - Hide on mobile */}
+            {/* Theme Toggle - Now visible on mobile */}
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 toggleTheme();
               }}
-              className="p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer hidden md:flex items-center justify-center min-h-[44px] min-w-[44px] touch-manipulation"
+              className="p-0.5 sm:p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer flex items-center justify-center min-h-[44px] min-w-[44px] touch-manipulation"
               title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
               aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
             >
               {theme === 'light' ? (
-                <Moon className="h-5 w-5 text-gray-600" />
+                <Moon className="h-8 w-8 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
               ) : (
-                <Sun className="h-5 w-5 text-gray-300" />
+                <Sun className="h-8 w-8 sm:h-5 sm:w-5 text-gray-300" />
               )}
             </button>
 
